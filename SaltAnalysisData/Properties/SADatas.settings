@@ -1,0 +1,80 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SaltAnalysisDatas.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="NatirumCalibrationFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NaTestCalibration.xml</Value>
+    </Setting>
+    <Setting Name="KaliumCalibrationFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">KTestCalibration.xml</Value>
+    </Setting>
+    <Setting Name="ChemAnConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=(localdb)\mssqllocaldb;AttachDbFilename=E:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=(localdb)\mssqllocaldb;AttachDbFilename=E:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="Na" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">22.99</Value>
+    </Setting>
+    <Setting Name="K" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">39.098</Value>
+    </Setting>
+    <Setting Name="Cl" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">35.45</Value>
+    </Setting>
+    <Setting Name="Ca" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">40.078</Value>
+    </Setting>
+    <Setting Name="Mg" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">24.305</Value>
+    </Setting>
+    <Setting Name="C" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">12.011</Value>
+    </Setting>
+    <Setting Name="O" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">15.999</Value>
+    </Setting>
+    <Setting Name="H" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">1.008</Value>
+    </Setting>
+    <Setting Name="S" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">32.06</Value>
+    </Setting>
+    <Setting Name="Br" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">79.904</Value>
+    </Setting>
+    <Setting Name="B" Type="System.Decimal" Scope="Application">
+      <Value Profile="(Default)">10.81</Value>
+    </Setting>
+    <Setting Name="CarnalliteThreshold" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.0008</Value>
+    </Setting>
+    <Setting Name="HgCoefficient" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="BrBlank" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">9.65</Value>
+    </Setting>
+    <Setting Name="BrTitre" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.1332</Value>
+    </Setting>
+    <Setting Name="SulfatesBlank" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CaTrilonB" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1.0782</Value>
+    </Setting>
+    <Setting Name="MgTrilonB" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1.0782</Value>
+    </Setting>
+    <Setting Name="KaliumCalibrationNumber" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="NatriumCalibrationNumber" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

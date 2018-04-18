@@ -1,0 +1,80 @@
+﻿<Window x:Class="ChemicalAnalyses.Dialogs.CalibrationDataDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="CalibrationDataDialog" MinHeight="40" MinWidth="400" Height="400" Width="400"
+        Validation.Error="OnErrorEvent">
+    <Window.Resources>
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="CanUserAddRows" Value="True"/>
+            <Setter Property="CanUserReorderColumns" Value="False"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+        </Style>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
+    </Window.CommandBindings>
+    <Grid x:Name="grdCalibrationDialog">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Первый диапазон" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
+        <TextBlock Text="Второй диапазон" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center"/>
+        <DataGrid Grid.Column="0" Grid.Row="1" x:Name="dgrdFirstDiapason"
+                  ItemsSource="{Binding Path=lc.LinearCalibrationData[0],
+                    UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" 
+                  CurrentCellChanged="DataGrids_CurrentCellChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Концентрация" Width="*" Binding="{Binding Path=Concentration, 
+                    UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, 
+                    NotifyOnValidationError=True}"/>
+                <DataGridTextColumn Header="Показания" Width="*" Binding="{Binding Path= Value, 
+                    UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.0}, ValidatesOnExceptions=True,
+                    NotifyOnValidationError=True}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid Grid.Column="1" Grid.Row="1" x:Name="dgrdSecondDiapason"
+                  ItemsSource="{Binding Path=lc.LinearCalibrationData[1],
+                    UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True"
+                  CurrentCellChanged="DataGrids_CurrentCellChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Концентрация" Width="*" Binding="{Binding Path=Concentration, 
+                    UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.000}, ValidatesOnExceptions=True, 
+                    NotifyOnValidationError=True}"/>
+                <DataGridTextColumn Header="Показания" Width="*" Binding="{Binding Path= Value, 
+                    UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.0}, ValidatesOnExceptions=True,
+                    NotifyOnValidationError=True}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button  Content="OK" IsDefault="True" IsCancel="False" 
+                Margin="5" Width="70" x:Name="btnOK" Command="Save"/>
+            <Button  Content="Cancel" IsDefault="False" IsCancel="True" Margin="5" Width="70"/>
+        </StackPanel>
+        <ComboBox Margin="15,0,15,0" Grid.Column="1" Grid.Row="2" Height="20" x:Name="cbChemicalElemets"
+                  ItemsSource="{Binding}" SelectedItem="{Binding Path=lc.CalibrationType,
+                    UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+            <Label Content="_Краткое описание: "/>
+            <TextBox x:Name="tbDescription" TextWrapping="WrapWithOverflow" Text="{Binding Path=lc.Description,
+                UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, NotifyOnTargetUpdated=True, 
+                ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="_Дата: " Target="{Binding ElementName=dpckCalibrationDate}"/>
+                <DatePicker Text="{Binding lc.CalibrationDate, UpdateSourceTrigger=PropertyChanged, 
+                Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True}" 
+                            SelectedDateFormat="Short" Language="ru-RU"
+                        ToolTip="Ввести дату калибровки" x:Name="dpckCalibrationDate"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,48 @@
+﻿<Window x:Class="ChemicalAnalyses.Dialogs.SaltAnalysisOptionsDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
+        mc:Ignorable="d"
+        Title="Исходные настройки для анализа солей:" Height="220" Width="400" MaxHeight="220" MaxWidth="400"
+        Validation.Error="Window_ValidationError">
+    <Window.CommandBindings>
+        <CommandBinding Command="Save" Executed="SaveCommand_Executed" CanExecute="SaveCommand_CanExecute"/>
+    </Window.CommandBindings>
+    <Grid x:Name="grdMain">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Margin="5" Grid.Column="0" Grid.Row="0">
+            <Label Content="_ТрилонБ (Ca) мг-экв/л:"  Target="{Binding ElementName=tbCaTrilonB}"/>
+            <TextBox x:Name="tbCaTrilonB" Text="{Binding Path=CalciumTrilonTitre,
+                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Content="ТрилонБ (_Mg) мг-экв/л:" Target="{Binding ElementName=tbMgTrilonB}"/>
+            <TextBox x:Name="tbMgTrilonB" Text="{Binding Path=MagnesiumTrilonTitre,
+                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Content="_Холостой Br мл:" Target="{Binding ElementName=tbBrBlank}"/>
+            <TextBox x:Name="tbBrBlank" Text="{Binding Path=BromumBlank, 
+                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Margin="5" Grid.Column="1" Grid.Row="0">
+            <Label Content="Эквивалент (Hg) мл:"  Target="{Binding ElementName=tbHg,
+                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="tbHg" Text="{Binding Path=HgCoefficient,
+                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Target="{Binding ElementName=tbSulfatesBlank}" Content="Холостой SO₄²¯"/>
+            <TextBox x:Name="tbSulfatesBlank" Text="{Binding Path=SulfatesBlank}"/>
+            <Label Content="Титр Br мг-экв/мл:" Target="{Binding ElementName=tbBrTitre,
+                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="tbBrTitre" Text="{Binding Path=BromumStandardTitre,
+                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+        <Button Content="OK" Command="Save" IsDefault="False" IsCancel="False" Grid.Column="0" Grid.Row="1" Width="80" Height="25"/>
+        <Button Content="Cancel" IsDefault="True" IsCancel="True" Grid.Column="1" Grid.Row="1" Width="80" Height="25"/>
+    </Grid>
+</Window>

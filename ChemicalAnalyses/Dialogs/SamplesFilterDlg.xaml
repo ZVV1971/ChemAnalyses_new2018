@@ -1,0 +1,78 @@
+﻿<Window x:Class="ChemicalAnalyses.Dialogs.SamplesFilterDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Отбор образцов по параметрам" 
+        Height="200" Width="300" MaxHeight="200" MaxWidth="300" MinHeight="200" MinWidth="300"
+        Validation.Error="Window_Error">
+    <Window.CommandBindings>
+        <CommandBinding Command="Save" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed"/>
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                   Text="Выберите интервал дат для фильтрации образцов:"/>
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="1">
+            <Label Content="_c:" Margin="5,-2,5,-2" Target="{Binding ElementName=dpStartDate}"/>
+            <DatePicker x:Name="dpStartDate" Text="{Binding Path=Filter.StartDate, ValidatesOnExceptions=True, 
+                UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd/MM/yyyy}, Mode=TwoWay,
+                NotifyOnValidationError=True}"
+                 SelectedDateFormat="Short" Language="ru-RU">
+                <DatePicker.Resources>
+                    <Style TargetType="{x:Type DatePickerTextBox}">
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox x:Name="PART_TextBox" Text="{Binding Path=SelectedDate, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, 
+                                        StringFormat={}{0:dd-MM-yyyy}}"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.Resources>
+            </DatePicker>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+            <Label Content="_по:" Margin="5,-2,5,-2" Target="{Binding ElementName=dpEndDate}"/>
+            <DatePicker x:Name="dpEndDate" Text="{Binding Path=Filter.EndDate, ValidatesOnExceptions=True, 
+                UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd/MM/yyyy}, Mode=TwoWay, 
+                NotifyOnValidationError=True}"
+                 SelectedDateFormat="Short" Language="ru-RU">
+                <DatePicker.Resources>
+                    <Style TargetType="{x:Type DatePickerTextBox}">
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox x:Name="PART_TextBox" Text="{Binding Path=SelectedDate, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, 
+                                        StringFormat={}{0:dd-MM-yyyy}}"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.Resources>
+            </DatePicker>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.ColumnSpan="2">
+            <Label Content="_Лабораторный номер (точное совпадение):" Target="{Binding ElementName=tbLR}"/>
+            <TextBox x:Name="tbLR"  Text="{Binding Path=Filter.LabNumber, NotifyOnTargetUpdated=True, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+        <Button Content="OK" IsCancel="False" IsDefault="False" Grid.Row="3" Grid.Column="0" Margin="5"
+                Command="Save" Width="90"/>
+        <Button Content="Cancel" IsCancel="True" IsDefault="True" Grid.Row="3" Grid.Column="1" Margin="5"
+                Width="90"/>
+    </Grid>
+</Window>

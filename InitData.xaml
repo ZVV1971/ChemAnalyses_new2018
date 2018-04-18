@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This file is NOT compatible with Silverlight-->
+<Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+  <Canvas Name="svg8" Width="8.4748697" Height="8.4748688">
+    <Canvas.RenderTransform>
+      <TranslateTransform X="0" Y="0"/>
+    </Canvas.RenderTransform>
+    <Canvas.Resources>
+      <!--Unknown tag: inkscape:path-effect-->
+    </Canvas.Resources>
+    <!--Unknown tag: sodipodi:namedview-->
+    <!--Unknown tag: metadata-->
+    <Canvas Name="layer1">
+      <Canvas.RenderTransform>
+        <TranslateTransform X="-50.605056" Y="-58.003398"/>
+      </Canvas.RenderTransform>
+      <TextBlock xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontSize="1.12" FontWeight="Normal" FontFamily="sans-serif" FontStyle="normal" Foreground="#FF000000" Canvas.Left="1e+002" Canvas.Top="28.9" Name="text4564">
+        <Span whiteSpaceCollapse="preserve" FontSize="1.12">0.1234567890</Span>
+      </TextBlock>
+      <TextBlock xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontSize="1.12" FontWeight="Normal" FontFamily="sans-serif" FontStyle="normal" Foreground="#FF000000" Canvas.Left="-4.9" Canvas.Top="40.9" Name="text4568">
+        <Span whiteSpaceCollapse="preserve" FontSize="1.12">0.1234567890</Span>
+      </TextBlock>
+      <TextBlock xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontSize="1.11" FontWeight="Normal" FontFamily="sans-serif" FontStyle="normal" Foreground="#FF000000" Canvas.Left="160" Canvas.Top="10.9" Name="text4572">
+        <Span whiteSpaceCollapse="preserve" FontSize="1.11">0.1234567890</Span>
+      </TextBlock>
+    </Canvas>
+  </Canvas>
+</Viewbox>

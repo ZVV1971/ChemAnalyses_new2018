@@ -1,0 +1,67 @@
+﻿<Window x:Class="ChemicalAnalyses.Dialogs.SampleDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
+        mc:Ignorable="d"
+        Title="{Binding}" Height="200" Width="300" MaxWidth="350" MaxHeight="270">
+    <Window.Resources>
+        <alumni:SampleAvConverter x:Key="avConv"/>
+    </Window.Resources>
+    <Grid x:Name="grdSample">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <Label Content="Лабораторный номер:" Grid.RowSpan="2"/>
+            <TextBox x:Name="tbLabNumber" Text="{Binding Path=LabNumber, ValidatesOnExceptions=True,
+                UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Height="{Binding ElementName=dpSamplingDate, 
+                Path=ActualHeight}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <Label Content="Дата отбора:" Grid.RowSpan="2"/>
+            <DatePicker x:Name="dpSamplingDate" Text="{Binding Path=SamplingDate, ValidatesOnExceptions=True, 
+                UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd/MM/yyyy},Mode=TwoWay}" Grid.RowSpan="2"
+                 SelectedDateFormat="Short" Language="ru-RU">
+                <DatePicker.Resources>
+                    <Style TargetType="{x:Type DatePickerTextBox}">
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <TextBox x:Name="PART_TextBox" Text="{Binding Path=SelectedDate, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, 
+                                        StringFormat={}{0:dd-MM-yyyy}}"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.Resources>
+            </DatePicker>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0">
+            <Label Content="Описание:" Grid.RowSpan="2"/>
+            <TextBox x:Name="tbDescription" Text="{Binding Path=Description, ValidatesOnExceptions=True, 
+                UpdateSourceTrigger=PropertyChanged}" TextWrapping="WrapWithOverflow"
+                     Height="{Binding ElementName=dpSamplingDate, Path=ActualHeight}"/>
+        </StackPanel>
+        <Button Grid.Row="2" Grid.Column="2" Width="90" Height="20" Content="Cancel" HorizontalAlignment="Center"
+                IsCancel="True"/>
+        <Button Grid.Row="2" Grid.Column="0" Width="90" Height="20" Content="OK" HorizontalAlignment="Center"
+                IsDefault="True" IsCancel="False"  Click="OKButton_Click">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{StaticResource avConv}" UpdateSourceTrigger="PropertyChanged">
+                    <Binding ElementName="tbLabNumber" Path="Text"/>
+                    <Binding ElementName="dpSamplingDate" Path="Text"/>
+                    <Binding ElementName="tbDescription" Path="Text"/>
+                </MultiBinding>
+            </Button.IsEnabled>
+        </Button>
+    </Grid>
+</Window>
