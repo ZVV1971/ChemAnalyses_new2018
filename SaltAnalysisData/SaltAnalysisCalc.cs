@@ -143,17 +143,18 @@ namespace SaltAnalysisDatas
                     CaCl2 = _Ca_bound2_Cl * _CaCl2_2_Ca;                                    //4
                     decimal _Cl_bound2_Ca = CaCl2 - _Ca_bound2_Cl;                          //5
                     MgCl2AnyCase = MgDry * _MgCl2_2_Mg;                                     //6 
-                    MgCl2 = (MgWet >= carnalliteThreshold)? MgDry * _MgCl2_2_Mg:(decimal?)null;                                     //6
-                    decimal _Cl_bound_2_Mg = (MgCl2.HasValue) ? MgCl2.Value : 0 - MgDry;    //7
-                    KBr = BrDry * _KBr_2_Br;                                                //8
-                    decimal _K_bound2_Br = KBr - BrDry;                                     //9
-                    decimal _K_bound_2_Cl = KDry - _K_bound2_Br;                            //10
-                    KCl = _K_bound_2_Cl * _KCl_2_K;                                         //11
-                    decimal _Cl_bound2_K = KCl - _K_bound_2_Cl;                             //12
-                    decimal _summaryCl = _Cl_bound2_Ca + _Cl_bound_2_Mg + _Cl_bound2_K;     //13
-                    decimal _CL_bound2_Na = ClDry - _summaryCl;                             //14
-                    Na = _CL_bound2_Na * awNa / awCl;                                       //15
-                    NaCl = Na + _CL_bound2_Na;                                              //16
+                    MgCl2 = (MgWet >= carnalliteThreshold)? MgDry * 
+                        _MgCl2_2_Mg:(decimal?)null;                                         //7
+                    decimal _Cl_bound_2_Mg = (MgCl2.HasValue) ? MgCl2.Value : 0 - MgDry;    //8
+                    KBr = BrDry * _KBr_2_Br;                                                //9
+                    decimal _K_bound2_Br = KBr - BrDry;                                     //10
+                    decimal _K_bound_2_Cl = KDry - _K_bound2_Br;                            //11
+                    KCl = _K_bound_2_Cl * _KCl_2_K;                                         //12
+                    decimal _Cl_bound2_K = KCl - _K_bound_2_Cl;                             //13
+                    decimal _summaryCl = _Cl_bound2_Ca + _Cl_bound_2_Mg + _Cl_bound2_K;     //14
+                    decimal _CL_bound2_Na = ClDry - _summaryCl;                             //15
+                    Na = _CL_bound2_Na * awNa / awCl;                                       //16
+                    NaCl = Na + _CL_bound2_Na;                                              //17
                     CrystWater = (MgWet >= carnalliteThreshold)
                        ? MgDry * _water2MagnesiumRatioInCarnallite
                        : (decimal?)null;
