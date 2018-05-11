@@ -185,6 +185,8 @@
     <Compile Include="Dialogs\SAPrintPreview.xaml.cs">
       <DependentUpon>SAPrintPreview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -257,5 +259,6 @@
   <ItemGroup>
     <Resource Include="CASplashScreen.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
