@@ -66,6 +66,11 @@ namespace SaltAnalysisDatas
         private static decimal _NaCl_2_Cl;
         private static decimal _KBr_2_Br;
         private static decimal _Carnallite_2_Magnesium;
+        private static decimal _Eq_CO3;
+        private static decimal _Eq_HCO3;
+        private static decimal _Eq_Mg;
+        private static decimal _Eq_Ca;
+        private static decimal _Eq_SO4;
         //May be changed at the user level so need to hold for each instance separately
         private decimal carnalliteThreshold;
         
@@ -130,6 +135,43 @@ namespace SaltAnalysisDatas
             else { lc = lcDict[KaliumCalibration]; }
             KDry = lc.ValueToConcentration(KaliumValue, KaliumDiapason - 1) * KaliumVolume 
                 / (2 * SampleCorrectedDryWeight);
+        }
+        public void CalcRecommendedScheme()
+        {
+            decimal Coeff1 = 0, Coeff2 = 0, Coeff3 = 0, Coeff4 = 0;
+            try
+            {
+                Coeff1 = (CarbonatesDry * _Eq_CO3 + HydrocarbonatesDry * _Eq_HCO3) /
+                  (CaDry * _Eq_Ca + MgDry * _Eq_Mg);
+            }
+            catch { }
+            try
+            {
+                Coeff2 = (CarbonatesDry * _Eq_CO3 + HydrocarbonatesDry * _Eq_HCO3 + SulfatesDry * _Eq_SO4) /
+                  (CaDry * _Eq_Ca + MgDry * _Eq_Mg);
+            }
+            catch { }
+            try { Coeff3 = SulfatesDry * _Eq_SO4 / (CaDry * _Eq_Ca); }
+            catch { }
+            try { Coeff4 = (CarbonatesDry * _Eq_CO3 + HydrocarbonatesDry * _Eq_HCO3) / (CaDry * _Eq_Ca); }
+            catch { }
+            if (Coeff1 >= 1) RecommendedCalculationScheme = SaltCalculationSchemes.Carbonate;
+            else if (Coeff2 < 1)
+            {
+                if (Coeff3 >= 1) RecommendedCalculationScheme = (Coeff4 < 1) ?
+                        SaltCalculationSchemes.SulfateSodiumI : SaltCalculationSchemes.SulfateSodiumII;
+                else RecommendedCalculationScheme = SaltCalculationSchemes.Chloride;
+            }
+            else
+            {
+                if (Coeff3 >= 1)
+                {
+                    RecommendedCalculationScheme = (Coeff4 < 1) ?
+         SaltCalculationSchemes.SulfateMagnesiumI : SaltCalculationSchemes.SulfateMagnesiumII;
+                }
+                else throw new ArgumentOutOfRangeException("RecommendedCalculationScheme",
+                     "Unknown calculation scheme results");
+            }
         }
 
         public void CalcSchemeResults()

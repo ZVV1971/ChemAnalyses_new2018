@@ -14,8 +14,6 @@ namespace Calibration
     {
         static SqlConnection connection;
 
-       
-
         private decimal conc = (decimal)0.001;
         public decimal Concentration
         {
@@ -47,13 +45,13 @@ namespace Calibration
         public DataPoint()
         {
             string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(ref s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
         }
 
         static DataPoint()
         {
             string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(ref s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
         }
 
         public int IDCalibration { get; set; }

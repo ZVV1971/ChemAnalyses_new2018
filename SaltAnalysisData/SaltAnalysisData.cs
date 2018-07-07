@@ -20,14 +20,14 @@ namespace SaltAnalysisDatas
         public SaltAnalysisData(decimal CarnalliteThreshold = (decimal)0.0008)
         {
             string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(ref s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
             carnalliteThreshold = CarnalliteThreshold;
         }
 
         static SaltAnalysisData()
         {
             string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(ref s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
             if (lcDict is null) lcDict = new Dictionary<int, Calibration.LinearCalibration>();
             if (elementsWeights is null)
             {
@@ -62,6 +62,7 @@ namespace SaltAnalysisDatas
                     awBr = (decimal)79.9;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("B").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awB))
                     awB = (decimal)10.81;
+                //ions ratio in minerals constants
                 _SO4_2_CaS04 = (awS + 4 * awO) / (awS + 4 * awO + awCa);
                 _CaSO4_2_SO4 = (awS + 4 * awO + awCa) / (awS + 4 * awO);
                 _CaCl2_2_Ca = (awCa + awCl * 2) / awCa;
@@ -70,6 +71,12 @@ namespace SaltAnalysisDatas
                 _NaCl_2_Cl = (awNa + awCl) / awCl;
                 _KBr_2_Br = (awK + awBr) / awBr;
                 _Carnallite_2_Magnesium = (12 * awH + 6 * awO + awMg + 3 * awCl + awK) / awMg;
+                //mass percentage to normality concentration constants
+                _Eq_CO3 = 1000 / (awC + 3 * awO);
+                _Eq_HCO3 = 1000 / (awC + awH + 3 * awO);
+                _Eq_Mg = 1000 / (awMg);
+                _Eq_Ca = 1000 / (awCa);
+                _Eq_SO4 = 1000 / (awS + 4 * awO);
             }
         }
 
@@ -834,7 +841,16 @@ namespace SaltAnalysisDatas
                 OnPropertyChanged("DefaultCalculationScheme");
             }
         }
-
+        private SaltCalculationSchemes _recommendedCalculationScheme = SaltCalculationSchemes.Chloride;
+        public SaltCalculationSchemes RecommendedCalculationScheme
+        {
+            get { return _recommendedCalculationScheme; }
+            set
+            {
+                _recommendedCalculationScheme = value;
+                OnPropertyChanged("RecommendedCalculationScheme");
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {

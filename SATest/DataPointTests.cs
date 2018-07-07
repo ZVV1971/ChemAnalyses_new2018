@@ -3,12 +3,21 @@ using Moq;
 using Calibration;
 using System;
 using System.Reflection;
+using System.Data.SqlClient;
+using System.Linq;
+using SettingsHelper;
 
 namespace SATest
 {
     [TestClass]
     public class DataPointTests
     {
+        public DataPointTests()
+        {
+            var csg = new Mock<ConnectionStringGiver>();
+            //csg.Setup(p=>)
+        }
+
         [TestMethod, Owner("ZVV 60325-2")]
         public void SimplePositiveConcentration()
         {

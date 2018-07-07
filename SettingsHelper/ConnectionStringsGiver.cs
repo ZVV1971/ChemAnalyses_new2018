@@ -11,11 +11,11 @@ namespace SettingsHelper
     {
         static string connection;
 
-        public static string GetValidConnectionString(ref string szUserLevelDBPAth, bool bGetNewConnection = false)
+        public static Func<string, string> GetValidConnectionString = (szUserLevelDBPAth) =>//(ref string szUserLevelDBPAth)
         {
             string connstr;
             //if connection has already been made and new is not needed just return static connection
-            if (!(connection is null || connection == "") && !bGetNewConnection) return connection;
+            if (!(connection is null || connection == "")) return connection;
 
             try
             {
@@ -89,6 +89,6 @@ namespace SettingsHelper
                     }
                 }
             }
-        }
+        };
     }
 }

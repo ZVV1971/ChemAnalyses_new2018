@@ -29,7 +29,7 @@ namespace ChemicalAnalyses
             try
             {
                 string UserLevelPath = Properties.Settings.Default.DBFilePath;
-                if (ConnectionStringGiver.GetValidConnectionString(ref UserLevelPath) != null)
+                if (ConnectionStringGiver.GetValidConnectionString(UserLevelPath) != null)
                     Properties.Settings.Default.DBFilePath = UserLevelPath;
                 else { CALogger.WriteToLogFile("Не найдена БД"); Close(); }
             }

@@ -205,6 +205,9 @@
                                     NotifyOnValidationError=True, ValidatesOnExceptions=True, 
                                     UpdateSourceTrigger=PropertyChanged , NotifyOnTargetUpdated=True}"/>
                                 <Label Content=" мг-экв/мл"/>
+                                <Label Content=" Рекомендуемая схема расчета: "/>
+                                <TextBlock Text="{Binding Path=RecommendedCalculationScheme, 
+                                    UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Grid.Row="1">
                                 <Label Content="Холостой сульфаты:"/>
