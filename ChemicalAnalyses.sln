@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Sample\Samples.c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettingsHelper", "SettingsHelper\SettingsHelper.csproj", "{8CB22BE2-951B-406A-B4B7-233D328A0299}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SATest", "SATest\SATest.csproj", "{8619888D-3792-4A01-801C-16D573BD9C53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8CB22BE2-951B-406A-B4B7-233D328A0299}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CB22BE2-951B-406A-B4B7-233D328A0299}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CB22BE2-951B-406A-B4B7-233D328A0299}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8619888D-3792-4A01-801C-16D573BD9C53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8619888D-3792-4A01-801C-16D573BD9C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8619888D-3792-4A01-801C-16D573BD9C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8619888D-3792-4A01-801C-16D573BD9C53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
