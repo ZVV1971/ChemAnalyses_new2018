@@ -44,14 +44,12 @@ namespace Calibration
 
         public DataPoint()
         {
-            string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
         }
 
         static DataPoint()
         {
-            string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
         }
 
         public int IDCalibration { get; set; }

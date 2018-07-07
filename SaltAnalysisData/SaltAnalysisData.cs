@@ -19,15 +19,13 @@ namespace SaltAnalysisDatas
 
         public SaltAnalysisData(decimal CarnalliteThreshold = (decimal)0.0008)
         {
-            string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
             carnalliteThreshold = CarnalliteThreshold;
         }
 
         static SaltAnalysisData()
         {
-            string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
             if (lcDict is null) lcDict = new Dictionary<int, Calibration.LinearCalibration>();
             if (elementsWeights is null)
             {

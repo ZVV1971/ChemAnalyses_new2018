@@ -103,15 +103,12 @@ namespace Calibration
        
         static LinearCalibration()
         {
-            //couldn't save new path so use a dummy string
-            string s = string.Empty;
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
         }
 
         public LinearCalibration()
         {
-            string s = string.Empty;
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
             LinearCalibrationData = new ObservableCollection<DataPoint>[2];
             LinearCalibrationData[0] = new ObservableCollection<DataPoint>();
             LinearCalibrationData[1] = new ObservableCollection<DataPoint>();

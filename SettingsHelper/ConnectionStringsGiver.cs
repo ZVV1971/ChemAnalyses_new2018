@@ -11,7 +11,7 @@ namespace SettingsHelper
     {
         static string connection;
 
-        public static Func<string, string> GetValidConnectionString = (szUserLevelDBPAth) =>//(ref string szUserLevelDBPAth)
+        public static Func<string, string> GetValidConnectionString = (szUserLevelDBPath) =>
         {
             string connstr;
             //if connection has already been made and new is not needed just return static connection
@@ -40,7 +40,7 @@ namespace SettingsHelper
                 //something went wrong! 
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connstr);
                 //will try to use other filename stored in the user config
-                builder.AttachDBFilename = szUserLevelDBPAth;
+                builder.AttachDBFilename = szUserLevelDBPath;
                 sqlconnection = new SqlConnection(builder.ConnectionString);
                 try
                 {
@@ -65,7 +65,7 @@ namespace SettingsHelper
                             {
                                 sqlconnection = new SqlConnection(builder.ConnectionString);
                                 sqlconnection.Open();
-                                szUserLevelDBPAth = ofDlg.FileName;
+                                szUserLevelDBPath = ofDlg.FileName;
                                 sqlconnection.Close();
                                 return connection = sqlconnection.ConnectionString;
                             }

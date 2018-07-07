@@ -15,14 +15,12 @@ namespace Samples
 
         public Sample ()
         {
-            string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
         }
 
         static Sample()
         {
-            string s = "";
-            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(s));
+            if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
         }
 
         public int IDSample { get; set; } 
