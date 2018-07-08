@@ -3,12 +3,21 @@ using Moq;
 using Calibration;
 using System;
 using System.Reflection;
+using SettingsHelper;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SATest
 {
     [TestClass]
     public class DataPointTests
     {
+        //use implicit public constructor to moq Static connection string returning from SettingsHelper
+        public DataPointTests()
+        {
+            ConnectionStringGiver.GetValidConnectionString = (string s) => { return @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=E:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True"; };
+        }
+
         [TestMethod, Owner("ZVV 60325-2")]
         public void SimplePositiveConcentration()
         {
@@ -87,6 +96,35 @@ namespace SATest
 
             DataPoint dp2 = new DataPoint(c, v);
             Assert.IsTrue(dp2.Equals(dp1));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void PositiveReadingFromDB_GetAllDP()
+        {
+            // Arrange and give an existing calibration ID
+            IEnumerable<DataPoint> listOfDP = DataPoint.GetAllDP(11);
+            //Check
+            Assert.IsNotNull(listOfDP, "The list is NULL");
+            Assert.IsTrue(listOfDP.Count() != 0,"Список пуст!");
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void NegativeReadingFromDB_GetAllDP()
+        {
+            // Arrange and give a crazy calibration ID
+            IEnumerable<DataPoint> listOfDP = DataPoint.GetAllDP(-11);
+            //Check
+            Assert.IsNotNull(listOfDP, "The list is NULL");
+            Assert.IsTrue(listOfDP.Count() == 0, "Список не пуст!");
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void PublicConstructorPositive()
+        {
+            // Arrange
+            DataPoint dp1 = new DataPoint(1, 1);
+            //Check
+            Assert.IsTrue(dp1 == Mock.Of<DataPoint>(d => d.Concentration == 1 && d.Value == 1),"DPs are not equal");
         }
     }
 }
