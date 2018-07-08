@@ -32,7 +32,7 @@ namespace Calibration
         public decimal[] Intercept
         {
             get { return _intercept; }
-            private set
+            private set //is calculated and set internally
             {
                 _intercept = value;
                 OnPropertyChanged("Intercept");
@@ -43,7 +43,7 @@ namespace Calibration
         public decimal[] Slope
         {
             get { return _slope; }
-            private set
+            private set //is calculated and set internally
             {
                 _slope = value;
                 OnPropertyChanged("Slope");
@@ -54,7 +54,7 @@ namespace Calibration
         public decimal[] RSquared
         {
             get { return _rSquared; }
-            private set
+            private set //is calculated and set internally
             {
                 _rSquared = value;
                 OnPropertyChanged("RSquared");
@@ -89,7 +89,7 @@ namespace Calibration
         public DateTime CalibrationDate
         {
             get { return _date; }
-            private set
+            set
             {
                 if (value <= DateTime.Today)
                 {
@@ -122,7 +122,7 @@ namespace Calibration
         /// </summary>
         /// <param name="conditionString">Condition used in SQL WHERE clause</param>
         /// <param name="deepRead">Shall the attached Lists of DataPoints be filled</param>
-        /// <returns></returns>
+        /// <returns>Collection of Calibrations</returns>
         public static IEnumerable<LinearCalibration> GetAllLC(string conditionString, bool deepRead = false)
         {
             string commandString = "SELECT * FROM [Calibration] "
@@ -159,8 +159,7 @@ namespace Calibration
 
                         if (deepRead)
                         {
-                            foreach (DataPoint dp in DataPoint.GetAllDP("([IDCalibration] = " +
-                                iDCalibration + ")"))
+                            foreach (DataPoint dp in DataPoint.GetAllDP(iDCalibration))
                                 if (dp.Diapason == 1) diap1.Add(dp); else diap2.Add(dp);
                         }
 
@@ -376,13 +375,23 @@ namespace Calibration
                     _sumProducts += t.Concentration * t.Value;
                 }
                 decimal delta = _sumSquares * Count - _sumConcentration * _sumConcentration;
-                Slope[i] = (_sumProducts * Count - _sumConcentration * _sumValues) / delta;
-                Intercept[i] = (_sumValues * _sumSquares - _sumProducts * _sumConcentration) / delta;
+                if (delta == 0)
+                {
+                    Slope[i] = decimal.MaxValue;
+                    Intercept[i] = decimal.MaxValue;
+                    RSquared[i] = 0;
+                }
+                else
+                {
+                    Slope[i] = (_sumProducts * Count - _sumConcentration * _sumValues) / delta;
+                    Intercept[i] = (_sumValues * _sumSquares - _sumProducts * _sumConcentration) / delta;
 
-                decimal valueMean = LinearCalibrationData[i].Average(x => x.Value);
-                RSquared[i] = 1 - LinearCalibrationData[i].Sum(p => (decimal)Math.Pow((double)(p.Value - (Slope[i] * p.Concentration 
-                    + Intercept[i])), 2.0)) / LinearCalibrationData[i].Sum(p => 
-                    (decimal)Math.Pow((double)(p.Value - valueMean), 2.0));
+                    decimal valueMean = LinearCalibrationData[i].Average(x => x.Value);
+                    decimal d = LinearCalibrationData[i].Sum(p => (decimal)Math.Pow((double)(p.Value - valueMean), 2.0));
+                    if (d == 0) RSquared[i] = 0;
+                    else RSquared[i] = 1 - LinearCalibrationData[i].Sum(p => (decimal)Math.Pow((double)(p.Value - 
+                        (Slope[i] * p.Concentration + Intercept[i])), 2.0)) / d;
+                }
             }
         }
         /// <summary>
@@ -394,7 +403,7 @@ namespace Calibration
         public decimal ValueToConcentration(decimal val, int diap)
         {
             if (diap < 0 || diap > 1 || val <= 0)
-                throw new ArgumentOutOfRangeException("diapason", 
+                throw new ArgumentOutOfRangeException("Diapason", 
                     "Недопустимый номер диапазаона или неверное значение показателя");
             if (val < LinearCalibrationData[diap].Min(p => p.Value) || val > LinearCalibrationData[diap].Max(p => p.Value))
             {//calculate by coefficients
