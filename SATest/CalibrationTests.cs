@@ -11,7 +11,7 @@ namespace SATest
     [TestClass, TestCategory("Calibration")]
     public class CalibrationTests
     {
-        //use implicit public constructor to moq Static connection string returning from SettingsHelper
+        //use explicit public constructor to moq Static connection string returning from SettingsHelper
         public CalibrationTests()
         {
             ConnectionStringGiver.GetValidConnectionString = (string s) => { return @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=E:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True"; };

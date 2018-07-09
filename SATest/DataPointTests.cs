@@ -12,10 +12,10 @@ namespace SATest
     [TestClass]
     public class DataPointTests
     {
-        //use implicit public constructor to moq Static connection string returning from SettingsHelper
+        //use explicit public constructor to moq Static connection string returning from SettingsHelper
         public DataPointTests()
         {
-            ConnectionStringGiver.GetValidConnectionString = (string s) => { return @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=E:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True"; };
+            ConnectionStringGiver.GetValidConnectionString = (string s) => { return @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=e:\Downloads\svpp\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True"; };
         }
 
         [TestMethod, Owner("ZVV 60325-2")]
@@ -95,6 +95,7 @@ namespace SATest
             var dp1 = Mock.Of<DataPoint>(d => d.Concentration == c && d.Value == v);
 
             DataPoint dp2 = new DataPoint(c, v);
+            //check
             Assert.IsTrue(dp2.Equals(dp1));
         }
 
@@ -124,7 +125,8 @@ namespace SATest
             // Arrange
             DataPoint dp1 = new DataPoint(1, 1);
             //Check
-            Assert.IsTrue(dp1 == Mock.Of<DataPoint>(d => d.Concentration == 1 && d.Value == 1),"DPs are not equal");
+            Assert.IsTrue(dp1 == Mock.Of<DataPoint>(d => d.Concentration == 1 && d.Value == 1),
+                "DPs are not equal");
         }
     }
 }
