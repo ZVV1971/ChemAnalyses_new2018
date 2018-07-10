@@ -72,8 +72,8 @@ namespace SaltAnalysisDatas
         private static decimal _Eq_Ca;
         private static decimal _Eq_SO4;
         //May be changed at the user level so need to hold for each instance separately
-        private decimal carnalliteThreshold;
-        
+        private decimal carnalliteThreshold = (decimal)0.0008;
+
         public string AnalysisDescription { get; set; }
 
         public void CalcValues()

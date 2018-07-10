@@ -1,0 +1,979 @@
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SettingsHelper;
+using Moq;
+using System.Reflection;
+using SaltAnalysisDatas;
+
+namespace SATest
+{
+    [TestClass]
+    public class SaltAnalysisDataTests
+    {
+        //use explicit public constructor to moq Static connection string returning from SettingsHelper
+        public SaltAnalysisDataTests()
+        {
+            ConnectionStringGiver.GetValidConnectionString = (string s) => { return @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=e:\Downloads\svpp\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True"; };
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataanalysisDateNegative()
+        {
+            // Arrange
+            DateTime dt = DateTime.Today.Subtract(TimeSpan.FromDays(-1));
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.AnalysisDate == dt);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.AnalysisDate == dt);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Дата анализа не может лежать в будущем!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataSamplingDatePositive()
+        {
+            // Arrange
+            DateTime dt = DateTime.Today.Subtract(TimeSpan.FromDays(1));
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.AnalysisDate == dt);
+            //Check
+            Assert.AreEqual(mock.AnalysisDate, dt);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumAliquotePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.BromumAliquote == 1);
+            //Check
+            Assert.AreEqual(mock.BromumAliquote, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumAliquoteNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.BromumAliquote == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.BromumAliquote == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение аликвоты не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumBlankPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.BromumBlank == 1);
+            //Check
+            Assert.AreEqual(mock.BromumBlank, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumBlankNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.BromumBlank == -1);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.BromumBlank== -1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение не может быть отрицательным!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumStandardTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.BromumStandardTitre == 1);
+            //Check
+            Assert.AreEqual(mock.BromumStandardTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumStandardTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.BromumStandardTitre == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.BromumStandardTitre == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение не может быть отрицательным!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.BromumTitre == 1);
+            //Check
+            Assert.AreEqual(mock.BromumTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataBromumTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.BromumTitre == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.BromumTitre == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCalciumAliquotePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.CalciumAliquote == 1);
+            //Check
+            Assert.AreEqual(mock.CalciumAliquote, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCalciumAliquoteNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.CalciumAliquote == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.CalciumAliquote == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение аликвоты не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCalciumTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.CalciumTitre == 1);
+            //Check
+            Assert.AreEqual(mock.CalciumTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCalciumTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.CalciumTitre == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.CalciumTitre == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCalciumTrilonTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.CalciumTrilonTitre == 1);
+            //Check
+            Assert.AreEqual(mock.CalciumTrilonTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCalciumTrilonTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.CalciumTrilonTitre == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.CalciumTrilonTitre == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCarbonatesTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.CarbonatesTitre == 1);
+            //Check
+            Assert.AreEqual(mock.CarbonatesTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataCarbonatesTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.CarbonatesTitre == -1);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.CarbonatesTitre == -1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataChlorumAliquotePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.ChlorumAliquote == 1);
+            //Check
+            Assert.AreEqual(mock.ChlorumAliquote, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataChlorumAliquoteNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.ChlorumAliquote == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.ChlorumAliquote == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение аликвоты не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataChlorumTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.ChlorumTitre == 1);
+            //Check
+            Assert.AreEqual(mock.ChlorumTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataChlorumTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.ChlorumTitre == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.ChlorumTitre == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHgCoefficientPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HgCoefficient == 1);
+            //Check
+            Assert.AreEqual(mock.HgCoefficient, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHgCoefficientTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HgCoefficient == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HgCoefficient == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение параметра не может быть отрицательным либо равным 0!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleEmptyWeightPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1);
+            //Check
+            Assert.AreEqual(mock.HumidityCrucibleEmptyWeight, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleEmptyWeightNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса пустого тигля не может быть отрицательным числом!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SaltAnalysisDataHumidityCrucibleWetSampleWeightPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1 
+                && p.HumidityCrucibleWetSampleWeight == 2);
+            //Check
+            Assert.AreEqual(mock.HumidityCrucibleEmptyWeight, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleWetSampleWeightNegative_Zero()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleWetSampleWeight == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleWetSampleWeight == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сырой навеской не может быть отрицательным числом!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SaltAnalysisDataHumidityCrucibleWetSampleWeightNegative_LessThanEmpty()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 2 
+                && d.HumidityCrucibleWetSampleWeight == 1);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 2
+                    && d.HumidityCrucibleWetSampleWeight == 1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сырой навеской не может быть меньшим или равным весу пустого тигля!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SaltAnalysisDataHumidityCrucibleDry110SampleWeightPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1 
+                && p.HumidityCrucibleWetSampleWeight == 3
+                && p.HumidityCrucibleDry110SampleWeight == 2);
+            //Check
+            Assert.AreEqual(mock.HumidityCrucibleDry110SampleWeight, 2);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry110SampleWeightNegative_Zero()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleDry110SampleWeight== 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleDry110SampleWeight == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сухой (110) навеской не может быть равным нулю или отрицательным числом!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry110SampleWeightNegative_EqualToEmpty()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1 
+                && d.HumidityCrucibleDry110SampleWeight == 1);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight ==1 
+                    && d.HumidityCrucibleDry110SampleWeight == 1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сухой (110) навеской не может быть меньшим или равным весу пустого тигля!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry110SampleWeightNegative_GTWet()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
+                && d.HumidityCrucibleWetSampleWeight == 2
+                && d.HumidityCrucibleDry110SampleWeight == 3);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
+                    && d.HumidityCrucibleWetSampleWeight == 2
+                    && d.HumidityCrucibleDry110SampleWeight == 3);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сухой (110) навеской не может быть большим веса тигля с сырой навеской!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry180SampleWeightPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1
+                && p.HumidityCrucibleWetSampleWeight == 4
+                && p.HumidityCrucibleDry110SampleWeight == 3
+                && p.HumidityCrucibleDry180SampleWeight == 2);
+            //Check
+            Assert.AreEqual(mock.HumidityCrucibleDry180SampleWeight, 2);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry180SampleWeightNegative_LessThanZero()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleDry180SampleWeight == -1);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleDry180SampleWeight == -1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сухой (180) навеской не может быть равным нулю или отрицательным числом!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry180SampleWeightNegative_LessThanEmpty()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 2
+                && d.HumidityCrucibleDry180SampleWeight == 1);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 2
+                    && d.HumidityCrucibleDry180SampleWeight == 1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сухой (180) навеской не может быть меньшим или равным весу пустого тигля!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry180SampleWeightNegative_GTWet()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
+                && d.HumidityCrucibleWetSampleWeight == 2
+                && d.HumidityCrucibleDry180SampleWeight == 3);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
+                    && d.HumidityCrucibleWetSampleWeight == 2
+                    && d.HumidityCrucibleDry180SampleWeight == 3);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сухой (180) навеской не может быть большим веса тигля с сырой навеской!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHumidityCrucibleDry180SampleWeightNegative_GT110()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
+                && d.HumidityCrucibleWetSampleWeight == 4
+                && d.HumidityCrucibleDry110SampleWeight == 2
+                && d.HumidityCrucibleDry180SampleWeight == 3);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
+                && d.HumidityCrucibleWetSampleWeight == 4
+                && d.HumidityCrucibleDry110SampleWeight == 2
+                && d.HumidityCrucibleDry180SampleWeight == 3);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение веса тигля с сухой (180) навеской не может быть большим веса тигля с навеской при 110!"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHydrocarbonatesTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HydrocarbonatesTitre == 1);
+            //Check
+            Assert.AreEqual(mock.HydrocarbonatesTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataHydrocarbonatesTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HydrocarbonatesTitre == -1);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HydrocarbonatesTitre == -1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataKaliumDiapasonPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.KaliumDiapason == 1);
+            //Check
+            Assert.AreEqual(mock.KaliumDiapason, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataKaliumDiapasonNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.KaliumDiapason == 3);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.KaliumDiapason == 3);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение диапазона 1 или 2"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataKaliumValuePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.KaliumValue == 1);
+            //Check
+            Assert.AreEqual(mock.KaliumValue, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataKaliumValueNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.KaliumValue == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.KaliumValue == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение показаний не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataKaliumVolumPositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.KaliumVolume == 1);
+            //Check
+            Assert.AreEqual(mock.KaliumVolume, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataKaliumVolumeNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.KaliumVolume == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.KaliumVolume == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение аликвоты не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataMgAliquotePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.MagnesiumAliquote == 1);
+            //Check
+            Assert.AreEqual(mock.MagnesiumAliquote, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataMgAliquoteNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.MagnesiumAliquote == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.MagnesiumAliquote == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение аликвоты не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataMgTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.MagnesiumTitre == 1);
+            //Check
+            Assert.AreEqual(mock.MagnesiumTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataMgTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.MagnesiumTitre == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.MagnesiumTitre == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataMgTrilonTitrePositive()
+        {
+            // Arrange
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.MagnesiumTrilonTitre == 1);
+            //Check
+            Assert.AreEqual(mock.MagnesiumTrilonTitre, 1);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void SimpleSaltAnalysisDataMgTrilonTitreNegative()
+        {
+            // Arrange
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.MagnesiumTrilonTitre == 0);
+            //Check if an exception is thrown
+            Assert.ThrowsException<TargetInvocationException>(ac);
+
+            Exception except = null;
+            try
+            {
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.MagnesiumTrilonTitre == 0);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
+                except.InnerException.Message.IndexOf("\r\n")),
+                "Значение титра не может быть отрицательным числом"));
+        }
+    }
+}

@@ -17,9 +17,13 @@ namespace SaltAnalysisDatas
     {
         static SqlConnection connection;
 
-        public SaltAnalysisData(decimal CarnalliteThreshold = (decimal)0.0008)
+        public SaltAnalysisData()
         {
             if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
+        }
+
+        public SaltAnalysisData(decimal CarnalliteThreshold):this()
+        {
             carnalliteThreshold = CarnalliteThreshold;
         }
 
@@ -587,7 +591,7 @@ namespace SaltAnalysisDatas
             set
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException("HumidityCrucibleDry110SampleWeight",
-                    "Значение веса тигля с сухой (110) навеской не может быть отрицательным числом!");
+                    "Значение веса тигля с сухой (110) навеской не может быть равным нулю или отрицательным числом!");
                 if (value <= HumidityCrucibleEmptyWeight) throw new ArgumentOutOfRangeException("HumidityCrucibleDry110SampleWeight",
                     "Значение веса тигля с сухой (110) навеской не может быть меньшим или равным весу пустого тигля!");
                 if (value > HumidityCrucibleWetSampleWeight) throw new ArgumentOutOfRangeException("HumidityCrucibleDry110SampleWeight",
@@ -605,14 +609,14 @@ namespace SaltAnalysisDatas
             {
                 if (value != null)
                 {
-                    if (value < 0) throw new ArgumentException("HumidityCrucibleDry180SampleWeight",
-                        "Вес должен быть положительным числом!");
+                    if (value < 0) throw new ArgumentOutOfRangeException("HumidityCrucibleDry180SampleWeight",
+                        "Значение веса тигля с сухой (180) навеской не может быть равным нулю или отрицательным числом!");
                     if (value <= HumidityCrucibleEmptyWeight) throw new ArgumentOutOfRangeException("HumidityCrucibleDry180SampleWeight",
-                   "Значение веса тигля с сухой (180) навеской не может быть меньшим или равным весу пустого тигля!");
+                        "Значение веса тигля с сухой (180) навеской не может быть меньшим или равным весу пустого тигля!");
                     if (value > HumidityCrucibleWetSampleWeight) throw new ArgumentOutOfRangeException("HumidityCrucibleDry180SampleWeight",
-                   "Значение веса тигля с сухой (180) навеской не может быть большим веса тигля с сырой навеской!");
+                        "Значение веса тигля с сухой (180) навеской не может быть большим веса тигля с сырой навеской!");
                     if (value > HumidityCrucibleDry110SampleWeight) throw new ArgumentOutOfRangeException("HumidityCrucibleDry180SampleWeight",
-            "Значение веса тигля с сухой (180) навеской не может быть большим веса тигля с навеской при 110!");
+                        "Значение веса тигля с сухой (180) навеской не может быть большим веса тигля с навеской при 110!");
                     _humidityCrucibleDry180SampleWeight = value;
                     OnPropertyChanged("HumidityCrucibleDry180SampleWeight");
                 }
@@ -782,7 +786,7 @@ namespace SaltAnalysisDatas
             set
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException("HgCoefficient", 
-                    "Значение параметра не может быть отрицательным либоравным 0!");
+                    "Значение параметра не может быть отрицательным либо равным 0!");
                 _hgCoefficient = value;
                 OnPropertyChanged("HgCoefficient");
             }

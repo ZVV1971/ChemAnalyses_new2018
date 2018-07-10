@@ -50,7 +50,6 @@ namespace SATest
             Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
                 except.InnerException.Message.IndexOf("\r\n")),
                 "Концентрация должна быть положительным числом!"));
-            
         }
 
         [TestMethod, Owner("ZVV 60325-2")]
