@@ -511,7 +511,7 @@ namespace SaltAnalysisDatas
             set
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException("SulfatesCrucibleEmptyWeight",
-                    "Значение веса тигля не может быть отрицательным числом!");
+                    "Значение веса пустого тигля не может быть отрицательным числом!");
                 _sulfatesCrucibleEmptyWeight = value;
                 OnPropertyChanged("SulfatesCrucibleEmptyWeight");
             }
@@ -525,6 +525,8 @@ namespace SaltAnalysisDatas
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException("SulfatesCrucibleFullWeight",
                     "Значение веса тигля с осадком не может быть отрицательным числом!");
+                if (value <= SulfatesCrucibleEmptyWeight) throw new ArgumentOutOfRangeException("SulfatesCrucibleFullWeight",
+                   "Значение веса тигля с осадком не может быть меньшим или равным весу пустого тигля!");
                 _sulfatesCrucibleFullWeight = value;
                 OnPropertyChanged("SulfatesCrucibleFullWeight");
             }
@@ -538,6 +540,8 @@ namespace SaltAnalysisDatas
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException("ResiduumCrucibleFullWeight",
                     "Значение веса тигля с осадком не может быть отрицательным числом!");
+                if (value <= ResiduumCrucibleEmptyWeight) throw new ArgumentOutOfRangeException("ResiduumCrucibleFullWeight",
+                    "Значение веса тигля с осадком не может быть меньше или равно весу пустого тигля!");
                 _residuumCrucibleFullWeight = value;
                 OnPropertyChanged("ResiduumCrucibleFullWeight");
             }

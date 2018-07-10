@@ -14,7 +14,7 @@ namespace SATest
         //use explicit public constructor to moq Static connection string returning from SettingsHelper
         public CalibrationTests()
         {
-            ConnectionStringGiver.GetValidConnectionString = (string s) => { return @"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=E:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Security=True"; };
+            ConnectionStringGiver.GetValidConnectionString = (string s) => { return SATestSettings.cstring.ToString(); };
         }
 
         [TestMethod, Owner("ZVV 60325-2")]
