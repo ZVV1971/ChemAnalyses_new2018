@@ -24,7 +24,7 @@ namespace SaltAnalysisDatas
         #endregion DryWeights
         //Calibrations "Pool" in case there will be many of them present 
         //storing and retireving works faster than reading from SQL server
-        static Dictionary<int, LinearCalibration> lcDict;
+        static IDictionary<int, LinearCalibration> lcDict;
         
         //Application Level settings holding atomic weights of chemical elements used in calculation
         static ClientSettingsSection elementsWeights;
@@ -75,6 +75,17 @@ namespace SaltAnalysisDatas
         private decimal carnalliteThreshold = (decimal)0.0008;
 
         public string AnalysisDescription { get; set; }
+
+        public SaltAnalysisData(IDictionary<int, LinearCalibration> lc):this()
+        {
+            if (lc != null) lcDict = lc;
+        }
+
+        public SaltAnalysisData(IDictionary<int, LinearCalibration> lc, 
+                    decimal CarnalliteThreshold) : this(CarnalliteThreshold)
+        {
+            if (lc != null) lcDict = lc;
+        }
 
         public void CalcValues()
         {
@@ -136,7 +147,7 @@ namespace SaltAnalysisDatas
             KDry = lc.ValueToConcentration(KaliumValue, KaliumDiapason - 1) * KaliumVolume 
                 / (2 * SampleCorrectedDryWeight);
         }
-        public void CalcRecommendedScheme()
+        public SaltCalculationSchemes CalcRecommendedScheme()
         {
             decimal Coeff1 = 0, Coeff2 = 0, Coeff3 = 0, Coeff4 = 0;
             try
@@ -155,19 +166,22 @@ namespace SaltAnalysisDatas
             catch { }
             try { Coeff4 = (CarbonatesDry * _Eq_CO3 + HydrocarbonatesDry * _Eq_HCO3) / (CaDry * _Eq_Ca); }
             catch { }
-            if (Coeff1 >= 1) RecommendedCalculationScheme = SaltCalculationSchemes.Carbonate;
+            if (Coeff1 >= 1) return SaltCalculationSchemes.Carbonate;
             else if (Coeff2 < 1)
             {
-                if (Coeff3 >= 1) RecommendedCalculationScheme = (Coeff4 < 1) ?
-                        SaltCalculationSchemes.SulfateSodiumI : SaltCalculationSchemes.SulfateSodiumII;
-                else RecommendedCalculationScheme = SaltCalculationSchemes.Chloride;
+                if (Coeff3 >= 1)
+                {
+                    if (Coeff4 < 1) return SaltCalculationSchemes.SulfateSodiumI;
+                    else return SaltCalculationSchemes.SulfateSodiumII;
+                }
+                else return SaltCalculationSchemes.Chloride;
             }
             else
             {
                 if (Coeff3 >= 1)
                 {
-                    RecommendedCalculationScheme = (Coeff4 < 1) ?
-         SaltCalculationSchemes.SulfateMagnesiumI : SaltCalculationSchemes.SulfateMagnesiumII;
+                    if (Coeff4 < 1) return SaltCalculationSchemes.SulfateMagnesiumI;
+                        else return SaltCalculationSchemes.SulfateMagnesiumII;
                 }
                 else throw new ArgumentOutOfRangeException("RecommendedCalculationScheme",
                      "Unknown calculation scheme results");
@@ -237,7 +251,6 @@ namespace SaltAnalysisDatas
     /// <summary>
     /// Enumerates possible calculation schemes
     /// </summary>
-    ///
     public enum SaltCalculationSchemes {
         /// <summary>
         /// Carbonate calculation scheme

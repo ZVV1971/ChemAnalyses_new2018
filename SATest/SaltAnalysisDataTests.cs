@@ -4,6 +4,8 @@ using SettingsHelper;
 using Moq;
 using System.Reflection;
 using SaltAnalysisDatas;
+using System.Collections.Generic;
+using Calibration;
 
 namespace SATest
 {
@@ -106,7 +108,7 @@ namespace SATest
             Exception except = null;
             try
             {
-                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.BromumBlank== -1);
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.BromumBlank == -1);
             }
             catch (Exception ex)
             {
@@ -464,7 +466,7 @@ namespace SATest
         public void SaltAnalysisDataHumidityCrucibleWetSampleWeightPositive()
         {
             // Arrange
-            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1 
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1
                 && p.HumidityCrucibleWetSampleWeight == 2);
             //Check
             Assert.AreEqual(mock.HumidityCrucibleEmptyWeight, 1);
@@ -499,7 +501,7 @@ namespace SATest
         public void SaltAnalysisDataHumidityCrucibleWetSampleWeightNegative_LessThanEmpty()
         {
             // Arrange
-            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 2 
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 2
                 && d.HumidityCrucibleWetSampleWeight == 1);
             //Check if an exception is thrown
             Assert.ThrowsException<TargetInvocationException>(ac);
@@ -526,7 +528,7 @@ namespace SATest
         public void SaltAnalysisDataHumidityCrucibleDry110SampleWeightPositive()
         {
             // Arrange
-            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1 
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.HumidityCrucibleEmptyWeight == 1
                 && p.HumidityCrucibleWetSampleWeight == 3
                 && p.HumidityCrucibleDry110SampleWeight == 2);
             //Check
@@ -537,7 +539,7 @@ namespace SATest
         public void SimpleSaltAnalysisDataHumidityCrucibleDry110SampleWeightNegative_Zero()
         {
             // Arrange
-            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleDry110SampleWeight== 0);
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleDry110SampleWeight == 0);
             //Check if an exception is thrown
             Assert.ThrowsException<TargetInvocationException>(ac);
 
@@ -562,7 +564,7 @@ namespace SATest
         public void SimpleSaltAnalysisDataHumidityCrucibleDry110SampleWeightNegative_EqualToEmpty()
         {
             // Arrange
-            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1 
+            Action ac = () => Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
                 && d.HumidityCrucibleDry110SampleWeight == 1);
             //Check if an exception is thrown
             Assert.ThrowsException<TargetInvocationException>(ac);
@@ -570,7 +572,7 @@ namespace SATest
             Exception except = null;
             try
             {
-                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight ==1 
+                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.HumidityCrucibleEmptyWeight == 1
                     && d.HumidityCrucibleDry110SampleWeight == 1);
             }
             catch (Exception ex)
@@ -1014,10 +1016,10 @@ namespace SATest
         public void SimpleSaltAnalysisDataResiduumCrucibleFullWeightPositive()
         {
             // Arrange
-            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.ResiduumCrucibleEmptyWeight == 2
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.ResiduumCrucibleEmptyWeight == 1
                 && p.ResiduumCrucibleFullWeight == 2);
             //Check
-            Assert.AreEqual(mock.ResiduumCrucibleEmptyWeight, 2);
+            Assert.AreEqual(mock.ResiduumCrucibleEmptyWeight, 1);
         }
 
         [TestMethod, Owner("ZVV 60325-2")]
@@ -1178,7 +1180,7 @@ namespace SATest
         public void SimpleSaltAnalysisDataSulfatesCrucibleFullWeightPositive()
         {
             // Arrange
-            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.SulfatesCrucibleEmptyWeight == 1 
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.SulfatesCrucibleEmptyWeight == 1
                                                                 && p.SulfatesCrucibleFullWeight == 2);
             //Check
             Assert.AreEqual(mock.SulfatesCrucibleFullWeight, 2);
@@ -1268,6 +1270,52 @@ namespace SATest
             Assert.IsTrue(String.Equals(except.InnerException.Message.Substring(0,
                 except.InnerException.Message.IndexOf("\r\n")),
                 "Значение сырой навески не может быть отрицательным числом!"));
+        }
+
+        [TestMethod]
+        public void SaltAnalysisDataCalcValues_CalcScheme_Chloride()
+        {
+            SaltAnalysisData mock = Mock.Of<SaltAnalysisData>(p => p.WetWeight == 4.454M
+            && p.MagnesiumTitre == 2.25M
+            && p.MagnesiumTrilonTitre == 1.084M
+            && p.CalciumTitre == 1.62M
+            && p.CalciumTrilonTitre == 1.084M
+            && p.HumidityCrucibleEmptyWeight == 12.5431M
+            && p.HumidityCrucibleWetSampleWeight == 15.676M
+            && p.HumidityCrucibleDry110SampleWeight == 15.6609M
+            && p.HumidityCrucibleDry180SampleWeight == 15.6557M
+            && p.ChlorumTitre == 6.65M
+            && p.HgCoefficient == 1
+            && p.BromumTitre == 11.27M
+            && p.BromumBlank == 9.6M
+            && p.ResiduumCrucibleEmptyWeight == 48.6832M
+            && p.ResiduumCrucibleFullWeight == 48.863M
+            && p.SulfatesCrucibleEmptyWeight == 14.97M
+            && p.SulfatesCrucibleFullWeight == 14.9859M
+            && p.SulfatesBlank == 0.0008M
+            && p.RecommendedCalculationScheme == SaltCalculationSchemes.Chloride);
+            //Calculate values
+            mock.CalcValues();
+            //Calculate recommended scheme
+            Assert.AreEqual(SaltCalculationSchemes.Chloride, mock.CalcRecommendedScheme());
+            //Set tolerance for rounding in 0.5%
+            decimal threshold = 0.005M;
+            //Check if calculated values fall into allowable range
+            Assert.IsTrue(Math.Abs(mock.SampleCorrectedDryWeight / 4.4434M - 1) < threshold);
+            Assert.IsTrue(Math.Abs(mock.MgDry / 0.00093M - 1) < threshold);
+            Assert.IsTrue(Math.Abs(mock.CaDry / 0.00396M - 1) < threshold);
+            Assert.IsTrue(Math.Abs(mock.HumidityContent / 0.0065M - 1) < threshold);
+            Assert.IsTrue(Math.Abs(mock.ClDry / 0.53M - 1) < threshold);
+            Assert.IsTrue(Math.Abs(mock.BrDry / 0.0005M - 1) < threshold);
+            Assert.IsTrue(Math.Abs(mock.ResiduumDry / 0.0404M - 1) < threshold);
+            Assert.IsTrue(Math.Abs(mock.SulfatesDry / 0.00699M - 1) < threshold);
+        }
+
+        [TestMethod]
+        public void SaltAnalysisDataCalcK_Chloride()
+        {
+            SaltAnalysisData sa = new SaltAnalysisData(new Dictionary<int, LinearCalibration>() {
+                { 1, Mock.Of<LinearCalibration>(p=>p.CalibrationID == 1) } });
         }
     }
 }

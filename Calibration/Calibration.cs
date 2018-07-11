@@ -118,6 +118,20 @@ namespace Calibration
             CalibrationDate = DateTime.Today;
         }
 
+        public LinearCalibration(IEnumerable<Tuple<int, decimal, decimal>> lst):this()
+        {
+            foreach (Tuple<int, decimal, decimal> tpl in lst.ToList()) 
+            {
+                if (tpl.Item1 == 0) LinearCalibrationData[0].Add(new DataPoint(tpl.Item2, tpl.Item3));
+                else if (tpl.Item1 == 1) LinearCalibrationData[1].Add(new DataPoint(tpl.Item2, tpl.Item3));
+            }
+            try
+            {
+                GetLinearCoefficients();
+            }
+            catch { }
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="conditionString">Condition used in SQL WHERE clause</param>
@@ -147,11 +161,8 @@ namespace Calibration
                 {
                     while (reader.Read())
                     {
-                        ObservableCollection<DataPoint> diap1 = new ObservableCollection<DataPoint>();
-                        ObservableCollection<DataPoint> diap2 = new ObservableCollection<DataPoint>();
-                        ObservableCollection<DataPoint>[] lcDP = new ObservableCollection<DataPoint>[2];
-                        lcDP[0] = diap1;
-                        lcDP[1] = diap2;
+                        ObservableCollection<DataPoint>[] lcDP = new ObservableCollection<DataPoint>[2] {
+                            new ObservableCollection<DataPoint>(), new ObservableCollection<DataPoint>()};
                         var iDCalibration = reader.GetInt32(0);
                         var date = reader.GetDateTime(1);
                         var comment = reader.GetSqlString(2);
@@ -160,7 +171,7 @@ namespace Calibration
                         if (deepRead)
                         {
                             foreach (DataPoint dp in DataPoint.GetAllDP(iDCalibration))
-                                if (dp.Diapason == 1) diap1.Add(dp); else diap2.Add(dp);
+                                if (dp.Diapason == 1) lcDP[0].Add(dp); else lcDP[1].Add(dp);
                         }
 
                         var lc = new LinearCalibration

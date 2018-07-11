@@ -16,7 +16,7 @@ namespace SATest
         static SATestSettings()
         {
             cstring = new StringBuilder(@"Data Source=(localdb)\mssqllocaldb;AttachDbFilename=");
-            cstring.Append(@"e:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf ");
+            cstring.Append(@"e:\Downloads\svpp\KSR\ChemicalAnalyses\ChemicalAnalyses.mdf");
             cstring.Append(@";Initial Catalog=ChemicalAnalyses;Integrated Security=True");
         }
     }
@@ -94,7 +94,6 @@ namespace SATest
             //Check the real type of the inner exception
             Assert.IsInstanceOfType(except.InnerException, typeof(ArgumentOutOfRangeException));
         }
-
 
         [TestMethod, Owner("ZVV 60325-2")]
         public void EqualsTest()

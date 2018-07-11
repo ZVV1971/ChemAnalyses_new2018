@@ -217,9 +217,9 @@ namespace ChemicalAnalyses.Dialogs
                 p.CalcValues();
                 p.CalcKaliumValue();
                 p.CalcSchemeResults();
-                p.CalcRecommendedScheme();
+                p.RecommendedCalculationScheme = p.CalcRecommendedScheme();
             });
-            MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " were filled with calculation results");
+            MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны");
             btnPrint.Visibility = Visibility.Visible;
         }
 
