@@ -24,7 +24,7 @@ namespace SaltAnalysisDatas
         #endregion DryWeights
         //Calibrations "Pool" in case there will be many of them present 
         //storing and retireving works faster than reading from SQL server
-        static IDictionary<int, LinearCalibration> lcDict;
+        static IDictionary<int, ILinearCalibration> lcDict;
         
         //Application Level settings holding atomic weights of chemical elements used in calculation
         static ClientSettingsSection elementsWeights;
@@ -72,16 +72,16 @@ namespace SaltAnalysisDatas
         private static decimal _Eq_Ca;
         private static decimal _Eq_SO4;
         //May be changed at the user level so need to hold for each instance separately
-        private decimal carnalliteThreshold = (decimal)0.0008;
+        private decimal carnalliteThreshold = 0.0008M;
 
         public string AnalysisDescription { get; set; }
 
-        public SaltAnalysisData(IDictionary<int, LinearCalibration> lc):this()
+        public SaltAnalysisData(IDictionary<int, ILinearCalibration> lc):this()
         {
             if (lc != null) lcDict = lc;
         }
 
-        public SaltAnalysisData(IDictionary<int, LinearCalibration> lc, 
+        public SaltAnalysisData(IDictionary<int, ILinearCalibration> lc, 
                     decimal CarnalliteThreshold) : this(CarnalliteThreshold)
         {
             if (lc != null) lcDict = lc;
@@ -92,7 +92,7 @@ namespace SaltAnalysisDatas
             MgWet = (MagnesiumTitre * MagnesiumTrilonTitre / MagnesiumAliquote
                 - CalciumTitre * CalciumTrilonTitre / CalciumAliquote)
                 //0.0125 = 0.5 * 0.05 * 500 /1000
-                * (decimal)0.0125 * awMg / WetWeight;
+                * 0.0125M * awMg / WetWeight;
 
             HumidityContent = (MgWet >= carnalliteThreshold)
                         ? (HumidityCrucibleWetSampleWeight - ((HumidityCrucibleDry180SampleWeight.HasValue) ?
@@ -115,20 +115,20 @@ namespace SaltAnalysisDatas
 
             MgDry = (MagnesiumTitre * MagnesiumTrilonTitre / MagnesiumAliquote
                 - CalciumTitre * CalciumTrilonTitre / CalciumAliquote)
-                * (decimal)0.0125 * awMg / SampleCorrectedDryWeight;
+                * 0.0125M * awMg / SampleCorrectedDryWeight;
 
-            CaDry = CalciumTitre * CalciumTrilonTitre * (decimal)0.0125 
+            CaDry = CalciumTitre * CalciumTrilonTitre * 0.0125M 
                 * awCa / (SampleCorrectedDryWeight * CalciumAliquote);
 
             ClDry = ChlorumTitre * awCl * HgCoefficient/ (SampleCorrectedDryWeight * ChlorumAliquote * 20);
 
-            BrDry = (BromumTitre - BromumBlank) * BromumStandardTitre * (decimal)0.5
+            BrDry = (BromumTitre - BromumBlank) * BromumStandardTitre * 0.5M
                 / (SampleCorrectedDryWeight * BromumAliquote);
 
             ResiduumDry = (ResiduumCrucibleFullWeight - ResiduumCrucibleEmptyWeight) / SampleCorrectedDryWeight;
 
             SulfatesDry = (SulfatesCrucibleFullWeight - SulfatesCrucibleEmptyWeight - SulfatesBlank) *
-                (decimal)205.75 / (SampleCorrectedDryWeight * SulfatesAliquote);
+                205.75M / (SampleCorrectedDryWeight * SulfatesAliquote);
 
             CarbonatesDry = CarbonatesTitre / (1000 * SampleCorrectedDryWeight);
 
@@ -137,7 +137,7 @@ namespace SaltAnalysisDatas
 
         public void CalcKaliumValue()
         {
-            LinearCalibration lc;
+            ILinearCalibration lc;
             if (!lcDict.ContainsKey(KaliumCalibration))
             {
                 lc = LinearCalibration.GetAllLC("[IDCalibration] = " + KaliumCalibration, true).FirstOrDefault();
@@ -242,7 +242,7 @@ namespace SaltAnalysisDatas
             WHygr2 = Humidity180 - WCryst2;
             SampleDry2 = SampleWet * (1 - WHygr2);
             MgDry2 = MgWet * SampleWet / SampleDry2;
-            if (Math.Abs(MgDry2 - MgDry1) > (decimal)0.0001)
+            if (Math.Abs(MgDry2 - MgDry1) > 0.0001M)
                 return NewDryWeight(SampleDry2, MgDry2, Humidity180, WaterInCarnallite);
             else return SampleDry2;
         }

@@ -39,7 +39,7 @@
             <Style TargetType="{x:Type DataGridCell}">
                 <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
             </Style>
-            <local:BindingProxy x:Key="FirstColumnCheckedProxy" Data="{Binding ShowHygroscopicWaterFroAll}"/>
+            <local:BindingProxy x:Key="FirstColumnCheckedProxy" Data="{Binding ShowHygroscopicWaterForAll}"/>
         </DataGrid.Resources>
         <DataGrid.Columns>
             <DataGridTextColumn Binding="{Binding Path=LabNumber, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">

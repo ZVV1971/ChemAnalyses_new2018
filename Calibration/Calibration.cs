@@ -11,8 +11,7 @@ using SettingsHelper;
 
 namespace Calibration
 {
-    [Serializable]
-    public class LinearCalibration : INotifyPropertyChanged
+    public class LinearCalibration : INotifyPropertyChanged, ILinearCalibration
     {
         static SqlConnection connection;
         public int CalibrationID { get; set; }
@@ -21,8 +20,7 @@ namespace Calibration
         public ChemicalElemetCalibration CalibrationType
         {
             get { return _calibrationType; }
-            set
-            {
+            set {
                 _calibrationType = value;
                 OnPropertyChanged("CalibrationType");
             }
@@ -32,8 +30,7 @@ namespace Calibration
         public decimal[] Intercept
         {
             get { return _intercept; }
-            private set //is calculated and set internally
-            {
+            set {
                 _intercept = value;
                 OnPropertyChanged("Intercept");
             }
@@ -43,8 +40,7 @@ namespace Calibration
         public decimal[] Slope
         {
             get { return _slope; }
-            private set //is calculated and set internally
-            {
+            set {
                 _slope = value;
                 OnPropertyChanged("Slope");
             }
@@ -413,12 +409,15 @@ namespace Calibration
         /// <returns>Concentration</returns>
         public decimal ValueToConcentration(decimal val, int diap)
         {
-            if (diap < 0 || diap > 1 || val <= 0)
-                throw new ArgumentOutOfRangeException("Diapason", 
-                    "Недопустимый номер диапазаона или неверное значение показателя");
+            if (diap < 0 || diap > 1) throw new ArgumentOutOfRangeException("Diapason", "Недопустимый номер диапазаона");
+            if (val <= 0) throw new ArgumentOutOfRangeException("Value", "или неверное значение показателя");
             if (val < LinearCalibrationData[diap].Min(p => p.Value) || val > LinearCalibrationData[diap].Max(p => p.Value))
             {//calculate by coefficients
-                return (val - Intercept[diap]) / Slope[diap];
+                try { return (val - Intercept[diap]) / Slope[diap]; }
+                catch (Exception ex)
+                {
+                    throw new ArgumentOutOfRangeException("Нулевое значение углового коэффициента", ex);
+                }
             }
             else
             {//calculate by the way of interpolation between two dots
@@ -458,4 +457,12 @@ namespace Calibration
     /// Enumerates the possible chemical elements the calibration can be applied to
     /// </summary>
     public enum ChemicalElemetCalibration { Kalium, Natrium };
+
+    public interface ILinearCalibration
+    {
+        int CalibrationID { get; set;}
+        decimal[] Slope {get; set;}
+        decimal[] Intercept { get; set; }
+        decimal ValueToConcentration(decimal val, int diap);
+    }
 }

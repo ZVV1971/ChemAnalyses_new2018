@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using ChemicalAnalyses.Alumni;
 using System.Windows.Data;
 using SettingsHelper;
+using SaltAnalysisDatas;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -229,8 +230,10 @@ namespace ChemicalAnalyses.Dialogs
             {
                 Owner = this,
                 Title = @"Предварительный просмотр результатов расчета, схема ""Хлоридная"" (IV)" };
-            ChlorideSchemePrintingGrid pgrdChloride = 
-                new ChlorideSchemePrintingGrid(dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList()) { Name = "pg1" };
+            ChlorideSchemePrintingGrid pgrdChloride =
+                new ChlorideSchemePrintingGrid(dgrdSA.SelectedItems.Cast<SaltAnalysisData>()
+                .Where(p => p.RecommendedCalculationScheme == SaltCalculationSchemes.Chloride).ToList())
+                { Name = "pg1", ResultsType = SaltCalculationSchemes.Chloride };
             TextBox tbTitle = new TextBox()
             {
                 Text = "Химический состав, %",
@@ -264,7 +267,7 @@ namespace ChemicalAnalyses.Dialogs
             Label lbHygro = new Label() { Content = "Выводить гигроскопическую влагу для всех образцов? " };
             spHygro.Children.Add(lbHygro);
             CheckBox cbHygro = new CheckBox();
-            Binding bdHygro = new Binding("ShowHygroscopicWaterFroAll") { Source = pgrdChloride};
+            Binding bdHygro = new Binding("ShowHygroscopicWaterForAll") { Source = pgrdChloride};
             cbHygro.SetBinding(CheckBox.IsCheckedProperty, bdHygro);
             spHygro.Children.Add(cbHygro);
 

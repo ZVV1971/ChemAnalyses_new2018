@@ -1258,7 +1258,7 @@ namespace SATest
             Exception except = null;
             try
             {
-                SaltAnalysisData lc = Mock.Of<SaltAnalysisData>(d => d.WetWeight == 0);
+                SaltAnalysisData sa = Mock.Of<SaltAnalysisData>(d => d.WetWeight == 0);
             }
             catch (Exception ex)
             {
@@ -1314,8 +1314,46 @@ namespace SATest
         [TestMethod]
         public void SaltAnalysisDataCalcK_Chloride()
         {
-            SaltAnalysisData sa = new SaltAnalysisData(new Dictionary<int, LinearCalibration>() {
-                { 1, Mock.Of<LinearCalibration>(p=>p.CalibrationID == 1) } });
+            //LinearCalibration lc = new LinearCalibration(new List<Tuple<int, decimal, decimal>> {
+            //    { new Tuple<int, decimal, decimal>(0,0.0005M,7.5M)},
+            //    { new Tuple<int, decimal, decimal>(0,0.001M,12.5M)},
+            //    { new Tuple<int, decimal, decimal>(0,0.0015M,18)},
+            //    { new Tuple<int, decimal, decimal>(0,0.002M,23)},
+            //    { new Tuple<int, decimal, decimal>(0,0.0025M,29)},
+            //    { new Tuple<int, decimal, decimal>(0,0.005M,53)},
+            //    { new Tuple<int, decimal, decimal>(1,0.005M,6.5M)},
+            //    { new Tuple<int, decimal, decimal>(1,0.01M,12.5M)},
+            //    { new Tuple<int, decimal, decimal>(1,0.015M,18)},
+            //    { new Tuple<int, decimal, decimal>(1,0.02M,23.5M)},
+            //    { new Tuple<int, decimal, decimal>(1,0.025M,28.5M)},
+            //    { new Tuple<int, decimal, decimal>(1,0.03M,33.5M)},
+            //    { new Tuple<int, decimal, decimal>(1,0.035M,38)},
+            //    { new Tuple<int, decimal, decimal>(1,0.04M,44)},
+            //    { new Tuple<int, decimal, decimal>(1,0.05M,51)}});
+            //lc.CalibrationID = 1;
+            var lc = new Mock<ILinearCalibration>();
+            lc.Setup(p => p.Intercept).Returns(new decimal[2] { 2.71311M, 2.78387M });
+            lc.Setup(p => p.Slope).Returns(new decimal[2] { 10137.7M, 157.377M });
+            lc.Setup(p => p.CalibrationID).Returns(1);
+            lc.Setup(p => p.ValueToConcentration(It.IsAny<decimal>(), It.IsAny<int>())).Returns(0.0152M);
+
+            SaltAnalysisData sa = new SaltAnalysisData(new Dictionary<int, ILinearCalibration>() {
+                { lc.Object.CalibrationID, lc.Object } });
+            sa.WetWeight = 4.454M;
+            sa.MagnesiumTitre = 2.25M;
+            sa.MagnesiumTrilonTitre = 1.084M;
+            sa.CalciumTitre = 1.62M;
+            sa.CalciumTrilonTitre = 1.084M;
+            sa.HumidityCrucibleEmptyWeight = 12.5431M;
+            sa.HumidityCrucibleWetSampleWeight = 15.676M;
+            sa.HumidityCrucibleDry110SampleWeight = 15.6609M;
+            sa.HumidityCrucibleDry180SampleWeight = 15.6557M;
+            sa.KaliumVolume = 100;
+            sa.RecommendedCalculationScheme = SaltCalculationSchemes.Chloride;
+            sa.CalcValues();
+            sa.KaliumCalibration = lc.Object.CalibrationID;
+            sa.CalcKaliumValue();
+            Assert.AreEqual(0.17M, Math.Round(sa.KDry, 2));
         }
     }
 }

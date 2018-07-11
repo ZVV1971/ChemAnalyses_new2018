@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using SaltAnalysisDatas;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using SaltAnalysisDatas;
+using System.Windows;
 
 namespace ChemicalAnalyses.Alumni
 {
@@ -20,12 +22,12 @@ namespace ChemicalAnalyses.Alumni
         private void dgrdMain_LoadingRow(object sender, DataGridRowEventArgs e)
         {e.Row.Header = (e.Row.GetIndex() + 1).ToString();}
 
-        private bool _showHygroscopicWaterFroAll = true;
-        public bool ShowHygroscopicWaterFroAll
+        private bool _showHygroscopicWaterForAll = true;
+        public bool ShowHygroscopicWaterForAll
         {
-            get { return _showHygroscopicWaterFroAll; }
-            set { _showHygroscopicWaterFroAll = value;
-                OnPropertyChanged(nameof(ShowHygroscopicWaterFroAll));
+            get { return _showHygroscopicWaterForAll; }
+            set { _showHygroscopicWaterForAll = value;
+                OnPropertyChanged(nameof(ShowHygroscopicWaterForAll));
             }}
 
         private bool _useBKRespresentationVariant = true;
@@ -41,5 +43,16 @@ namespace ChemicalAnalyses.Alumni
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
+
+        public SaltCalculationSchemes ResultsType
+        {
+            get { return (SaltCalculationSchemes)GetValue(ResultsTypeProperty); }
+            set { SetValue(ResultsTypeProperty, value); }
+        }
+
+        public static readonly DependencyProperty ResultsTypeProperty =
+           DependencyProperty.Register("ResultsType",
+                typeof(SaltCalculationSchemes), typeof(ChlorideSchemePrintingGrid),
+                new PropertyMetadata());
     }
 }

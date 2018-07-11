@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Reflection;
 using System.Globalization;
 using System.IO;
+using Calibration;
 
 namespace SaltAnalysisDatas
 {
@@ -30,7 +31,7 @@ namespace SaltAnalysisDatas
         static SaltAnalysisData()
         {
             if (connection is null) connection = new SqlConnection(ConnectionStringGiver.GetValidConnectionString(String.Empty));
-            if (lcDict is null) lcDict = new Dictionary<int, Calibration.LinearCalibration>();
+            if (lcDict is null) lcDict = new Dictionary<int, ILinearCalibration>();
             if (elementsWeights is null)
             {
                 Uri UriAssemblyFolder = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase));
