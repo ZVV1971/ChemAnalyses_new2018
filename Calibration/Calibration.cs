@@ -366,7 +366,7 @@ namespace Calibration
 
         public void GetLinearCoefficients()
         {
-            for (int i = 0; i <= 1; i++)
+            for (int i = 0; i <= LinearCalibrationData.Rank; i++)
             {
                 int Count = LinearCalibrationData[i].Count;
                 decimal _sumConcentration = 0;
