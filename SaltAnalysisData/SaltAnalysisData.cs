@@ -43,28 +43,28 @@ namespace SaltAnalysisDatas
                 NumberFormatInfo nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
                 //read application level constants
                 if (!decimal.TryParse(elementsWeights.Settings.Get("Mg").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awMg))
-                    awMg = (decimal)24.305;
+                    awMg = 24.305M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("H").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awH))
-                    awH = (decimal)1.008;
+                    awH = 1.008M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("O").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awO))
-                    awO = (decimal)15.999;
+                    awO = 15.999M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("Ca").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awCa))
-                    awCa = (decimal)40.078;
+                    awCa = 40.078M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("Cl").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awCl))
-                    awCl = (decimal)35.45;
+                    awCl = 35.45M;
                 _water2MagnesiumRatioInCarnallite = 6 * (2 * awH + awO) / awMg;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("Na").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awNa))
-                    awNa = (decimal)23.99;
+                    awNa = 23.99M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("K").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awK))
-                    awK = (decimal)39.099;
+                    awK = 39.099M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("C").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awC))
-                    awC = (decimal)12.011;
+                    awC = 12.011M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("S").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awS))
-                    awS = (decimal)32.07;
+                    awS = 32.07M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("Br").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awBr))
-                    awBr = (decimal)79.9;
+                    awBr = 79.9M;
                 if (!decimal.TryParse(elementsWeights.Settings.Get("B").Value.ValueXml.InnerText, NumberStyles.Number, nfi, out awB))
-                    awB = (decimal)10.81;
+                    awB = 10.81M;
                 //ions ratio in minerals constants
                 _SO4_2_CaS04 = (awS + 4 * awO) / (awS + 4 * awO + awCa);
                 _CaSO4_2_SO4 = (awS + 4 * awO + awCa) / (awS + 4 * awO);
