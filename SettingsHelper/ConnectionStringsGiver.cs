@@ -20,7 +20,7 @@ namespace SettingsHelper
             try
             {
                 connstr = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).
-                    ConnectionStrings.ConnectionStrings["ChemicalAnalyses.Properties.Settings.ChemAnConnectionString"].ToString();
+                    ConnectionStrings.ConnectionStrings["ChemAnConnectionString"].ToString();
             }
             catch
             {

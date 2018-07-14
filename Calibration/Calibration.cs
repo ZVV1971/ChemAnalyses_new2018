@@ -441,7 +441,8 @@ namespace Calibration
             {
                 try
                 {
-                   var d = (LinearCalibrationData[diap].ToList()).ToDictionary(p=>p.GetHashCode(),p=>p);
+                    var d = (LinearCalibrationData[diap].ToList()).ToDictionary(p => p.Concentration, p => p);
+                    var t = (LinearCalibrationData[diap].ToList()).ToDictionary(p => p.Value, p => p);
                     return false;
                 }
                 catch

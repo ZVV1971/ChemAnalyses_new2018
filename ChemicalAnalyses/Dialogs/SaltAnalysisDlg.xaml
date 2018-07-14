@@ -6,7 +6,7 @@
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
-        xmlns:SaltAnalysis="clr-namespace:SaltAnalysisDatas;assembly=SaltAnalysisData"
+        xmlns:SA_EF="clr-namespace:SA_EF;assembly=SA_EF"
         mc:Ignorable="d"
         Title="{Binding}" Height="500" Width="1150" MinHeight="500" MinWidth="1050" 
             x:Name="wSAWindow"  Validation.Error="OnErrorEvent">
@@ -20,7 +20,7 @@
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
                             ObjectType="{x:Type System:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="SaltAnalysis:SaltCalculationSchemes"/>
+                <x:Type TypeName="SA_EF:SaltCalculationSchemes"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>

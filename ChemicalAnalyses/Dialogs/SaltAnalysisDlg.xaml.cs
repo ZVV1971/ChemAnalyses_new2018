@@ -6,12 +6,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using SaltAnalysisDatas;
-using Samples;
 using System.Windows.Documents;
 using ChemicalAnalyses.Alumni;
 using System.Windows.Data;
 using SettingsHelper;
+using SA_EF;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -70,23 +69,29 @@ namespace ChemicalAnalyses.Dialogs
         private void FillData()
         {
             sa.Clear();
-            string cond = "";
-            //if the list contans just one sample make simple condition
-            if (Labnumbers?.Count == 1) cond = "[IDSample] = " + Labnumbers[0].IDSample;
-            else // if many - use IN statement
+            //string cond = "";
+            ////if the list contans just one sample make simple condition
+            //if (Labnumbers?.Count == 1) cond = "[IDSample] = " + Labnumbers[0].IDSample;
+            //else // if many - use IN statement
+            //{
+            //    bool fl = false;
+            //    cond = "[IDSample] IN (";
+            //    foreach (Sample smpl in Labnumbers)
+            //    {
+            //        cond = cond + ((fl) ? ", " : " ") + smpl.IDSample;
+            //        fl = true;
+            //    }
+            //    cond += " )";
+            //}
+            using (var context = new ChemicalAnalysesEntities())
             {
-                bool fl = false;
-                cond = "[IDSample] IN (";
-                foreach (Sample smpl in Labnumbers)
+                if (Labnumbers?.Count == 1) sa.Add(context.SaltAnalysisDatas.Find(Labnumbers[0].IDSample));
+                else
+                    foreach (SaltAnalysisData sad in 
+                        context.SaltAnalysisDatas.Intersect(Labnumbers.Cast<SaltAnalysisData>()))
                 {
-                    cond = cond + ((fl) ? ", " : " ") + smpl.IDSample;
-                    fl = true;
+                    sa.Add(sad);
                 }
-                cond += " )";
-            }
-            foreach (SaltAnalysisData sad in SaltAnalysisData.GetAllSamples(cond))
-            {
-                sa.Add(sad);
             }
         }
 
@@ -132,20 +137,29 @@ namespace ChemicalAnalyses.Dialogs
             {
                 if (TypeOfWork == "Create")
                 {
-                    dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
+                    using (var context = new ChemicalAnalysesEntities())
                     {
-                        p.Insert();
-                        s.AppendLine(p.LabNumber);
-                    });
+                        dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
+                        {
+                            context.SaltAnalysisDatas.Add(p);
+                            //p.Insert();
+                            s.AppendLine(p.LabNumber);
+                        });
+                        context.SaveChanges();
+                    }
                     CALogger.WriteToLogFile("Созданы новые анализы для следующих образцов: " + s);
                 }
                 else if (TypeOfWork == "Edit")
                 {
-                    dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
+                    using (var context = new ChemicalAnalysesEntities())
                     {
-                        p.Update();
-                        s.AppendLine(p.LabNumber);
-                    });
+                        dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
+                        {
+                            //p.Update();
+                            s.AppendLine(p.LabNumber);
+                        });
+                        context.SaveChanges();
+                    }
                     CALogger.WriteToLogFile("Изменены данные анализов для следующих образцов: " + s);
                 }
             }
@@ -169,11 +183,16 @@ namespace ChemicalAnalyses.Dialogs
             StringBuilder s = new StringBuilder();
             try
             {
-                dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p =>
-                    {
-                        s.AppendLine(p.LabNumber);
-                        SaltAnalysisData.Delete(p.IDSaltAnalysis);
-                    });
+                using (var context = new ChemicalAnalysesEntities())
+                {
+                    dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p =>
+                        {
+                            s.AppendLine(p.LabNumber);
+                            //SaltAnalysisData.Delete(p.IDSaltAnalysis);
+                            context.SaltAnalysisDatas.Remove(p);
+                        });
+                    context.SaveChanges();
+                }
             }
             catch (Exception ex)
             {

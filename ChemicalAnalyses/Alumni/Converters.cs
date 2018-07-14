@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using Samples;
+using SA_EF;
 using System.Windows;
 
 namespace ChemicalAnalyses.Alumni

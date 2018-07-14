@@ -163,11 +163,11 @@
       <Schema Namespace="SAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="LinearCalibration">
           <Key>
-            <PropertyRef Name="IDCalibration" />
+            <PropertyRef Name="CalibrationID" />
           </Key>
-          <Property Name="IDCalibration" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CalibrationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CalibrationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="CalibrationType" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="CalibrationData" Relationship="Self.FK_CalData_Calibration" FromRole="Calibration" ToRole="CalibrationData" />
           <NavigationProperty Name="CalibrationTypeSelector" Relationship="Self.FK_Calibr_CalibrType" FromRole="Calibration" ToRole="CalibrationType" />
@@ -248,7 +248,7 @@
           <End Role="CalibrationData" Type="SAModel.DataPoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Calibration">
-              <PropertyRef Name="IDCalibration" />
+              <PropertyRef Name="CalibrationID" />
             </Principal>
             <Dependent Role="CalibrationData">
               <PropertyRef Name="IDCalibration" />
@@ -272,7 +272,7 @@
           <End Role="SaltAnalysis" Type="SAModel.SaltAnalysisData" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Calibration">
-              <PropertyRef Name="IDCalibration" />
+              <PropertyRef Name="CalibrationID" />
             </Principal>
             <Dependent Role="SaltAnalysis">
               <PropertyRef Name="KaliumCalibration" />
@@ -325,9 +325,9 @@
           <EntitySetMapping Name="LineaCalibrations">
             <EntityTypeMapping TypeName="SAModel.LinearCalibration">
               <MappingFragment StoreEntitySet="Calibration">
-                <ScalarProperty Name="IDCalibration" ColumnName="IDCalibration" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="CalibrationID" ColumnName="IDCalibration" />
+                <ScalarProperty Name="CalibrationDate" ColumnName="Date" />
+                <ScalarProperty Name="Description" ColumnName="Comment" />
                 <ScalarProperty Name="CalibrationType" ColumnName="CalibrationType" />
               </MappingFragment>
             </EntityTypeMapping>

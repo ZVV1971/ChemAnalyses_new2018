@@ -268,9 +268,9 @@ namespace ChemicalAnalyses.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::Samples.SampleFilterFields PreviousFilter {
+        public global::ChemicalAnalyses.Alumni.SampleFilterFields PreviousFilter {
             get {
-                return ((global::Samples.SampleFilterFields)(this["PreviousFilter"]));
+                return ((global::ChemicalAnalyses.Alumni.SampleFilterFields)(this["PreviousFilter"]));
             }
             set {
                 this["PreviousFilter"] = value;

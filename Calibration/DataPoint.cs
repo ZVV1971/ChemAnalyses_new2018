@@ -13,7 +13,7 @@ namespace Calibration
     {
         static SqlConnection connection;
 
-        private decimal conc = (decimal)0.001;
+        private decimal conc = 0.001M;
         public decimal Concentration
         {
             get { return conc; }
@@ -131,8 +131,7 @@ namespace Calibration
         public static bool operator ==(DataPoint dp1, DataPoint dp2)
         {
             if (ReferenceEquals(dp1, dp2)) return true;
-            if (ReferenceEquals(dp1, null)) return false;
-            if (ReferenceEquals(dp2, null)) return false;
+            if (ReferenceEquals(dp1, null) || ReferenceEquals(dp2, null)) return false;
             return dp1.Equals(dp2);
         }
 

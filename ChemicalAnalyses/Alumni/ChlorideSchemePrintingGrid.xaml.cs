@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
-using SaltAnalysisDatas;
+//using SaltAnalysisDatas;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using System.Windows;
+using SA_EF;
 
 namespace ChemicalAnalyses.Alumni
 {

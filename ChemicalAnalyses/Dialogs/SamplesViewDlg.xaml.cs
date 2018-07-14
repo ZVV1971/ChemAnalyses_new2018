@@ -5,8 +5,10 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using Samples;
+//using Samples;
 using SettingsHelper;
+using SA_EF;
+using ChemicalAnalyses.Alumni;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -14,7 +16,7 @@ namespace ChemicalAnalyses.Dialogs
     {
         ObservableCollection<Sample> SamplesCollection;
         private static DateTime endDate = DateTime.Today;
-        private static DateTime startDate = 
+        private static DateTime startDate =
             new DateTime(DateTime.Today.Year - 1, DateTime.Today.Month, DateTime.Today.Day);
         public string FilterText
         {
@@ -27,6 +29,7 @@ namespace ChemicalAnalyses.Dialogs
                 new PropertyMetadata(null));
 
         private static SampleFilterFields fFields;
+        public SampleFilterFields GetFilter() { return fFields; }
 
         public SamplesViewDlg()
         {
@@ -37,6 +40,7 @@ namespace ChemicalAnalyses.Dialogs
             try {fFields = Properties.Settings.Default.PreviousFilter;}
             catch { }
             if (fFields == null) fFields = new SampleFilterFields();
+            FilterText = GetFilter().ToString();
         }
 
         void FillData()
@@ -44,9 +48,16 @@ namespace ChemicalAnalyses.Dialogs
             SamplesCollection.Clear();
             try
             {
-                foreach (Sample smpl in Sample.GetAllSamples(FilterText))
+                using (var context = new ChemicalAnalysesEntities())
                 {
-                    SamplesCollection.Add(smpl);
+                    foreach (Sample smpl in
+                        ((fFields.LabNumber == null) || (fFields.LabNumber.Equals(string.Empty)) ?
+                        (context.Samples) : (context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber)))
+                        .Where(p => p.SamplingDate <= fFields.EndDate
+                        && p.SamplingDate >= fFields.StartDate))) 
+                    {
+                        SamplesCollection.Add(smpl);
+                    }
                 }
             }
             catch (Exception ex)
@@ -57,14 +68,18 @@ namespace ChemicalAnalyses.Dialogs
 
         private void UpdateCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Sample smpl = (Sample)SamplesCollection[lbSamples.SelectedIndex].Clone();
+            Sample smpl = SamplesCollection[lbSamples.SelectedIndex];
             SampleDlg dlg = new SampleDlg(ref smpl);
             dlg.Title = "Редактировать информацию об образце";
             if (dlg.ShowDialog() == true)
             {
                 try
                 {
-                    smpl.Update();
+                    using (var context = new ChemicalAnalysesEntities())
+                    {
+                        context.SaveChanges();
+                    }
+                    //smpl.Update();
                     CALogger.WriteToLogFile(string.Format("Изменены данные образца {0}", smpl.ToString()));
                     FillData();
                 }
@@ -92,14 +107,15 @@ namespace ChemicalAnalyses.Dialogs
             if (dlg.ShowDialog() == true)
             {
                 fFields = dlg.Filter;
-                FilterText = "(([SamplingDate] >= '" +
-                    fFields.StartDate.Month.ToString() + '/' + fFields.StartDate.Day.ToString() + '/' 
-                    + fFields.StartDate.Year.ToString()
-                    + "') AND ([SamplingDate] <= '" +
-                    fFields.EndDate.Month.ToString() + '/' + fFields.EndDate.Day.ToString() + '/' 
-                    + fFields.EndDate.Year.ToString() + "'))";
-                if (fFields.LabNumber != null && fFields.LabNumber != string.Empty)
-                    FilterText += "AND ([LabNumber] = N'" + fFields.LabNumber + "')";
+                FilterText = GetFilter().ToString();
+                //    "(([SamplingDate] >= '" +
+                //    fFields.StartDate.Month.ToString() + '/' + fFields.StartDate.Day.ToString() + '/' 
+                //    + fFields.StartDate.Year.ToString()
+                //    + "') AND ([SamplingDate] <= '" +
+                //    fFields.EndDate.Month.ToString() + '/' + fFields.EndDate.Day.ToString() + '/' 
+                //    + fFields.EndDate.Year.ToString() + "'))";
+                //if (fFields.LabNumber != null && fFields.LabNumber != string.Empty)
+                //    FilterText += "AND ([LabNumber] = N'" + fFields.LabNumber + "')";
             }
         }
 
@@ -116,7 +132,12 @@ namespace ChemicalAnalyses.Dialogs
                 return;
             CALogger.WriteToLogFile(string.Format("Удален образец {0}", 
                 SamplesCollection[lbSamples.SelectedIndex].ToString()));
-            Sample.Delete(SamplesCollection[lbSamples.SelectedIndex].IDSample);
+            using (var context = new ChemicalAnalysesEntities())
+            {
+                context.Samples.Remove(SamplesCollection[lbSamples.SelectedIndex] as Sample);
+                context.SaveChanges();
+            }
+            //Sample.Delete(SamplesCollection[lbSamples.SelectedIndex].IDSample);
             FillData();
         }
 
@@ -135,7 +156,12 @@ namespace ChemicalAnalyses.Dialogs
                 try
                 {
                     CALogger.WriteToLogFile(string.Format("Внесен новый образец {0}", smpl.ToString()));
-                    smpl.Insert();
+                    using (var context = new ChemicalAnalysesEntities())
+                    {
+                        context.Samples.Add(smpl);
+                        context.SaveChanges();
+                    }
+                    //smpl.Insert();
                     FillData();
                 }
                 catch (Exception ex)
@@ -189,7 +215,8 @@ namespace ChemicalAnalyses.Dialogs
 
         private void ClearFilterMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            FilterText = null;
+            fFields = new SampleFilterFields();
+            FilterText = fFields.ToString();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

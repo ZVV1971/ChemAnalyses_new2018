@@ -5,8 +5,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Reflection;
 using ChemicalAnalyses.Dialogs;
-using SaltAnalysisDatas;
 using SettingsHelper;
+using SA_EF;
 
 namespace ChemicalAnalyses
 {
@@ -28,10 +28,19 @@ namespace ChemicalAnalyses
             CALogger.WriteToLogFile("Подключение к БД…");
             try
             {
-                string UserLevelPath = Properties.Settings.Default.DBFilePath;
-                if (ConnectionStringGiver.GetValidConnectionString(UserLevelPath) != null)
-                    Properties.Settings.Default.DBFilePath = UserLevelPath;
-                else { CALogger.WriteToLogFile("Не найдена БД"); Close(); }
+                //string UserLevelPath = Properties.Settings.Default.DBFilePath;
+                //if (ConnectionStringGiver.GetValidConnectionString(UserLevelPath) != null)
+                //    Properties.Settings.Default.DBFilePath = UserLevelPath;
+                try
+                {
+                    var context = new ChemicalAnalysesEntities();
+                }
+                catch
+                {
+                    CALogger.WriteToLogFile("Не найдена БД");
+                    Close();
+                }
+                
             }
             catch
             {
@@ -75,7 +84,8 @@ namespace ChemicalAnalyses
         }
         private void HelpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Курсовая работа по теме \"пока без темы\"\nЗахаренков В.В. группа №60325-2\nВерсия: " +
+            MessageBox.Show("Дипломнаяработа по теме «Программное средство для расчета химического состава образцов»" +
+                "\nЗахаренков В.В. группа №60325-2\nВерсия: " +
                 Assembly.GetExecutingAssembly().GetName().Version.ToString(), "О программе…",
                         MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -111,9 +121,11 @@ namespace ChemicalAnalyses
                 {
                     case "Калий":
                         Properties.Settings.Default.KaliumCalibrationNumber = dlg.CalibrationNumber;
+                        CALogger.WriteToLogFile("Properties.Settings.Default.KaliumCalibrationNumber set to: " + dlg.CalibrationNumber);
                         break;
                     case "Натрий":
                         Properties.Settings.Default.NatriumCalibrationNumber = dlg.CalibrationNumber;
+                        CALogger.WriteToLogFile("Properties.Settings.Default.NatriumCalibrationNumber set to: " + dlg.CalibrationNumber);
                         break;
                     default:
                         break;
@@ -126,22 +138,32 @@ namespace ChemicalAnalyses
             //use an instance of SaltAnalysis class to check for allowable values
             SaltAnalysisData sa = new SaltAnalysisData();
             //fill values from the user-defined section of settings
-            sa.HgCoefficient = Properties.Settings.Default.HgCoefficient;
-            sa.BromumStandardTitre = Properties.Settings.Default.BrTitre;
-            sa.CalciumTrilonTitre = Properties.Settings.Default.CaTrilonB;
-            sa.MagnesiumTrilonTitre = Properties.Settings.Default.MgTrilonB;
-            sa.SulfatesBlank = Properties.Settings.Default.SulfatesBlank;
-            sa.BromumBlank = Properties.Settings.Default.BrBlank;
-            
-            SaltAnalysisOptionsDlg saDlg = new SaltAnalysisOptionsDlg(sa);
+            try
+            {
+                sa.HgCoefficient = Properties.Settings.Default.HgCoefficient;
+                sa.BromumStandardTitre = Properties.Settings.Default.BrTitre;
+                sa.CalciumTrilonTitre = Properties.Settings.Default.CaTrilonB;
+                sa.MagnesiumTrilonTitre = Properties.Settings.Default.MgTrilonB;
+                sa.SulfatesBlank = Properties.Settings.Default.SulfatesBlank;
+                sa.BromumBlank = Properties.Settings.Default.BrBlank;
+            }
+            catch { return; }
+
+            SaltAnalysisOptionsDlg saDlg = new SaltAnalysisOptionsDlg(sa as SaltAnalysisData);
             if (saDlg.ShowDialog() == true)
             {//if OK save settings back to user.config
-                Properties.Settings.Default.HgCoefficient= sa.HgCoefficient;
+                Properties.Settings.Default.HgCoefficient = sa.HgCoefficient;
+                CALogger.WriteToLogFile("Properties.Settings.Default.HgCoefficient set to:" + sa.HgCoefficient);
                 Properties.Settings.Default.BrTitre = sa.BromumStandardTitre;
+                CALogger.WriteToLogFile("Properties.Settings.Default.BrTitre set to:" + sa.BromumStandardTitre);
                 Properties.Settings.Default.CaTrilonB = sa.CalciumTrilonTitre;
-                Properties.Settings.Default.MgTrilonB= sa.MagnesiumTrilonTitre;
-                Properties.Settings.Default.SulfatesBlank= sa.SulfatesBlank;
-                Properties.Settings.Default.BrBlank= sa.BromumBlank;
+                CALogger.WriteToLogFile("Properties.Settings.Default.CaTrilonB set to:" + sa.CalciumTrilonTitre);
+                Properties.Settings.Default.MgTrilonB = sa.MagnesiumTrilonTitre;
+                CALogger.WriteToLogFile(" Properties.Settings.Default.MgTrilonB set to:" + sa.MagnesiumTrilonTitre);
+                Properties.Settings.Default.SulfatesBlank = sa.SulfatesBlank;
+                CALogger.WriteToLogFile("Properties.Settings.Default.SulfatesBlank:" + sa.SulfatesBlank);
+                Properties.Settings.Default.BrBlank = sa.BromumBlank;
+                CALogger.WriteToLogFile("Properties.Settings.Default.SulfatesBlank:" + sa.BromumBlank);
             }
         }
     }

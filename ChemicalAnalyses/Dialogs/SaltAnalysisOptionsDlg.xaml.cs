@@ -2,7 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using SaltAnalysisDatas;
+//using SaltAnalysisDatas;
+using SA_EF;
 
 namespace ChemicalAnalyses.Dialogs
 {

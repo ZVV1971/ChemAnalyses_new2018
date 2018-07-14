@@ -1,5 +1,6 @@
 ﻿using System.Windows;
-using Samples;
+//using Samples;
+using SA_EF;
 
 namespace ChemicalAnalyses.Dialogs
 {
