@@ -71,119 +71,15 @@
           <Property Name="KaliumDiapason" Type="int" Nullable="false" />
           <Property Name="KaliumCalibration" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="Sample">
-          <Key>
-            <PropertyRef Name="IDSample" />
-          </Key>
-          <Property Name="IDSample" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="LabNumber" Type="nvarchar" MaxLength="15" Nullable="false" />
-          <Property Name="SamplingDate" Type="date" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="Comment" Type="text" />
-        </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.CalibrationDataView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
-        <EntityType Name="CalibrationDataView">
-          <Key>
-            <PropertyRef Name="IDCalibration" />
-            <PropertyRef Name="IDCalibrationData" />
-            <PropertyRef Name="Diapason" />
-            <PropertyRef Name="Concentration" />
-            <PropertyRef Name="Value" />
-            <PropertyRef Name="Date" />
-            <PropertyRef Name="CalibrationType" />
-          </Key>
-          <Property Name="IDCalibration" Type="int" Nullable="false" />
-          <Property Name="IDCalibrationData" Type="int" Nullable="false" />
-          <Property Name="Diapason" Type="int" Nullable="false" />
-          <Property Name="Concentration" Type="decimal" Precision="7" Scale="5" Nullable="false" />
-          <Property Name="Value" Type="decimal" Precision="5" Scale="2" Nullable="false" />
-          <Property Name="Date" Type="date" Nullable="false" />
-          <Property Name="Comment" Type="text" />
-          <Property Name="CalibrationType" Type="nchar" MaxLength="50" Nullable="false" />
-        </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.SaltAnalysisView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
-        <EntityType Name="SaltAnalysisView">
-          <Key>
-            <PropertyRef Name="IDSaltAnalysis" />
-            <PropertyRef Name="IDSample" />
-            <PropertyRef Name="LabNumber" />
-            <PropertyRef Name="WetWeight" />
-            <PropertyRef Name="MagnesiumTitre" />
-            <PropertyRef Name="MagnesiumAliquote" />
-            <PropertyRef Name="MagnesiumTrilonTitre" />
-            <PropertyRef Name="KaliumCalibration" />
-            <PropertyRef Name="AnalysisDate" />
-            <PropertyRef Name="KaliumDiapason" />
-            <PropertyRef Name="SulfatesCrucibleEmptyWeight" />
-            <PropertyRef Name="SulfatesCrucibleFullWeight" />
-            <PropertyRef Name="ResiduumCrucibleFullWeight" />
-            <PropertyRef Name="ResiduumCrucibleEmptyWeight" />
-            <PropertyRef Name="HumidityCrucibleEmptyWeight" />
-            <PropertyRef Name="HumidityCrucibleWetSampleWeight" />
-            <PropertyRef Name="HumidityCrucibleDry110SampleWeight" />
-            <PropertyRef Name="CalciumTitre" />
-            <PropertyRef Name="ChlorumTitre" />
-            <PropertyRef Name="BromumTitre" />
-            <PropertyRef Name="KaliumValue" />
-            <PropertyRef Name="CarbonatesTitre" />
-            <PropertyRef Name="HydrocarbonatesTitre" />
-            <PropertyRef Name="CalciumTrilonTitre" />
-            <PropertyRef Name="CalciumAliquote" />
-            <PropertyRef Name="BromumAliquote" />
-            <PropertyRef Name="SulfatesAliquote" />
-            <PropertyRef Name="KaliumVolume" />
-            <PropertyRef Name="HgCoefficient" />
-            <PropertyRef Name="BromumBlank" />
-            <PropertyRef Name="BromumStandardTitre" />
-            <PropertyRef Name="SulfatesBlank" />
-            <PropertyRef Name="ChlorumAliquote" />
-          </Key>
-          <Property Name="IDSaltAnalysis" Type="int" Nullable="false" />
-          <Property Name="IDSample" Type="int" Nullable="false" />
-          <Property Name="LabNumber" Type="nvarchar" MaxLength="15" Nullable="false" />
-          <Property Name="WetWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="MagnesiumTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="MagnesiumAliquote" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="MagnesiumTrilonTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="KaliumCalibration" Type="int" Nullable="false" />
-          <Property Name="AnalysisDate" Type="date" Nullable="false" />
-          <Property Name="KaliumDiapason" Type="int" Nullable="false" />
-          <Property Name="KaliumConcentration" Type="decimal" Precision="10" Scale="5" />
-          <Property Name="SulfatesCrucibleEmptyWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="SulfatesCrucibleFullWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ResiduumCrucibleFullWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ResiduumCrucibleEmptyWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleEmptyWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleWetSampleWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleDry110SampleWeight" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleDry180SampleWeight" Type="decimal" Precision="10" Scale="5" />
-          <Property Name="CalciumTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ChlorumTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="KaliumValue" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="CarbonatesTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HydrocarbonatesTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="CalciumTrilonTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="CalciumAliquote" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumAliquote" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="SulfatesAliquote" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="KaliumVolume" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HgCoefficient" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumBlank" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumStandardTitre" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="SulfatesBlank" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ChlorumAliquote" Type="decimal" Precision="10" Scale="5" Nullable="false" />
-        </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.SamplesView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="SamplesView">
           <Key>
             <PropertyRef Name="IDSample" />
-            <PropertyRef Name="LabNumber" />
-            <PropertyRef Name="SamplingDate" />
-            <PropertyRef Name="Description" />
           </Key>
           <Property Name="IDSample" Type="int" Nullable="false" />
           <Property Name="LabNumber" Type="nvarchar" MaxLength="15" Nullable="false" />
@@ -215,18 +111,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_IDSA_IDSample">
-          <End Role="Sample" Type="Self.Sample" Multiplicity="1" />
-          <End Role="SaltAnalysis" Type="Self.SaltAnalysis" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Sample">
-              <PropertyRef Name="IDSample" />
-            </Principal>
-            <Dependent Role="SaltAnalysis">
-              <PropertyRef Name="IDSample" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_KaliumCalibration">
           <End Role="Calibration" Type="Self.Calibration" Multiplicity="1" />
           <End Role="SaltAnalysis" Type="Self.SaltAnalysis" Multiplicity="*" />
@@ -245,62 +129,10 @@
           <EntitySet Name="Calibration" EntityType="Self.Calibration" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CalibrationData" EntityType="Self.CalibrationData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SaltAnalysis" EntityType="Self.SaltAnalysis" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Sample" EntityType="Self.Sample" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CalibrationType" EntityType="Self.CalibrationType" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [CalibrationType].[Type] AS [Type]
     FROM [dbo].[CalibrationType] AS [CalibrationType]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="CalibrationDataView" EntityType="Self.CalibrationDataView" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [CalibrationDataView].[IDCalibration] AS [IDCalibration], 
-    [CalibrationDataView].[IDCalibrationData] AS [IDCalibrationData], 
-    [CalibrationDataView].[Diapason] AS [Diapason], 
-    [CalibrationDataView].[Concentration] AS [Concentration], 
-    [CalibrationDataView].[Value] AS [Value], 
-    [CalibrationDataView].[Date] AS [Date], 
-    [CalibrationDataView].[Comment] AS [Comment], 
-    [CalibrationDataView].[CalibrationType] AS [CalibrationType]
-    FROM [dbo].[CalibrationDataView] AS [CalibrationDataView]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="SaltAnalysisView" EntityType="Self.SaltAnalysisView" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [SaltAnalysisView].[IDSaltAnalysis] AS [IDSaltAnalysis], 
-    [SaltAnalysisView].[IDSample] AS [IDSample], 
-    [SaltAnalysisView].[LabNumber] AS [LabNumber], 
-    [SaltAnalysisView].[WetWeight] AS [WetWeight], 
-    [SaltAnalysisView].[MagnesiumTitre] AS [MagnesiumTitre], 
-    [SaltAnalysisView].[MagnesiumAliquote] AS [MagnesiumAliquote], 
-    [SaltAnalysisView].[MagnesiumTrilonTitre] AS [MagnesiumTrilonTitre], 
-    [SaltAnalysisView].[KaliumCalibration] AS [KaliumCalibration], 
-    [SaltAnalysisView].[AnalysisDate] AS [AnalysisDate], 
-    [SaltAnalysisView].[KaliumDiapason] AS [KaliumDiapason], 
-    [SaltAnalysisView].[KaliumConcentration] AS [KaliumConcentration], 
-    [SaltAnalysisView].[SulfatesCrucibleEmptyWeight] AS [SulfatesCrucibleEmptyWeight], 
-    [SaltAnalysisView].[SulfatesCrucibleFullWeight] AS [SulfatesCrucibleFullWeight], 
-    [SaltAnalysisView].[ResiduumCrucibleFullWeight] AS [ResiduumCrucibleFullWeight], 
-    [SaltAnalysisView].[ResiduumCrucibleEmptyWeight] AS [ResiduumCrucibleEmptyWeight], 
-    [SaltAnalysisView].[HumidityCrucibleEmptyWeight] AS [HumidityCrucibleEmptyWeight], 
-    [SaltAnalysisView].[HumidityCrucibleWetSampleWeight] AS [HumidityCrucibleWetSampleWeight], 
-    [SaltAnalysisView].[HumidityCrucibleDry110SampleWeight] AS [HumidityCrucibleDry110SampleWeight], 
-    [SaltAnalysisView].[HumidityCrucibleDry180SampleWeight] AS [HumidityCrucibleDry180SampleWeight], 
-    [SaltAnalysisView].[CalciumTitre] AS [CalciumTitre], 
-    [SaltAnalysisView].[ChlorumTitre] AS [ChlorumTitre], 
-    [SaltAnalysisView].[BromumTitre] AS [BromumTitre], 
-    [SaltAnalysisView].[KaliumValue] AS [KaliumValue], 
-    [SaltAnalysisView].[CarbonatesTitre] AS [CarbonatesTitre], 
-    [SaltAnalysisView].[HydrocarbonatesTitre] AS [HydrocarbonatesTitre], 
-    [SaltAnalysisView].[CalciumTrilonTitre] AS [CalciumTrilonTitre], 
-    [SaltAnalysisView].[CalciumAliquote] AS [CalciumAliquote], 
-    [SaltAnalysisView].[BromumAliquote] AS [BromumAliquote], 
-    [SaltAnalysisView].[SulfatesAliquote] AS [SulfatesAliquote], 
-    [SaltAnalysisView].[KaliumVolume] AS [KaliumVolume], 
-    [SaltAnalysisView].[HgCoefficient] AS [HgCoefficient], 
-    [SaltAnalysisView].[BromumBlank] AS [BromumBlank], 
-    [SaltAnalysisView].[BromumStandardTitre] AS [BromumStandardTitre], 
-    [SaltAnalysisView].[SulfatesBlank] AS [SulfatesBlank], 
-    [SaltAnalysisView].[ChlorumAliquote] AS [ChlorumAliquote]
-    FROM [dbo].[SaltAnalysisView] AS [SaltAnalysisView]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="SamplesView" EntityType="Self.SamplesView" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -319,10 +151,6 @@
             <End Role="CalibrationType" EntitySet="CalibrationType" />
             <End Role="Calibration" EntitySet="Calibration" />
           </AssociationSet>
-          <AssociationSet Name="FK_IDSA_IDSample" Association="Self.FK_IDSA_IDSample">
-            <End Role="Sample" EntitySet="Sample" />
-            <End Role="SaltAnalysis" EntitySet="SaltAnalysis" />
-          </AssociationSet>
           <AssociationSet Name="FK_KaliumCalibration" Association="Self.FK_KaliumCalibration">
             <End Role="Calibration" EntitySet="Calibration" />
             <End Role="SaltAnalysis" EntitySet="SaltAnalysis" />
@@ -333,7 +161,7 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Calibration">
+        <EntityType Name="LinearCalibration">
           <Key>
             <PropertyRef Name="IDCalibration" />
           </Key>
@@ -345,7 +173,7 @@
           <NavigationProperty Name="CalibrationTypeSelector" Relationship="Self.FK_Calibr_CalibrType" FromRole="Calibration" ToRole="CalibrationType" />
           <NavigationProperty Name="SaltAnalysis" Relationship="Self.FK_KaliumCalibration" FromRole="Calibration" ToRole="SaltAnalysis" />
         </EntityType>
-        <EntityType Name="CalibrationData">
+        <EntityType Name="DataPoint">
           <Key>
             <PropertyRef Name="IDCalibrationData" />
           </Key>
@@ -395,19 +223,8 @@
           <Property Name="KaliumDiapason" Type="Int32" Nullable="false" />
           <Property Name="KaliumCalibration" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Calibration" Relationship="Self.FK_KaliumCalibration" FromRole="SaltAnalysis" ToRole="Calibration" />
-          <NavigationProperty Name="Sample" Relationship="Self.FK_IDSA_IDSample" FromRole="SaltAnalysis" ToRole="Sample" />
-        </EntityType>
-        <EntityType Name="Sample">
-          <Key>
-            <PropertyRef Name="IDSample" />
-          </Key>
-          <Property Name="IDSample" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LabNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="SamplingDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SaltAnalysis" Relationship="Self.FK_IDSA_IDSample" FromRole="Sample" ToRole="SaltAnalysis" />
-        </EntityType>
+          <NavigationProperty Name="Samples" Relationship="SAModel.SampleSaltAnalysisData" FromRole="SaltAnalysisData" ToRole="Sample" />
+          </EntityType>
         <EntityType Name="CalibrationType">
           <Key>
             <PropertyRef Name="Type" />
@@ -415,113 +232,20 @@
           <Property Name="Type" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Calibrations" Relationship="Self.FK_Calibr_CalibrType" FromRole="CalibrationType" ToRole="Calibration" />
         </EntityType>
-        <EntityType Name="CalibrationDataView">
-          <Key>
-            <PropertyRef Name="IDCalibration" />
-            <PropertyRef Name="IDCalibrationData" />
-            <PropertyRef Name="Diapason" />
-            <PropertyRef Name="Concentration" />
-            <PropertyRef Name="Value" />
-            <PropertyRef Name="Date" />
-            <PropertyRef Name="CalibrationType" />
-          </Key>
-          <Property Name="IDCalibration" Type="Int32" Nullable="false" />
-          <Property Name="IDCalibrationData" Type="Int32" Nullable="false" />
-          <Property Name="Diapason" Type="Int32" Nullable="false" />
-          <Property Name="Concentration" Type="Decimal" Precision="7" Scale="5" Nullable="false" />
-          <Property Name="Value" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="CalibrationType" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="SaltAnalysisView">
-          <Key>
-            <PropertyRef Name="IDSaltAnalysis" />
-            <PropertyRef Name="IDSample" />
-            <PropertyRef Name="LabNumber" />
-            <PropertyRef Name="WetWeight" />
-            <PropertyRef Name="MagnesiumTitre" />
-            <PropertyRef Name="MagnesiumAliquote" />
-            <PropertyRef Name="MagnesiumTrilonTitre" />
-            <PropertyRef Name="KaliumCalibration" />
-            <PropertyRef Name="AnalysisDate" />
-            <PropertyRef Name="KaliumDiapason" />
-            <PropertyRef Name="SulfatesCrucibleEmptyWeight" />
-            <PropertyRef Name="SulfatesCrucibleFullWeight" />
-            <PropertyRef Name="ResiduumCrucibleFullWeight" />
-            <PropertyRef Name="ResiduumCrucibleEmptyWeight" />
-            <PropertyRef Name="HumidityCrucibleEmptyWeight" />
-            <PropertyRef Name="HumidityCrucibleWetSampleWeight" />
-            <PropertyRef Name="HumidityCrucibleDry110SampleWeight" />
-            <PropertyRef Name="CalciumTitre" />
-            <PropertyRef Name="ChlorumTitre" />
-            <PropertyRef Name="BromumTitre" />
-            <PropertyRef Name="KaliumValue" />
-            <PropertyRef Name="CarbonatesTitre" />
-            <PropertyRef Name="HydrocarbonatesTitre" />
-            <PropertyRef Name="CalciumTrilonTitre" />
-            <PropertyRef Name="CalciumAliquote" />
-            <PropertyRef Name="BromumAliquote" />
-            <PropertyRef Name="SulfatesAliquote" />
-            <PropertyRef Name="KaliumVolume" />
-            <PropertyRef Name="HgCoefficient" />
-            <PropertyRef Name="BromumBlank" />
-            <PropertyRef Name="BromumStandardTitre" />
-            <PropertyRef Name="SulfatesBlank" />
-            <PropertyRef Name="ChlorumAliquote" />
-          </Key>
-          <Property Name="IDSaltAnalysis" Type="Int32" Nullable="false" />
-          <Property Name="IDSample" Type="Int32" Nullable="false" />
-          <Property Name="LabNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="WetWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="MagnesiumTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="MagnesiumAliquote" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="MagnesiumTrilonTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="KaliumCalibration" Type="Int32" Nullable="false" />
-          <Property Name="AnalysisDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="KaliumDiapason" Type="Int32" Nullable="false" />
-          <Property Name="KaliumConcentration" Type="Decimal" Precision="10" Scale="5" />
-          <Property Name="SulfatesCrucibleEmptyWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="SulfatesCrucibleFullWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ResiduumCrucibleFullWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ResiduumCrucibleEmptyWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleEmptyWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleWetSampleWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleDry110SampleWeight" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HumidityCrucibleDry180SampleWeight" Type="Decimal" Precision="10" Scale="5" />
-          <Property Name="CalciumTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ChlorumTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="KaliumValue" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="CarbonatesTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HydrocarbonatesTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="CalciumTrilonTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="CalciumAliquote" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumAliquote" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="SulfatesAliquote" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="KaliumVolume" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="HgCoefficient" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumBlank" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="BromumStandardTitre" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="SulfatesBlank" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-          <Property Name="ChlorumAliquote" Type="Decimal" Precision="10" Scale="5" Nullable="false" />
-        </EntityType>
-        <EntityType Name="SamplesView">
+        <EntityType Name="Sample">
           <Key>
             <PropertyRef Name="IDSample" />
-            <PropertyRef Name="LabNumber" />
-            <PropertyRef Name="SamplingDate" />
-            <PropertyRef Name="Description" />
           </Key>
-          <Property Name="IDSample" Type="Int32" Nullable="false" />
+          <Property Name="IDSample" Type="Int32" Nullable="false" ConcurrencyMode="None" />
           <Property Name="LabNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SamplingDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SamplesCount" Type="Int32" />
+          <NavigationProperty Name="SaltAnalysisDatas" Relationship="SAModel.SampleSaltAnalysisData" FromRole="Sample" ToRole="SaltAnalysisData" />
         </EntityType>
         <Association Name="FK_CalData_Calibration">
-          <End Role="Calibration" Type="Self.Calibration" Multiplicity="1" />
-          <End Role="CalibrationData" Type="Self.CalibrationData" Multiplicity="*" />
+          <End Role="Calibration" Type="SAModel.LinearCalibration" Multiplicity="1" />
+          <End Role="CalibrationData" Type="SAModel.DataPoint" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Calibration">
               <PropertyRef Name="IDCalibration" />
@@ -533,7 +257,7 @@
         </Association>
         <Association Name="FK_Calibr_CalibrType">
           <End Role="CalibrationType" Type="Self.CalibrationType" Multiplicity="1" />
-          <End Role="Calibration" Type="Self.Calibration" Multiplicity="*" />
+          <End Role="Calibration" Type="SAModel.LinearCalibration" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CalibrationType">
               <PropertyRef Name="Type" />
@@ -544,7 +268,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_KaliumCalibration">
-          <End Role="Calibration" Type="Self.Calibration" Multiplicity="1" />
+          <End Role="Calibration" Type="SAModel.LinearCalibration" Multiplicity="1" />
           <End Role="SaltAnalysis" Type="SAModel.SaltAnalysisData" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Calibration">
@@ -555,54 +279,51 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_IDSA_IDSample">
-          <End Role="Sample" Type="Self.Sample" Multiplicity="1" />
-          <End Role="SaltAnalysis" Type="SAModel.SaltAnalysisData" Multiplicity="*" />
+        <EntityContainer Name="ChemicalAnalysesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LineaCalibrations" EntityType="SAModel.LinearCalibration" />
+          <EntitySet Name="DataPoints" EntityType="SAModel.DataPoint" />
+          <EntitySet Name="SaltAnalysisDatas" EntityType="SAModel.SaltAnalysisData" />
+          <EntitySet Name="CalibrationType" EntityType="Self.CalibrationType" />
+          <EntitySet Name="Samples" EntityType="SAModel.Sample" />
+          <AssociationSet Name="FK_CalData_Calibration" Association="Self.FK_CalData_Calibration">
+            <End Role="Calibration" EntitySet="LineaCalibrations" />
+            <End Role="CalibrationData" EntitySet="DataPoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Calibr_CalibrType" Association="Self.FK_Calibr_CalibrType">
+            <End Role="CalibrationType" EntitySet="CalibrationType" />
+            <End Role="Calibration" EntitySet="LineaCalibrations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KaliumCalibration" Association="Self.FK_KaliumCalibration">
+            <End Role="Calibration" EntitySet="LineaCalibrations" />
+            <End Role="SaltAnalysis" EntitySet="SaltAnalysisDatas" />
+          </AssociationSet>
+          <FunctionImport Name="GetSamplesByMultipleIDs" />
+          <FunctionImport Name="UpdateCalibrationData" />
+          <AssociationSet Name="SampleSaltAnalysisData" Association="SAModel.SampleSaltAnalysisData">
+            <End Role="Sample" EntitySet="Samples" />
+            <End Role="SaltAnalysisData" EntitySet="SaltAnalysisDatas" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="SampleSaltAnalysisData">
+          <End Type="SAModel.Sample" Role="Sample" Multiplicity="1" />
+          <End Type="SAModel.SaltAnalysisData" Role="SaltAnalysisData" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Sample">
               <PropertyRef Name="IDSample" />
             </Principal>
-            <Dependent Role="SaltAnalysis">
+            <Dependent Role="SaltAnalysisData">
               <PropertyRef Name="IDSample" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="ChemicalAnalysesEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Calibration" EntityType="Self.Calibration" />
-          <EntitySet Name="CalibrationData" EntityType="Self.CalibrationData" />
-          <EntitySet Name="SaltAnalysis" EntityType="SAModel.SaltAnalysisData" />
-          <EntitySet Name="Sample" EntityType="Self.Sample" />
-          <EntitySet Name="CalibrationType" EntityType="Self.CalibrationType" />
-          <EntitySet Name="CalibrationDataView" EntityType="Self.CalibrationDataView" />
-          <EntitySet Name="SaltAnalysisView" EntityType="Self.SaltAnalysisView" />
-          <EntitySet Name="SamplesView" EntityType="Self.SamplesView" />
-          <AssociationSet Name="FK_CalData_Calibration" Association="Self.FK_CalData_Calibration">
-            <End Role="Calibration" EntitySet="Calibration" />
-            <End Role="CalibrationData" EntitySet="CalibrationData" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Calibr_CalibrType" Association="Self.FK_Calibr_CalibrType">
-            <End Role="CalibrationType" EntitySet="CalibrationType" />
-            <End Role="Calibration" EntitySet="Calibration" />
-          </AssociationSet>
-          <AssociationSet Name="FK_KaliumCalibration" Association="Self.FK_KaliumCalibration">
-            <End Role="Calibration" EntitySet="Calibration" />
-            <End Role="SaltAnalysis" EntitySet="SaltAnalysis" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IDSA_IDSample" Association="Self.FK_IDSA_IDSample">
-            <End Role="Sample" EntitySet="Sample" />
-            <End Role="SaltAnalysis" EntitySet="SaltAnalysis" />
-          </AssociationSet>
-          <FunctionImport Name="GetSamplesByMultipleIDs" />
-          <FunctionImport Name="UpdateCalibrationData" />
-        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="Хранилище SAModelContainer" CdmEntityContainer="ChemicalAnalysesEntities">
-          <EntitySetMapping Name="Calibration">
-            <EntityTypeMapping TypeName="SAModel.Calibration">
+          <EntitySetMapping Name="LineaCalibrations">
+            <EntityTypeMapping TypeName="SAModel.LinearCalibration">
               <MappingFragment StoreEntitySet="Calibration">
                 <ScalarProperty Name="IDCalibration" ColumnName="IDCalibration" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
@@ -611,8 +332,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CalibrationData">
-            <EntityTypeMapping TypeName="SAModel.CalibrationData">
+          <EntitySetMapping Name="DataPoints">
+            <EntityTypeMapping TypeName="SAModel.DataPoint">
               <MappingFragment StoreEntitySet="CalibrationData">
                 <ScalarProperty Name="IDCalibration" ColumnName="IDCalibration" />
                 <ScalarProperty Name="IDCalibrationData" ColumnName="IDCalibrationData" />
@@ -622,7 +343,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SaltAnalysis">
+          <EntitySetMapping Name="SaltAnalysisDatas">
             <EntityTypeMapping TypeName="SAModel.SaltAnalysisData">
               <MappingFragment StoreEntitySet="SaltAnalysis">
                 <ScalarProperty Name="IDSaltAnalysis" ColumnName="IDSaltAnalysis" />
@@ -662,17 +383,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Sample">
-            <EntityTypeMapping TypeName="SAModel.Sample">
-              <MappingFragment StoreEntitySet="Sample">
-                <ScalarProperty Name="IDSample" ColumnName="IDSample" />
-                <ScalarProperty Name="LabNumber" ColumnName="LabNumber" />
-                <ScalarProperty Name="SamplingDate" ColumnName="SamplingDate" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="CalibrationType">
             <EntityTypeMapping TypeName="SAModel.CalibrationType">
               <MappingFragment StoreEntitySet="CalibrationType">
@@ -680,63 +390,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CalibrationDataView">
-            <EntityTypeMapping TypeName="SAModel.CalibrationDataView">
-              <MappingFragment StoreEntitySet="CalibrationDataView">
-                <ScalarProperty Name="IDCalibration" ColumnName="IDCalibration" />
-                <ScalarProperty Name="IDCalibrationData" ColumnName="IDCalibrationData" />
-                <ScalarProperty Name="Diapason" ColumnName="Diapason" />
-                <ScalarProperty Name="Concentration" ColumnName="Concentration" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="CalibrationType" ColumnName="CalibrationType" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SaltAnalysisView">
-            <EntityTypeMapping TypeName="SAModel.SaltAnalysisView">
-              <MappingFragment StoreEntitySet="SaltAnalysisView">
-                <ScalarProperty Name="IDSaltAnalysis" ColumnName="IDSaltAnalysis" />
-                <ScalarProperty Name="IDSample" ColumnName="IDSample" />
-                <ScalarProperty Name="LabNumber" ColumnName="LabNumber" />
-                <ScalarProperty Name="WetWeight" ColumnName="WetWeight" />
-                <ScalarProperty Name="MagnesiumTitre" ColumnName="MagnesiumTitre" />
-                <ScalarProperty Name="MagnesiumAliquote" ColumnName="MagnesiumAliquote" />
-                <ScalarProperty Name="MagnesiumTrilonTitre" ColumnName="MagnesiumTrilonTitre" />
-                <ScalarProperty Name="KaliumCalibration" ColumnName="KaliumCalibration" />
-                <ScalarProperty Name="AnalysisDate" ColumnName="AnalysisDate" />
-                <ScalarProperty Name="KaliumDiapason" ColumnName="KaliumDiapason" />
-                <ScalarProperty Name="KaliumConcentration" ColumnName="KaliumConcentration" />
-                <ScalarProperty Name="SulfatesCrucibleEmptyWeight" ColumnName="SulfatesCrucibleEmptyWeight" />
-                <ScalarProperty Name="SulfatesCrucibleFullWeight" ColumnName="SulfatesCrucibleFullWeight" />
-                <ScalarProperty Name="ResiduumCrucibleFullWeight" ColumnName="ResiduumCrucibleFullWeight" />
-                <ScalarProperty Name="ResiduumCrucibleEmptyWeight" ColumnName="ResiduumCrucibleEmptyWeight" />
-                <ScalarProperty Name="HumidityCrucibleEmptyWeight" ColumnName="HumidityCrucibleEmptyWeight" />
-                <ScalarProperty Name="HumidityCrucibleWetSampleWeight" ColumnName="HumidityCrucibleWetSampleWeight" />
-                <ScalarProperty Name="HumidityCrucibleDry110SampleWeight" ColumnName="HumidityCrucibleDry110SampleWeight" />
-                <ScalarProperty Name="HumidityCrucibleDry180SampleWeight" ColumnName="HumidityCrucibleDry180SampleWeight" />
-                <ScalarProperty Name="CalciumTitre" ColumnName="CalciumTitre" />
-                <ScalarProperty Name="ChlorumTitre" ColumnName="ChlorumTitre" />
-                <ScalarProperty Name="BromumTitre" ColumnName="BromumTitre" />
-                <ScalarProperty Name="KaliumValue" ColumnName="KaliumValue" />
-                <ScalarProperty Name="CarbonatesTitre" ColumnName="CarbonatesTitre" />
-                <ScalarProperty Name="HydrocarbonatesTitre" ColumnName="HydrocarbonatesTitre" />
-                <ScalarProperty Name="CalciumTrilonTitre" ColumnName="CalciumTrilonTitre" />
-                <ScalarProperty Name="CalciumAliquote" ColumnName="CalciumAliquote" />
-                <ScalarProperty Name="BromumAliquote" ColumnName="BromumAliquote" />
-                <ScalarProperty Name="SulfatesAliquote" ColumnName="SulfatesAliquote" />
-                <ScalarProperty Name="KaliumVolume" ColumnName="KaliumVolume" />
-                <ScalarProperty Name="HgCoefficient" ColumnName="HgCoefficient" />
-                <ScalarProperty Name="BromumBlank" ColumnName="BromumBlank" />
-                <ScalarProperty Name="BromumStandardTitre" ColumnName="BromumStandardTitre" />
-                <ScalarProperty Name="SulfatesBlank" ColumnName="SulfatesBlank" />
-                <ScalarProperty Name="ChlorumAliquote" ColumnName="ChlorumAliquote" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SamplesView">
-            <EntityTypeMapping TypeName="SAModel.SamplesView">
+          <EntitySetMapping Name="Samples">
+            <EntityTypeMapping TypeName="SAModel.Sample">
               <MappingFragment StoreEntitySet="SamplesView">
                 <ScalarProperty Name="IDSample" ColumnName="IDSample" />
                 <ScalarProperty Name="LabNumber" ColumnName="LabNumber" />

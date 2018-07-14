@@ -17,12 +17,12 @@ namespace SA_EF
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public CalibrationType()
         {
-            this.Calibrations = new HashSet<Calibration>();
+            this.Calibrations = new HashSet<LinearCalibration>();
         }
     
         public string Type { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Calibration> Calibrations { get; set; }
+        public virtual ICollection<LinearCalibration> Calibrations { get; set; }
     }
 }

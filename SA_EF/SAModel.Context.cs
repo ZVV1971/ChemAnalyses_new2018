@@ -6,18 +6,19 @@
 //     Изменения, вносимые в этот файл вручную, будут перезаписаны при повторном создании кода.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Core.Objects;
-using System.Linq;
-using Samples;
+
 namespace SA_EF
-{  
+{
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
+    
     public partial class ChemicalAnalysesEntities : DbContext
     {
         public ChemicalAnalysesEntities()
-            : base("name=ChemicalAnalysesEntities")
+            : base("name=CAEntities")
         {
         }
     
@@ -26,14 +27,11 @@ namespace SA_EF
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Calibration> Calibration { get; set; }
-        public virtual DbSet<CalibrationData> CalibrationData { get; set; }
-        public virtual DbSet<SaltAnalysisData> SaltAnalysis { get; set; }
-        public virtual DbSet<Sample> Sample { get; set; }
+        public virtual DbSet<LinearCalibration> LineaCalibrations { get; set; }
+        public virtual DbSet<DataPoint> DataPoints { get; set; }
+        public virtual DbSet<SaltAnalysisData> SaltAnalysisDatas { get; set; }
         public virtual DbSet<CalibrationType> CalibrationType { get; set; }
-        public virtual DbSet<CalibrationDataView> CalibrationDataView { get; set; }
-        public virtual DbSet<SaltAnalysisView> SaltAnalysisView { get; set; }
-        public virtual DbSet<SamplesView> SamplesView { get; set; }
+        public virtual DbSet<Sample> Samples { get; set; }
     
         public virtual int GetSamplesByMultipleIDs()
         {

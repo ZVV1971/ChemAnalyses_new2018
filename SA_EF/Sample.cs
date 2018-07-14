@@ -7,28 +7,26 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using SaltAnalysisDatas;
-using System.Diagnostics.CodeAnalysis;
-
 namespace SA_EF
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Sample
     {
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Sample()
         {
-            this.SaltAnalysis = new HashSet<SaltAnalysisData>();
+            this.SaltAnalysisDatas = new HashSet<SaltAnalysisData>();
         }
     
         public int IDSample { get; set; }
         public string LabNumber { get; set; }
-        public DateTime SamplingDate { get; set; }
+        public System.DateTime SamplingDate { get; set; }
         public string Description { get; set; }
-        public string Comment { get; set; }
+        public Nullable<int> SamplesCount { get; set; }
     
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SaltAnalysisData> SaltAnalysis { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SaltAnalysisData> SaltAnalysisDatas { get; set; }
     }
 }

@@ -167,7 +167,7 @@ namespace Calibration
                         if (deepRead)
                         {
                             foreach (DataPoint dp in DataPoint.GetAllDP(iDCalibration))
-                                if (dp.Diapason == 1) lcDP[0].Add(dp); else if (dp.Diapason == 0) lcDP[1].Add(dp);
+                                if (dp.Diapason == 1) lcDP[0].Add(dp); else if (dp.Diapason == 2) lcDP[1].Add(dp);
                         }
 
                         var lc = new LinearCalibration

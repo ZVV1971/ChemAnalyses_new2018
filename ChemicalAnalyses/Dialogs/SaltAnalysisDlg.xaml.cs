@@ -12,7 +12,6 @@ using System.Windows.Documents;
 using ChemicalAnalyses.Alumni;
 using System.Windows.Data;
 using SettingsHelper;
-using SaltAnalysisDatas;
 
 namespace ChemicalAnalyses.Dialogs
 {

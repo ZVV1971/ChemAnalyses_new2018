@@ -7,13 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using Samples;
-
 namespace SA_EF
 {
-    
+    using System;
+    using System.Collections.Generic;
     
     public partial class SaltAnalysisData
     {
@@ -52,7 +49,7 @@ namespace SA_EF
         public int KaliumDiapason { get; set; }
         public int KaliumCalibration { get; set; }
     
-        public virtual Calibration Calibration { get; set; }
-        public virtual Sample Sample { get; set; }
+        public virtual LinearCalibration Calibration { get; set; }
+        public virtual Sample Samples { get; set; }
     }
 }

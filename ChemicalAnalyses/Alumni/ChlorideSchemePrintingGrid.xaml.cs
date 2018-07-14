@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using SaltAnalysisDatas;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using SaltAnalysisDatas;
 using System.Windows;
 
 namespace ChemicalAnalyses.Alumni

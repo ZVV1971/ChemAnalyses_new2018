@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -49,23 +52,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Calibration.cs">
-      <DependentUpon>SAModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CalibrationData.cs">
-      <DependentUpon>SAModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="CalibrationDataView.cs">
-      <DependentUpon>SAModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="CalibrationType.cs">
+      <DependentUpon>SAModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataPoint.cs">
+      <DependentUpon>SAModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LinearCalibration.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaltAnalysisData.cs">
-      <DependentUpon>SAModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SaltAnalysisView.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SAModel.Context.cs">
@@ -84,9 +81,6 @@
       <DependentUpon>SAModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Sample.cs">
-      <DependentUpon>SAModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SamplesView.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -115,16 +109,6 @@
       <DependentUpon>SAModel.edmx</DependentUpon>
       <LastGenOutput>SAModel.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SaltAnalysisData\SaltAnalysisDatas.csproj">
-      <Project>{27b9db2e-6f04-4952-8e34-91edb4670cf3}</Project>
-      <Name>SaltAnalysisDatas</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sample\Samples.csproj">
-      <Project>{fb811f74-2032-4ef4-b40e-4131bb498194}</Project>
-      <Name>Samples</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
