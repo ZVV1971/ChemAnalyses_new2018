@@ -184,7 +184,7 @@ namespace SA_EF
             if (lc != null) lcDict = lc;
         }
 
-        public void CalcValues()
+        public void CalcDryValues()
         {
             MgWet = (MagnesiumTitre * MagnesiumTrilonTitre / MagnesiumAliquote
                 - CalciumTitre * CalciumTrilonTitre / CalciumAliquote)
@@ -241,7 +241,6 @@ namespace SA_EF
                 {
                     lc = context.LineaCalibrations.Find(KaliumCalibration);
                     (lc as LinearCalibration).GetLinearCoefficients();
-                        //LinearCalibration.GetAllLC("[IDCalibration] = " + KaliumCalibration, true).FirstOrDefault();
                     lcDict.Add(KaliumCalibration, lc);
                 }
             }

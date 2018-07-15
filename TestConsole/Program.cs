@@ -42,7 +42,7 @@ namespace TestConsole
                     var sa = smpl.SaltAnalysisDatas.Where(p=>p.IDSample == smpl.IDSample).FirstOrDefault();
                     //var sa = context.SaltAnalysisDatas.Where(p=>p.IDSaltAnalysis
                     //    == saID.IDSaltAnalysis).FirstOrDefault();
-                    sa.CalcValues();
+                    sa.CalcDryValues();
                     sa.CalcSchemeResults();
                     sa.CalcKaliumValue();
                 }

@@ -259,3 +259,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/Build.proj
+/.build/MSBuild.Community.Tasks.targets
+/.build/MSBuild.Community.Tasks.dll

@@ -247,7 +247,7 @@ namespace ChemicalAnalyses.Dialogs
         private void CalculateCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p => {
-                p.CalcValues();
+                p.CalcDryValues();
                 p.CalcKaliumValue();
                 p.CalcSchemeResults();
                 p.RecommendedCalculationScheme = p.CalcRecommendedScheme();
