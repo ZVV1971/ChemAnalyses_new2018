@@ -39,7 +39,7 @@ namespace TestConsole
                 var smpl = context.Samples.Find(18);
                 if (smpl != null)
                 {
-                    var sa = smpl.SaltAnalysisDatas.ToList().FirstOrDefault();
+                    var sa = smpl.SaltAnalysisDatas.Where(p=>p.IDSample == smpl.IDSample).FirstOrDefault();
                     //var sa = context.SaltAnalysisDatas.Where(p=>p.IDSaltAnalysis
                     //    == saID.IDSaltAnalysis).FirstOrDefault();
                     sa.CalcValues();

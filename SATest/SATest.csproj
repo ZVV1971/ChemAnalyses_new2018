@@ -77,21 +77,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Calibration\Calibration.csproj">
-      <Project>{0d0758f5-b88d-4de2-bab4-dd269c471ec9}</Project>
-      <Name>Calibration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ChemicalAnalyses\ChemicalAnalyses.csproj">
       <Project>{8b3a8a2f-0d64-4af4-acf9-e1b4fee1f717}</Project>
       <Name>ChemicalAnalyses</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SaltAnalysisData\SaltAnalysisDatas.csproj">
-      <Project>{27b9db2e-6f04-4952-8e34-91edb4670cf3}</Project>
-      <Name>SaltAnalysisDatas</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sample\Samples.csproj">
-      <Project>{fb811f74-2032-4ef4-b40e-4131bb498194}</Project>
-      <Name>Samples</Name>
+    <ProjectReference Include="..\SA_EF\SA_EF.csproj">
+      <Project>{937c4b50-47c0-471c-8d18-a404fb283877}</Project>
+      <Name>SA_EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\SettingsHelper\SettingsHelper.csproj">
       <Project>{8cb22be2-951b-406a-b4b7-233d328a0299}</Project>

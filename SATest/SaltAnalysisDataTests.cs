@@ -1,23 +1,15 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SettingsHelper;
 using Moq;
 using System.Reflection;
-using SaltAnalysisDatas;
 using System.Collections.Generic;
-using Calibration;
+using SA_EF;
 
 namespace SATest
 {
     [TestClass]
     public class SaltAnalysisDataTests
     {
-        //use explicit public constructor to moq Static connection string returning from SettingsHelper
-        public SaltAnalysisDataTests()
-        {
-            ConnectionStringGiver.GetValidConnectionString = (string s) => { return SATestSettings.cstring.ToString(); };
-        }
-
         [TestMethod, Owner("ZVV 60325-2")]
         public void SimpleSaltAnalysisDataanalysisDateNegative()
         {

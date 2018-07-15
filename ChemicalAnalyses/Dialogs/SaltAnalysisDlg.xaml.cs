@@ -11,6 +11,8 @@ using ChemicalAnalyses.Alumni;
 using System.Windows.Data;
 using SettingsHelper;
 using SA_EF;
+using System.Diagnostics;
+using System.Data.Entity;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -69,28 +71,38 @@ namespace ChemicalAnalyses.Dialogs
         private void FillData()
         {
             sa.Clear();
-            //string cond = "";
-            ////if the list contans just one sample make simple condition
-            //if (Labnumbers?.Count == 1) cond = "[IDSample] = " + Labnumbers[0].IDSample;
-            //else // if many - use IN statement
-            //{
-            //    bool fl = false;
-            //    cond = "[IDSample] IN (";
-            //    foreach (Sample smpl in Labnumbers)
-            //    {
-            //        cond = cond + ((fl) ? ", " : " ") + smpl.IDSample;
-            //        fl = true;
-            //    }
-            //    cond += " )";
-            //}
             using (var context = new ChemicalAnalysesEntities())
             {
-                if (Labnumbers?.Count == 1) sa.Add(context.SaltAnalysisDatas.Find(Labnumbers[0].IDSample));
-                else
-                    foreach (SaltAnalysisData sad in 
-                        context.SaltAnalysisDatas.Intersect(Labnumbers.Cast<SaltAnalysisData>()))
+#if DEBUG
+                context.Database.Log = s => { Debug.WriteLine(s); };
+#else
+                context.Databade.Log = s => { CALogger.WriteToLogfile(s); };
+#endif
+                if (Labnumbers?.Count == 1)
                 {
-                    sa.Add(sad);
+                    try
+                    {
+                        var smpl = context.Samples
+                            .Find(Labnumbers[0].IDSample).SaltAnalysisDatas;
+                        foreach (SaltAnalysisData sad in smpl)
+                        {
+                            sad.LabNumber = Labnumbers[0].LabNumber;
+                            sa.Add(sad);
+                        }
+                    }
+                    catch (Exception ex) { }
+                }
+                else
+                {
+                    var sampl_list = (from Labnumber in Labnumbers
+                                      join smpl in context.SaltAnalysisDatas on Labnumber.IDSample equals smpl.IDSample
+                                      select smpl);
+                    foreach (SaltAnalysisData sad in sampl_list)
+                    {
+                        sad.LabNumber = context.Samples.Where(p=>p.IDSample == sad.IDSample)
+                            .FirstOrDefault().LabNumber;
+                        sa.Add(sad);
+                    }
                 }
             }
         }
@@ -141,8 +153,9 @@ namespace ChemicalAnalyses.Dialogs
                     {
                         dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
                         {
-                            context.SaltAnalysisDatas.Add(p);
+                            //context.SaltAnalysisDatas.Add(p);
                             //p.Insert();
+                            context.Entry(p).State = EntityState.Added;
                             s.AppendLine(p.LabNumber);
                         });
                         context.SaveChanges();
@@ -155,6 +168,7 @@ namespace ChemicalAnalyses.Dialogs
                     {
                         dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
                         {
+                            context.Entry(p).State = EntityState.Modified;
                             //p.Update();
                             s.AppendLine(p.LabNumber);
                         });
@@ -189,7 +203,7 @@ namespace ChemicalAnalyses.Dialogs
                         {
                             s.AppendLine(p.LabNumber);
                             //SaltAnalysisData.Delete(p.IDSaltAnalysis);
-                            context.SaltAnalysisDatas.Remove(p);
+                            context.Entry(p).State=EntityState.Deleted;
                         });
                     context.SaveChanges();
                 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Calibration;
+using SA_EF;
 using SettingsHelper;
 using System;
 using System.Reflection;
@@ -11,12 +11,6 @@ namespace SATest
     [TestClass, TestCategory("Calibration")]
     public class CalibrationTests
     {
-        //use explicit public constructor to moq Static connection string returning from SettingsHelper
-        public CalibrationTests()
-        {
-            ConnectionStringGiver.GetValidConnectionString = (string s) => { return SATestSettings.cstring.ToString(); };
-        }
-
         [TestMethod, Owner("ZVV 60325-2")]
         public void SimpleCalibrationDescriptionPositive()
         {
@@ -112,8 +106,8 @@ namespace SATest
             LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.LinearCalibrationData) == 
             new ObservableCollection<DataPoint>[2] {
                 new ObservableCollection<DataPoint> {
-                    new DataPoint(1,1),
-                    new DataPoint(2,2)},
+                    Mock.Of<DataPoint>(r=>r.Concentration==1 && r.Value==1),
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2)},
                 new ObservableCollection<DataPoint> {}});
             //Check
             Assert.IsFalse(mock.ContainsEqualDataPoints(0));
@@ -126,8 +120,8 @@ namespace SATest
             LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.LinearCalibrationData) ==
             new ObservableCollection<DataPoint>[2] {
                 new ObservableCollection<DataPoint> {
-                    new DataPoint(2,2),
-                    new DataPoint(2,2)},
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2),
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2)},
                 new ObservableCollection<DataPoint> {}});
             //Check
             Assert.IsTrue(mock.ContainsEqualDataPoints(0));
@@ -137,14 +131,12 @@ namespace SATest
         public void GetLinearCoefficientsPositive()
         {
             // Arrange
-            LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.LinearCalibrationData) ==
-            new ObservableCollection<DataPoint>[2] {
+            LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.CalibrationData) ==
                 new ObservableCollection<DataPoint> {
-                    new DataPoint(2,2),
-                    new DataPoint(3,3)},
-                new ObservableCollection<DataPoint> {
-                    new DataPoint(1,2),
-                    new DataPoint(2,4)} });
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2 && r.Diapason==1),
+                    Mock.Of<DataPoint>(r=>r.Concentration==3 && r.Value==3 && r.Diapason==1),
+                    Mock.Of<DataPoint>(r=>r.Concentration==1 && r.Value==2 && r.Diapason==2),
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==4 && r.Diapason==2)});
             mock.GetLinearCoefficients();
             //Check
             Assert.IsTrue(mock.Intercept[0] == 0);
@@ -157,14 +149,12 @@ namespace SATest
         public void GetLinearCoefficientsNegative()
         {
             // Arrange
-            LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.LinearCalibrationData) ==
-            new ObservableCollection<DataPoint>[2] {
+            LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.CalibrationData) ==
                 new ObservableCollection<DataPoint> {
-                    new DataPoint(2,2),
-                    new DataPoint(2,2)},
-                new ObservableCollection<DataPoint> {
-                    new DataPoint(1,2),
-                    new DataPoint(2,2)} });
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2 && r.Diapason==1),
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2 && r.Diapason==1),
+                    Mock.Of<DataPoint>(r=>r.Concentration==1 && r.Value==2 && r.Diapason==2),
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2 && r.Diapason==2)});
             mock.GetLinearCoefficients();
             //Check
             Assert.IsTrue(mock.Intercept[0] == decimal.MaxValue);
@@ -174,7 +164,7 @@ namespace SATest
         }
 
         [TestMethod, Owner("ZVV 60325-2")]
-        public void ValueToConcentrationDiapasonNegative()
+        public void ValueToConcentrationDiapasonNegative_Diapason()
         {
             // Arrange
             LinearCalibration lc = Mock.Of<LinearCalibration>();
@@ -191,23 +181,42 @@ namespace SATest
             //Check the real type of the inner exception
             Assert.IsInstanceOfType(except, typeof(ArgumentOutOfRangeException));
             // and its text
-            Assert.IsTrue(String.Equals(except.Message.Substring(0,
-                except.Message.IndexOf("\r\n")),
-                "Недопустимый номер диапазаона или неверное значение показателя"));
+            Assert.IsTrue(String.Equals(except.Message.Substring(0, except.Message.IndexOf("\r\n")),
+                "Недопустимый номер диапазона"));
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
+        public void ValueToConcentrationDiapasonNegative_Value()
+        {
+            // Arrange
+            LinearCalibration lc = Mock.Of<LinearCalibration>();
+
+            Exception except = null;
+            try
+            {
+                lc.ValueToConcentration(-1, 1);
+            }
+            catch (Exception ex)
+            {
+                except = ex;
+            }
+            //Check the real type of the inner exception
+            Assert.IsInstanceOfType(except, typeof(ArgumentOutOfRangeException));
+            // and its text
+            Assert.IsTrue(String.Equals(except.Message.Substring(0, except.Message.IndexOf("\r\n")),
+                "Неверное значение показателя"));
         }
 
         [TestMethod, Owner("ZVV 60325-2")]
         public void ValueToConcentrationPositive()
         {
             // Arrange
-            LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.LinearCalibrationData) ==
-            new ObservableCollection<DataPoint>[2] {
+            LinearCalibration mock = Mock.Of<LinearCalibration>(p => (p.CalibrationData) ==
                 new ObservableCollection<DataPoint> {
-                    new DataPoint(2,2),
-                    new DataPoint(3,3)},
-                new ObservableCollection<DataPoint> {
-                    new DataPoint(1,2),
-                    new DataPoint(2,4)} });
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==2 && r.Diapason==1),
+                    Mock.Of<DataPoint>(r=>r.Concentration==3 && r.Value==3 && r.Diapason==1),
+                    Mock.Of<DataPoint>(r=>r.Concentration==1 && r.Value==2 && r.Diapason==2),
+                    Mock.Of<DataPoint>(r=>r.Concentration==2 && r.Value==4 && r.Diapason==2)} );
             mock.GetLinearCoefficients();
             Assert.AreEqual(mock.ValueToConcentration(2, 0), 2);
             Assert.AreEqual(mock.ValueToConcentration(2, 1), 1);

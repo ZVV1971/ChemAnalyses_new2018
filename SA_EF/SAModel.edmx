@@ -130,18 +130,20 @@
           <EntitySet Name="CalibrationData" EntityType="Self.CalibrationData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SaltAnalysis" EntityType="Self.SaltAnalysis" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CalibrationType" EntityType="Self.CalibrationType" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
+            <!--<DefiningQuery>SELECT 
     [CalibrationType].[Type] AS [Type]
     FROM [dbo].[CalibrationType] AS [CalibrationType]</DefiningQuery>
+    -->
           </EntitySet>
-          <EntitySet Name="SamplesView" EntityType="Self.SamplesView" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
+          <EntitySet Name="SamplesView" EntityType="Self.SamplesView" Schema="dbo" store:Type="Tables">
+         <!--   <DefiningQuery>SELECT 
     [SamplesView].[IDSample] AS [IDSample], 
     [SamplesView].[LabNumber] AS [LabNumber], 
     [SamplesView].[SamplingDate] AS [SamplingDate], 
     [SamplesView].[Description] AS [Description], 
     [SamplesView].[SamplesCount] AS [SamplesCount]
     FROM [dbo].[SamplesView] AS [SamplesView]</DefiningQuery>
+    -->
           </EntitySet>
           <AssociationSet Name="FK_CalData_Calibration" Association="Self.FK_CalData_Calibration">
             <End Role="Calibration" EntitySet="Calibration" />

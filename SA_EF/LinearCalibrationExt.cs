@@ -164,8 +164,8 @@ namespace SA_EF
         /// <returns>Concentration</returns>
         public decimal ValueToConcentration(decimal val, int diap)
         {
-            if (diap < 0 || diap > 1) throw new ArgumentOutOfRangeException("Diapason", "Недопустимый номер диапазаона");
-            if (val <= 0) throw new ArgumentOutOfRangeException("Value", "или неверное значение показателя");
+            if (diap < 0 || diap > 1) throw new ArgumentOutOfRangeException("Diapason", "Недопустимый номер диапазона");
+            if (val <= 0) throw new ArgumentOutOfRangeException("Value", "Неверное значение показателя");
             if (val < LinearCalibrationData[diap].Min(p => p.Value) || val > LinearCalibrationData[diap].Max(p => p.Value))
             {//calculate by coefficients
                 try { return (val - Intercept[diap]) / Slope[diap]; }

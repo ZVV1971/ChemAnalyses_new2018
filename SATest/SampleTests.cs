@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SettingsHelper;
 using Moq;
-using Samples;
+using SA_EF;
 using System.Reflection;
 
 namespace SATest
@@ -10,12 +9,6 @@ namespace SATest
     [TestClass]
     public class SampleTests
     {
-        //use explicit public constructor to moq Static connection string returning from SettingsHelper
-        public SampleTests()
-        {
-            ConnectionStringGiver.GetValidConnectionString = (string s) => { return SATestSettings.cstring.ToString(); };
-        }
-
         [TestMethod, Owner("ZVV 60325-2")]
         public void SimpleLabNumberPositive()
         {

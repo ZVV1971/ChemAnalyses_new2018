@@ -5,19 +5,17 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-//using Samples;
+using System.Data.Entity;
 using SettingsHelper;
 using SA_EF;
 using ChemicalAnalyses.Alumni;
+using System.Diagnostics;
 
 namespace ChemicalAnalyses.Dialogs
 {
     public partial class SamplesViewDlg : Window
     {
         ObservableCollection<Sample> SamplesCollection;
-        private static DateTime endDate = DateTime.Today;
-        private static DateTime startDate =
-            new DateTime(DateTime.Today.Year - 1, DateTime.Today.Month, DateTime.Today.Day);
         public string FilterText
         {
             get { return (string)GetValue(FilterTextProperty); }
@@ -50,6 +48,11 @@ namespace ChemicalAnalyses.Dialogs
             {
                 using (var context = new ChemicalAnalysesEntities())
                 {
+#if DEBUG
+                    context.Database.Log = s => { Debug.WriteLine(s); };
+#else
+                    context.Databade.Log = s => { CALogger.WriteToLogfile(s); };
+#endif
                     foreach (Sample smpl in
                         ((fFields.LabNumber == null) || (fFields.LabNumber.Equals(string.Empty)) ?
                         (context.Samples) : (context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber)))
@@ -77,9 +80,9 @@ namespace ChemicalAnalyses.Dialogs
                 {
                     using (var context = new ChemicalAnalysesEntities())
                     {
+                        context.Entry(smpl).State = EntityState.Modified;
                         context.SaveChanges();
                     }
-                    //smpl.Update();
                     CALogger.WriteToLogFile(string.Format("Изменены данные образца {0}", smpl.ToString()));
                     FillData();
                 }
@@ -108,14 +111,7 @@ namespace ChemicalAnalyses.Dialogs
             {
                 fFields = dlg.Filter;
                 FilterText = GetFilter().ToString();
-                //    "(([SamplingDate] >= '" +
-                //    fFields.StartDate.Month.ToString() + '/' + fFields.StartDate.Day.ToString() + '/' 
-                //    + fFields.StartDate.Year.ToString()
-                //    + "') AND ([SamplingDate] <= '" +
-                //    fFields.EndDate.Month.ToString() + '/' + fFields.EndDate.Day.ToString() + '/' 
-                //    + fFields.EndDate.Year.ToString() + "'))";
-                //if (fFields.LabNumber != null && fFields.LabNumber != string.Empty)
-                //    FilterText += "AND ([LabNumber] = N'" + fFields.LabNumber + "')";
+                FillData();
             }
         }
 
@@ -134,10 +130,10 @@ namespace ChemicalAnalyses.Dialogs
                 SamplesCollection[lbSamples.SelectedIndex].ToString()));
             using (var context = new ChemicalAnalysesEntities())
             {
-                context.Samples.Remove(SamplesCollection[lbSamples.SelectedIndex] as Sample);
+                context.Entry(SamplesCollection[lbSamples.SelectedIndex] as Sample)
+                    .State = EntityState.Deleted;
                 context.SaveChanges();
             }
-            //Sample.Delete(SamplesCollection[lbSamples.SelectedIndex].IDSample);
             FillData();
         }
 
@@ -158,6 +154,11 @@ namespace ChemicalAnalyses.Dialogs
                     CALogger.WriteToLogFile(string.Format("Внесен новый образец {0}", smpl.ToString()));
                     using (var context = new ChemicalAnalysesEntities())
                     {
+#if DEBUG
+                        context.Database.Log = s => { Debug.WriteLine(s); };
+#else
+                        context.Databade.Log = s => { CALogger.WriteToLogfile(s); };
+#endif
                         context.Samples.Add(smpl);
                         context.SaveChanges();
                     }
@@ -206,9 +207,7 @@ namespace ChemicalAnalyses.Dialogs
             saltADlg.Title = "Редактирование данных анализов для " + ((lbSamples.SelectedItems.Count == 1) ?
              "образца №" + ((Sample)lbSamples.SelectedItem).IDSample.ToString() :
              title.ToString());
-            if (saltADlg.ShowDialog() == true)
-            {
-            }
+            if (saltADlg.ShowDialog() == true) { };
             //Resample in any case since user could have deleted all analyses and quitted by ESC
             FillData();
         }
@@ -217,6 +216,7 @@ namespace ChemicalAnalyses.Dialogs
         {
             fFields = new SampleFilterFields();
             FilterText = fFields.ToString();
+            FillData();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
