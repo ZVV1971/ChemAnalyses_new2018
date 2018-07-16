@@ -11,7 +11,7 @@ namespace SettingsHelper
             LogFileName = logFile;
         }
 
-        public static void WriteToLogFile (string msg)
+        public static async void WriteToLogFile (string msg)
         {
             string logFilePath = (LogFileName == null) ? 
                 (Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"log.txt") 
@@ -21,7 +21,7 @@ namespace SettingsHelper
                 using (StreamWriter sw = new StreamWriter(new FileStream(logFilePath,
                     FileMode.Append, FileAccess.Write, FileShare.ReadWrite)))
                 {
-                    sw.WriteLine(String.Format("{0}:{1} -- {2}", 
+                    await sw.WriteLineAsync(String.Format("{0}:{1} -- {2}", 
                         DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), msg));
                 }
             }

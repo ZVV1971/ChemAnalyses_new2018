@@ -6,6 +6,9 @@ using System.Windows;
 using System.Windows.Input;
 using SettingsHelper;
 using SA_EF;
+using System.Diagnostics;
+using System.Data.Entity;
+using System.Data;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -56,10 +59,11 @@ namespace ChemicalAnalyses.Dialogs
             //deep read the currently selected calibration
             using (var context = new ChemicalAnalysesEntities())
             {
+#if DEBUG
+                context.Database.Log = s => { Debug.WriteLine(s); };
+#endif
                 LinearCalibration lc = context.LineaCalibrations
                     .Find(((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID);
-                //LinearCalibration.GetAllLC("[IDCalibration] = " +
-                //((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID, true)?.Single();
                 if (lc != null) lc.GetLinearCoefficients();
                 else return;
                 CalibrationDataDialog cldDlg = new CalibrationDataDialog(ref lc);
@@ -67,6 +71,23 @@ namespace ChemicalAnalyses.Dialogs
                 {
                     try
                     {
+                        //context.Entry(lc.CalibrationData).State = EntityState.Modified;
+                        context.Entry(lc).State = EntityState.Modified;
+
+                        DataTable dataTable = new DataTable("TempCalibrationData");
+                        dataTable.Columns.AddRange(new DataColumn[]
+                        {
+                            new DataColumn("IDCalibration", typeof(int)),
+                            new DataColumn("IDCalibrationData", typeof(int)),
+                            new DataColumn("Diapason", typeof(int)),
+                            new DataColumn("Concentration", typeof(decimal)),
+                            new DataColumn("Value", typeof(decimal))
+                        });
+                        lc.LinearCalibrationData[0].ToList().ForEach(p =>
+                            dataTable.Rows.Add(lc.CalibrationID, 0, 1, p.Concentration, p.Value));
+                        lc.LinearCalibrationData[1].ToList().ForEach(p =>
+                            dataTable.Rows.Add(lc.CalibrationID, 0, 2, p.Concentration, p.Value));
+                        int res = context.UpdateCalibrationData(dataTable);
                         context.SaveChanges();
                         //lc.Update();
                         CALogger.WriteToLogFile(string.Format("Изменена калибровка ID{0};{1} - {2}",
@@ -95,8 +116,6 @@ namespace ChemicalAnalyses.Dialogs
                     .Find(((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID);
                 if (lc != null) lc.GetLinearCoefficients();
                 else return;
-                //LinearCalibration.GetAllLC("[IDCalibration] = " +
-                //((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID, true)?.Single();
                 CalibrationViewDialog cvDlg = new CalibrationViewDialog(ref lc);
                 cvDlg.Show(); //just to show it, no results are necessary
             }
@@ -119,10 +138,24 @@ namespace ChemicalAnalyses.Dialogs
                     lc.Description , lc.CalibrationType.ToString()));
                 using (var context = new ChemicalAnalysesEntities())
                 {
-                    context.LineaCalibrations.Add(lc);
+#if DEBUG
+                    context.Database.Log = s => { Debug.WriteLine(s); };
+#endif
+                    for (int i = 0; i <= lc.LinearCalibrationData.Rank; i++)
+                    {
+                        lc.LinearCalibrationData[i].ToList().ForEach(p =>
+                        {
+                            lc.CalibrationData.Add(new DataPoint
+                            {
+                                Concentration = p.Concentration,
+                                Value = p.Value,
+                                Diapason = i + 1
+                            });
+                        });
+                    }
+                    LinearCalibration newlc = context.LineaCalibrations.Add(lc);
                     context.SaveChanges();
                 }
-                    //lc.Insert();
                     FillData();
             }
         }
@@ -164,13 +197,15 @@ namespace ChemicalAnalyses.Dialogs
             {
                 using (var context = new ChemicalAnalysesEntities())
                 {
+#if DEBUG
+                    context.Database.Log = s => { Debug.WriteLine(s); };
+#endif
                     LinearCalibration tmpLC = context.LineaCalibrations
                     .Find(((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID);
-                    //((LinearCalibration)cbLCSelection.SelectedItem);
-                    //LinearCalibration.Delete(tmpLC.CalibrationID);
                     CALogger.WriteToLogFile(string.Format("Удалена калибровка ID{0};{1} - {2}",
                          tmpLC.CalibrationID, tmpLC.Description, tmpLC.CalibrationType.ToString()));
-                    context.LineaCalibrations.Remove(tmpLC);
+                    tmpLC.CalibrationData.ToList().ForEach(p => context.Entry(p).State = EntityState.Deleted);
+                    context.Entry(tmpLC).State = EntityState.Deleted;
                     context.SaveChanges();
                 }
                 FillData();

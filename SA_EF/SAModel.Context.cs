@@ -14,7 +14,8 @@ namespace SA_EF
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
-    
+    using System.Data;
+
     public partial class ChemicalAnalysesEntities : DbContext
     {
         public ChemicalAnalysesEntities()
@@ -38,9 +39,10 @@ namespace SA_EF
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetSamplesByMultipleIDs");
         }
     
-        public virtual int UpdateCalibrationData()
+        public virtual int UpdateCalibrationData(DataTable dtbl)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateCalibrationData");
+            var dtblParameter = new ObjectParameter("tmp", typeof(DataTable));
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateCalibrationData", dtblParameter);
         }
     }
 }
