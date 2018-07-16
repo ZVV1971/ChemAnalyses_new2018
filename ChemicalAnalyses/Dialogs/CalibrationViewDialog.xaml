@@ -9,7 +9,7 @@
         xmlns:chartingprimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:chHlpr="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
-        Title="Просмотр и редактирование параметров калибровки" Height="750" Width="625">
+        Title="Просмотр параметров калибровки" Height="750" Width="625">
     <Window.Resources>
         <Style TargetType="{x:Type chartingToolkit:NumericAxisLabel}" x:Key="nmStyle">
             <Setter Property="StringFormat" Value="{}{0:0.####}"/>

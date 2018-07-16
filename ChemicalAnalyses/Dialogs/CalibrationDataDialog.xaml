@@ -67,7 +67,8 @@
             <Label Content="_Краткое описание: "/>
             <TextBox x:Name="tbDescription" TextWrapping="WrapWithOverflow" Text="{Binding Path=lc.Description,
                 UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, NotifyOnTargetUpdated=True, 
-                ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
+                ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                ToolTip="Введите краткое описание, которое максимально точно характиризует калибровку.&#x0a;(Будет отображаться в списке)"/>
             <StackPanel Orientation="Horizontal">
                 <Label Content="_Дата: " Target="{Binding ElementName=dpckCalibrationDate}"/>
                 <DatePicker Text="{Binding lc.CalibrationDate, UpdateSourceTrigger=PropertyChanged, 

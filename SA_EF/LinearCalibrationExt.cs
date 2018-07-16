@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Data;
+using EntityFrameworkExtras.EF6;
 
 namespace SA_EF
 {
@@ -223,4 +224,26 @@ namespace SA_EF
     /// Enumerates the possible chemical elements the calibration can be applied to
     /// </summary>
     public enum ChemicalElemetCalibration { Kalium, Natrium };
+
+    [StoredProcedure("UpdateCalibrationData")]
+    public class UpdateLCWithSP
+    {
+        [StoredProcedureParameter(SqlDbType.Udt)]
+        public List<LCData> tmp { get; set; }
+    }
+
+    [UserDefinedTableType("TempCalibrationData")]
+    public class LCData
+    {
+        [UserDefinedTableTypeColumn(1, "IDCalibration")]
+        public int IDCalibration { get; set; }
+        [UserDefinedTableTypeColumn(2, "IDCalibrationData")]
+        public int IDCalibrationData { get; set; }
+        [UserDefinedTableTypeColumn(3, "Diapason")]
+        public int Diapason { get; set; }
+        [UserDefinedTableTypeColumn(4, "Concentration")]
+        public decimal Concentration { get; set; }
+        [UserDefinedTableTypeColumn(4, "Value")]
+        public decimal Value { get; set; }
+    }
 }

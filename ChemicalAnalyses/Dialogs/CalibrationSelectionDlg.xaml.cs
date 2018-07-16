@@ -9,6 +9,8 @@ using SA_EF;
 using System.Diagnostics;
 using System.Data.Entity;
 using System.Data;
+using EntityFrameworkExtras.EF6;
+using System.Windows.Controls;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -27,6 +29,10 @@ namespace ChemicalAnalyses.Dialogs
             FillData();
             Title = "Выбор калибровки для: " + type;
             grdMain.DataContext = this;
+            //let tooltips be shown on disabled controls as well
+            ToolTipService.ShowOnDisabledProperty.OverrideMetadata(
+                typeof(Control),
+                new FrameworkPropertyMetadata(true));
         }
 
         private void FillData()
@@ -71,31 +77,40 @@ namespace ChemicalAnalyses.Dialogs
                 {
                     try
                     {
-                        //context.Entry(lc.CalibrationData).State = EntityState.Modified;
+                        context.Database.BeginTransaction();
                         context.Entry(lc).State = EntityState.Modified;
 
-                        DataTable dataTable = new DataTable("TempCalibrationData");
-                        dataTable.Columns.AddRange(new DataColumn[]
+                        List<LCData> t = new List<LCData>();
+                        for (int i = 0; i <= lc.LinearCalibrationData.Rank; i++)
                         {
-                            new DataColumn("IDCalibration", typeof(int)),
-                            new DataColumn("IDCalibrationData", typeof(int)),
-                            new DataColumn("Diapason", typeof(int)),
-                            new DataColumn("Concentration", typeof(decimal)),
-                            new DataColumn("Value", typeof(decimal))
-                        });
-                        lc.LinearCalibrationData[0].ToList().ForEach(p =>
-                            dataTable.Rows.Add(lc.CalibrationID, 0, 1, p.Concentration, p.Value));
-                        lc.LinearCalibrationData[1].ToList().ForEach(p =>
-                            dataTable.Rows.Add(lc.CalibrationID, 0, 2, p.Concentration, p.Value));
-                        int res = context.UpdateCalibrationData(dataTable);
+                            lc.LinearCalibrationData[i].ToList().ForEach(p =>
+                            {
+                                t.Add(new LCData()
+                                {
+                                    IDCalibration = lc.CalibrationID,
+                                    IDCalibrationData = p.IDCalibrationData,
+                                    Diapason = i + 1,
+                                    Concentration = p.Concentration,
+                                    Value = p.Value
+                                });
+                            });
+                        }
+
+                        var proc = new UpdateLCWithSP()
+                        {
+                            tmp = t
+                        };
+
+                        context.Database.ExecuteStoredProcedure(proc);
                         context.SaveChanges();
-                        //lc.Update();
+                        context.Database.CurrentTransaction.Commit();
                         CALogger.WriteToLogFile(string.Format("Изменена калибровка ID{0};{1} - {2}",
                         lc.CalibrationID, lc.Description, lc.CalibrationType.ToString()));
                         FillData();
                     }
                     catch (Exception ex)
                     {
+                        context.Database.CurrentTransaction.Rollback();
                         MessageBox.Show(ex.Message + " в " + ex.Source, "Ошибка");
                     }
                 }
@@ -189,6 +204,8 @@ namespace ChemicalAnalyses.Dialogs
                 }
                 else e.CanExecute = false;
             }
+            btnDelete.ToolTip = (e.CanExecute) ? "Удалить выбранную калибровку" 
+                : "Удаление калибровки невозможно." + Environment.NewLine + "Присутствуют связанные данные.";
         }
 
         private void DeleteCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -212,7 +229,7 @@ namespace ChemicalAnalyses.Dialogs
             }
             catch
             {
-                MessageBox.Show("Не удалось удалить калибровку!\nИмеются связанные данные.");
+                MessageBox.Show("Не удалось удалить калибровку!" + Environment.NewLine + "Имеются связанные данные.");
             }
         }
     }

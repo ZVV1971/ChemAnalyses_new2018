@@ -13,7 +13,7 @@
         <CommandBinding Command="commands:CustomKSRCommands.List" Executed="ListCommand_Executed"/>
         <CommandBinding Command="commands:CustomKSRCommands.Exit" Executed="ExitCommand_Executed"/>
     </Window.CommandBindings>
-    <Grid>
+    <Grid ToolTip="">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
@@ -52,7 +52,7 @@
             </MenuItem>
         </Menu>
         <!--*********************  StatusBar **************************-->
-        <StatusBar Grid.Row="3" VerticalAlignment="Stretch" x:Name="sbMain" ToolTip="Главная StackPanel">
+        <StatusBar Grid.Row="3" VerticalAlignment="Stretch" x:Name="sbMain" ToolTip="Строка состояния">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
