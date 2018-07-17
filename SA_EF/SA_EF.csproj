@@ -78,6 +78,8 @@
     <Compile Include="DataPoint.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ILinearCalibration.cs" />
+    <Compile Include="Interfaces\ISaltAnalysisCalc.cs" />
     <Compile Include="LinearCalibration.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>

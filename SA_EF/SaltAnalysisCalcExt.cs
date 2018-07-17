@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
-using System.Data.SqlClient;
-using System.Data;
-using System.Windows;
+using SA_EF.Interfaces;
 using System.Reflection;
 using System.Globalization;
 using System.IO;
 
 namespace SA_EF
 {
-    public partial class SaltAnalysisData
+    public partial class SaltAnalysisData : ISaltAnalysisCalculation, ISaltAnalysisDryData
     {
         #region DrywWeights
         [NotMapped]
@@ -74,6 +69,14 @@ namespace SA_EF
         public decimal? HygroWater { get; private set; }
         [NotMapped]
         public decimal HygroWaterAnyCase { get; private set; }
+        [NotMapped]
+        public decimal CaHCO3_2 { get; private set; }
+        [NotMapped]
+        public decimal MgSO4 { get; private set; }
+        [NotMapped]
+        public decimal Na2SO4 { get; private set; }
+        [NotMapped]
+        public decimal NaBr { get; private set; }
         #endregion SchemeResults
         #region AtomicWeights_Of_ChemicalElememts
         static decimal awMg;
@@ -103,6 +106,10 @@ namespace SA_EF
         private static decimal _Eq_Mg;
         private static decimal _Eq_Ca;
         private static decimal _Eq_SO4;
+        private static decimal _Ca_2_HCO3;
+        private static decimal _SO4_2_Ca;
+        private static decimal _SO4_2_Mg;
+        private static decimal _Na_2_SO4;
         //May be changed at the user level so need to hold for each instance separately
         private decimal carnalliteThreshold = 0.0008M;
         #endregion
@@ -159,6 +166,10 @@ namespace SA_EF
                 _NaCl_2_Cl = (awNa + awCl) / awCl;
                 _KBr_2_Br = (awK + awBr) / awBr;
                 _Carnallite_2_Magnesium = (12 * awH + 6 * awO + awMg + 3 * awCl + awK) / awMg;
+                _Ca_2_HCO3 = awCa / (2 * (awH + awC + 3 * awO));
+                _SO4_2_Ca = (awS + 4 * awO) / awCa;
+                _SO4_2_Mg = (awS + 4 * awO) / awMg;
+                _Na_2_SO4 = (2 * awNa) / (awS + 4 * awO);
                 //mass percentage to normality concentration constants
                 _Eq_CO3 = 1000 / (awC + 3 * awO);
                 _Eq_HCO3 = 1000 / (awC + awH + 3 * awO);
@@ -198,18 +209,8 @@ namespace SA_EF
                         : (HumidityCrucibleWetSampleWeight - HumidityCrucibleDry110SampleWeight)
                         / (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight);
             //Set corrected dry weight of the sample depending on the scheme
-            switch (DefaultCalculationScheme)
-            {
-                case SaltCalculationSchemes.Chloride:
-                    SampleCorrectedDryWeight = (MgWet >= carnalliteThreshold)
-                        ? NewDryWeight(WetWeight, MgWet, HumidityContent, _water2MagnesiumRatioInCarnallite)
-                        : WetWeight * (1 - HumidityContent);
-                    break;
-                default://All other schemes
-                    SampleCorrectedDryWeight = WetWeight * (1 - HumidityContent);
-                    break;
-            }
-
+            SampleCorrectedDryWeight = CalcCorrectedDryWeight(DefaultCalculationScheme);
+            
             MgDry = (MagnesiumTitre * MagnesiumTrilonTitre / MagnesiumAliquote
                 - CalciumTitre * CalciumTrilonTitre / CalciumAliquote)
                 * 0.0125M * awMg / SampleCorrectedDryWeight;
@@ -232,7 +233,31 @@ namespace SA_EF
             HydrocarbonatesDry = HydrocarbonatesTitre / (1000 * SampleCorrectedDryWeight);
         }
 
-        public void CalcKaliumValue()
+        /// <summary>
+        /// Возвращает скорректированный сухой вес пробы
+        /// в зависимости от схемы расчета
+        /// </summary>
+        /// <param name="defScheme">схема расчета</param>
+        /// <returns></returns>
+        public decimal CalcCorrectedDryWeight(SaltCalculationSchemes defScheme)
+        {
+            switch (defScheme)
+            {
+                case SaltCalculationSchemes.Chloride:
+                    return (MgWet >= carnalliteThreshold)
+                        ? NewDryWeight(WetWeight, MgWet, HumidityContent, _water2MagnesiumRatioInCarnallite)
+                        : WetWeight * (1 - HumidityContent);
+                default://All other schemes
+                    return WetWeight * (1 - HumidityContent);
+            }
+        }
+
+        /// <summary>
+        /// Возвращает рассчитанное на скорректированный сухой вес пробы
+        /// значение содержания калия в образце независимо от схемы расчета
+        /// </summary>
+        /// <returns>Скорректированный сухой вес</returns>
+        public decimal CalcKaliumValue()
         {
             ILinearCalibration lc;
             if (!lcDict.ContainsKey(KaliumCalibration))
@@ -245,9 +270,21 @@ namespace SA_EF
                 }
             }
             else { lc = lcDict[KaliumCalibration]; }
-            KDry = lc.ValueToConcentration(KaliumValue, KaliumDiapason - 1) * KaliumVolume
-                / (2 * SampleCorrectedDryWeight);
+            try
+            {
+                return lc.ValueToConcentration(KaliumValue, KaliumDiapason - 1) * KaliumVolume
+                    / (2 * SampleCorrectedDryWeight);
+            }
+            catch (Exception ex)
+            {
+                throw new DivideByZeroException("Скорректированный сухой вес не может быть равен нулю", ex);
+            }
         }
+
+        /// <summary>
+        /// Рассчитывает коэффициенты и возвращает рекомендуемую схему расчета
+        /// </summary>
+        /// <returns>Рекомендуемую схемы расчета</returns>
         public SaltCalculationSchemes CalcRecommendedScheme()
         {
             decimal Coeff1 = 0, Coeff2 = 0, Coeff3 = 0, Coeff4 = 0;
@@ -289,36 +326,61 @@ namespace SA_EF
             }
         }
 
-        public void CalcSchemeResults()
+        public void CalcSchemeResults(ISaltAnalysisDryData dryData, SaltCalculationSchemes defSchema)
         {
-            switch (DefaultCalculationScheme)
+            switch (defSchema)
             {
                 case SaltCalculationSchemes.Chloride:
-                    CaSO4 = SulfatesDry * _CaSO4_2_SO4;                                     //1
-                    decimal _Ca_bound2_SO4 = CaSO4 - SulfatesDry;                           //2
-                    decimal _Ca_bound2_Cl = CaDry - _Ca_bound2_SO4;                         //3
-                    CaCl2 = _Ca_bound2_Cl * _CaCl2_2_Ca;                                    //4
-                    decimal _Cl_bound2_Ca = CaCl2 - _Ca_bound2_Cl;                          //5
-                    MgCl2AnyCase = MgDry * _MgCl2_2_Mg;                                     //6 
-                    MgCl2 = (MgWet >= carnalliteThreshold) ? MgDry *
-                        _MgCl2_2_Mg : (decimal?)null;                                         //7
-                    decimal _Cl_bound_2_Mg = (MgCl2.HasValue) ? MgCl2.Value : 0 - MgDry;    //8
-                    KBr = BrDry * _KBr_2_Br;                                                //9
-                    decimal _K_bound2_Br = KBr - BrDry;                                     //10
-                    decimal _K_bound_2_Cl = KDry - _K_bound2_Br;                            //11
-                    KCl = _K_bound_2_Cl * _KCl_2_K;                                         //12
-                    decimal _Cl_bound2_K = KCl - _K_bound_2_Cl;                             //13
-                    decimal _summaryCl = _Cl_bound2_Ca + _Cl_bound_2_Mg + _Cl_bound2_K;     //14
-                    decimal _CL_bound2_Na = ClDry - _summaryCl;                             //15
-                    Na = _CL_bound2_Na * awNa / awCl;                                       //16
-                    NaCl = Na + _CL_bound2_Na;                                              //17
-                    CrystWater = (MgWet >= carnalliteThreshold)
-                       ? MgDry * _water2MagnesiumRatioInCarnallite
-                       : (decimal?)null;
-                    HygroWater = HumidityContent - CrystWater;                              //Non-BK
-                    Carnallite = MgDry * _Carnallite_2_Magnesium;
-                    HygroWaterAnyCase = (MgWet >= carnalliteThreshold) ?
-                        HumidityContent - MgDry * _water2MagnesiumRatioInCarnallite : HumidityContent;
+                    {
+                        CaSO4 = dryData.SulfatesDry * _CaSO4_2_SO4;
+                        decimal _Ca_bound2_SO4 = CaSO4 - dryData.SulfatesDry;
+                        decimal _Ca_bound2_Cl = dryData.CaDry - _Ca_bound2_SO4;
+                        CaCl2 = _Ca_bound2_Cl * _CaCl2_2_Ca;
+                        decimal _Cl_bound2_Ca = CaCl2 - _Ca_bound2_Cl;
+                        MgCl2AnyCase = dryData.MgDry * _MgCl2_2_Mg;
+                        MgCl2 = (dryData.MgWet >= carnalliteThreshold) ? dryData.MgDry *
+                            _MgCl2_2_Mg : (decimal?)null;
+                        decimal _Cl_bound_2_Mg = (MgCl2.HasValue) ? MgCl2.Value : 0 - dryData.MgDry;
+                        KBr = dryData.BrDry * _KBr_2_Br;
+                        decimal _K_bound2_Br = KBr - dryData.BrDry;
+                        decimal _K_bound_2_Cl = dryData.KDry - _K_bound2_Br;
+                        KCl = _K_bound_2_Cl * _KCl_2_K;
+                        decimal _Cl_bound2_K = KCl - _K_bound_2_Cl;
+                        decimal _summaryCl = _Cl_bound2_Ca + _Cl_bound_2_Mg + _Cl_bound2_K;
+                        decimal _CL_bound2_Na = dryData.ClDry - _summaryCl;
+                        Na = _CL_bound2_Na * awNa / awCl;
+                        NaCl = Na + _CL_bound2_Na;
+                        CrystWater = (dryData.MgWet >= carnalliteThreshold)
+                           ? dryData.MgDry * _water2MagnesiumRatioInCarnallite
+                           : (decimal?)null;
+                        HygroWater = HumidityContent - CrystWater;
+                        Carnallite = dryData.MgDry * _Carnallite_2_Magnesium;
+                        HygroWaterAnyCase = (dryData.MgWet >= carnalliteThreshold) ?
+                            dryData.HumidityContent - dryData.MgDry * _water2MagnesiumRatioInCarnallite
+                            : dryData.HumidityContent;
+                    }
+                    break;
+                case SaltCalculationSchemes.SulfateSodiumI:
+                    {
+                        decimal _Ca_bound2_HCO3 = dryData.HydrocarbonatesDry * _Ca_2_HCO3;              //1
+                        CaHCO3_2 = dryData.HydrocarbonatesDry + _Ca_bound2_HCO3;                        //2
+                        decimal _Ca_bound2_SO4 = dryData.CaDry - _Ca_bound2_HCO3;                       //3
+                        decimal _SO4_bound2_Ca = _Ca_bound2_SO4 * _SO4_2_Ca;                            //4
+                        CaSO4 = _Ca_bound2_SO4 + _SO4_bound2_Ca;                                        //5
+                        decimal _SO4_bound2_Mg = dryData.MgDry * _SO4_2_Mg;                             //6
+                        MgSO4 = _SO4_bound2_Mg + dryData.MgDry;                                         //7
+                        decimal _SO4_bound2_Na = dryData.SulfatesDry - _SO4_bound2_Ca - _SO4_bound2_Mg; //8
+                        decimal _Na_bound2_SO4 = _SO4_bound2_Na * _Na_2_SO4;                            //9
+                        Na2SO4 = _SO4_bound2_Na + _Na_bound2_SO4;                                       //10
+                        decimal _Cl_bound2_K = dryData.KDry * awCl / awK;                               //11
+                        KCl = dryData.KDry + _Cl_bound2_K;                                              //12
+                        decimal _Cl_bound2_Na = dryData.ClDry - _Cl_bound2_K;                           //13
+                        decimal _Na_bound2_Cl = _Cl_bound2_Na * awNa / awCl;                            //14
+                        NaCl = _Cl_bound2_Na + _Na_bound2_Cl;                                           //15
+                        decimal _Na_bound2_Br = dryData.BrDry * awNa / awBr;                            //16
+                        NaBr = dryData.BrDry + _Na_bound2_Br;                                           //17
+                        Na = _Na_bound2_SO4 + _Na_bound2_Cl + _Na_bound2_Br;                            //20 18-19 skipped
+                    }
                     break;
                 default: //All others - not yet implemented
                     break;

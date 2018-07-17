@@ -4,6 +4,7 @@ using Moq;
 using System.Reflection;
 using System.Collections.Generic;
 using SA_EF;
+using SA_EF.Interfaces;
 
 namespace SATest
 {
@@ -1344,7 +1345,7 @@ namespace SATest
             sa.RecommendedCalculationScheme = SaltCalculationSchemes.Chloride;
             sa.CalcDryValues();
             sa.KaliumCalibration = lc.Object.CalibrationID;
-            sa.CalcKaliumValue();
+            sa.KDry = sa.CalcKaliumValue();
             Assert.AreEqual(0.17M, Math.Round(sa.KDry, 2));
         }
     }

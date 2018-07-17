@@ -248,8 +248,8 @@ namespace ChemicalAnalyses.Dialogs
         {
             dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p => {
                 p.CalcDryValues();
-                p.CalcKaliumValue();
-                p.CalcSchemeResults();
+                p.KDry = p.CalcKaliumValue();
+                p.CalcSchemeResults(p,p.DefaultCalculationScheme);
                 p.RecommendedCalculationScheme = p.CalcRecommendedScheme();
             });
             MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны");

@@ -77,7 +77,7 @@ namespace ChemicalAnalyses.Dialogs
                 {
                     try
                     {
-                        context.Database.BeginTransaction();
+                        context.Database.BeginTransaction(IsolationLevel.Serializable);
                         context.Entry(lc).State = EntityState.Modified;
 
                         List<LCData> t = new List<LCData>();

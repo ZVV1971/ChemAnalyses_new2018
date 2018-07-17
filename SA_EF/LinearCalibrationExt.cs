@@ -5,8 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
-using System.Data.SqlClient;
-using System.Windows;
+using SA_EF.Interfaces;
 using System.Data;
 using EntityFrameworkExtras.EF6;
 
@@ -210,14 +209,6 @@ namespace SA_EF
             }
             else return true;
         }
-    }
-
-    public interface ILinearCalibration
-    {
-        int CalibrationID { get; set; }
-        decimal[] Slope { get; set; }
-        decimal[] Intercept { get; set; }
-        decimal ValueToConcentration(decimal val, int diap);
     }
 
     /// <summary>
