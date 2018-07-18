@@ -13,12 +13,12 @@
         </Style>
     </Window.Resources>
     <Window.CommandBindings>
-        <CommandBinding Command="commands:CustomKSRCommands.Edit" CanExecute="EditCommand_CanExecute"
+        <CommandBinding Command="commands:CustomCommands.Edit" CanExecute="EditCommand_CanExecute"
                         Executed="EditCommand_Executed"/>
-        <CommandBinding Command="commands:CustomKSRCommands.View" CanExecute="ViewCommand_CanExecute"
+        <CommandBinding Command="commands:CustomCommands.View" CanExecute="ViewCommand_CanExecute"
                         Executed="ViewCommand_Executed"/>
         <CommandBinding Command="New" CanExecute="NewCommand_CanExecute" Executed="NewCommand_Executed"/>
-        <CommandBinding Command="commands:CustomKSRCommands.SetDefault" CanExecute="SetDefaultCommand_CanExecute"
+        <CommandBinding Command="commands:CustomCommands.SetDefault" CanExecute="SetDefaultCommand_CanExecute"
                         Executed="SetDefaultCommand_Executed"/>
         <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed"/>
     </Window.CommandBindings>
@@ -43,10 +43,10 @@
         <Button Content="Закрыть" Grid.Column="0" Grid.Row="1" IsDefault="True" IsCancel="False"
                 Click="CloseButton_Click"/>
         <Button Content="{Binding}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Width="285"
-                Command="commands:CustomKSRCommands.SetDefault" x:Name="btnSetDefault" ToolTip="{Binding}"/>
-        <Button Content="Изменить" Grid.Column="0" Grid.Row="2" Command="commands:CustomKSRCommands.Edit" 
+                Command="commands:CustomCommands.SetDefault" x:Name="btnSetDefault" ToolTip="{Binding}"/>
+        <Button Content="Изменить" Grid.Column="0" Grid.Row="2" Command="commands:CustomCommands.Edit" 
                 ToolTip="Изменить выбранную калибровку"/>
-        <Button Content="Просмотр" Grid.Column="1" Grid.Row="2" Command="commands:CustomKSRCommands.View" 
+        <Button Content="Просмотр" Grid.Column="1" Grid.Row="2" Command="commands:CustomCommands.View" 
                 ToolTip="Просмотреть графическое представление и расчитанные параметры для выбранной калибровки"/>
         <Button Content="Новая" Grid.Column="2" Grid.Row="2" Command="New" ToolTip="Создать новую калибровку"/>
         <Button x:Name="btnDelete" Content="Удалить" Grid.Column="3" Grid.Row="2" Command="Delete" ToolTip="{Binding}"/>

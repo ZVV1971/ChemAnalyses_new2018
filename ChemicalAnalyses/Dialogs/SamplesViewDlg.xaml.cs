@@ -154,8 +154,6 @@ namespace ChemicalAnalyses.Dialogs
                     {
 #if DEBUG
                         context.Database.Log = s => { Debug.WriteLine(s); };
-#else
-                        context.Databade.Log = s => { CALogger.WriteToLogfile(s); };
 #endif
                         context.Samples.Add(smpl);
                         context.SaveChanges();

@@ -13,7 +13,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
         <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed"/>
-        <CommandBinding Command="commands:CustomKSRCommands.Calculate" CanExecute="CalculateCommand_CanExecute" Executed="CalculateCommand_Executed"/>
+        <CommandBinding Command="commands:CustomCommands.Calculate" CanExecute="CalculateCommand_CanExecute" Executed="CalculateCommand_Executed"/>
         <CommandBinding Command="Print" Executed="PrintCommand_Executed" CanExecute="PrintCommand_CanExecute"/>
     </Window.CommandBindings>
     <Window.Resources>
@@ -234,7 +234,7 @@
                 </DataGrid.RowDetailsTemplate>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Рассчитать результаты" Command="commands:CustomKSRCommands.Calculate"/>
+                        <MenuItem Header="Рассчитать результаты" Command="commands:CustomCommands.Calculate"/>
                         <MenuItem Header="Удалить выбранные" Command="Delete"/>
                         <ContextMenu.CommandBindings>
                             <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed"/>

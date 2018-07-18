@@ -8,10 +8,10 @@
         Title="Химический анализ" Height="250" Width="425"
         PreviewMouseMove="Window_PreviewMouseMove">
     <Window.CommandBindings>
-        <CommandBinding Command="commands:CustomKSRCommands.Exit" Executed="ExitCommand_Executed"/>
+        <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="Help" Executed="HelpCommand_Executed"/>
-        <CommandBinding Command="commands:CustomKSRCommands.List" Executed="ListCommand_Executed"/>
-        <CommandBinding Command="commands:CustomKSRCommands.Exit" Executed="ExitCommand_Executed"/>
+        <CommandBinding Command="commands:CustomCommands.List" Executed="ListCommand_Executed"/>
+        <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
     </Window.CommandBindings>
     <Grid ToolTip="">
         <Grid.RowDefinitions>
@@ -23,11 +23,11 @@
         <Menu x:Name="mnMainMenu" Grid.Row="0">
             <MenuItem Header="Файл" ToolTip="Работа с файлами…">
                 <Separator/>
-                <MenuItem Command="commands:CustomKSRCommands.Exit" ToolTip="Выход из программы"
+                <MenuItem Command="commands:CustomCommands.Exit" ToolTip="Выход из программы"
                           Icon="{Binding Source={StaticResource icnExitApplication}}"/>
             </MenuItem>
             <MenuItem Header="Образец" ToolTip="Выбор образцов для просмотра и изменения">
-                <MenuItem Header="Список…" Command ="commands:CustomKSRCommands.List"
+                <MenuItem Header="Список…" Command ="commands:CustomCommands.List"
                           ToolTip="Диалоговое окно выбора образца из списка имеющихся"
                           Icon="{Binding Source={StaticResource icnListOfSamples}}"/>
             </MenuItem>

@@ -25,18 +25,6 @@ namespace ChemicalAnalyses.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(localdb)\\mssqllocaldb;AttachDbFilename=E:\\Downloads\\svpp\\KSR\\Chemica" +
-            "lAnalyses\\ChemicalAnalyses.mdf;Initial Catalog=ChemicalAnalyses;Integrated Secur" +
-            "ity=True")]
-        public string ChemAnConnectionString {
-            get {
-                return ((string)(this["ChemAnConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("22.989768")]
         public decimal Na {
             get {
@@ -244,7 +232,7 @@ namespace ChemicalAnalyses.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("e:\\nonexisting file.mdb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("e:\\non_existing file.mdb")]
         public string DBFilePath {
             get {
                 return ((string)(this["DBFilePath"]));

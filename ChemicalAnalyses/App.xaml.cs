@@ -5,6 +5,8 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
+using System.Data.SqlClient;
+using System.Reflection;
 
 namespace ChemicalAnalyses
 {
@@ -14,11 +16,12 @@ namespace ChemicalAnalyses
 
         protected override void OnStartup(StartupEventArgs e)
         {// check for config file presence
+            Configuration config;
             try
             {
                 Uri UriAssemblyFolder = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase));
                 string appPath = UriAssemblyFolder.LocalPath;
-                Configuration config = ConfigurationManager.OpenExeConfiguration(appPath + @"\ChemicalAnalyses.exe");
+                config = ConfigurationManager.OpenExeConfiguration(appPath + @"\ChemicalAnalyses.exe");
                 ClientSettingsSection elementsWeights = (ClientSettingsSection)config.SectionGroups["applicationSettings"].Sections[0];
                 elementsWeights.Settings.Get("Mg");
                 StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
@@ -32,7 +35,7 @@ namespace ChemicalAnalyses
                 return;
             }
 
-            SplashScreen splash = new SplashScreen("CASplashScreen.png");
+            SplashScreen splash = new SplashScreen("SASplashScreen.png");
             splash.Show(false);
             // Step 2 - Start a stop watch  
             Stopwatch timer = new Stopwatch();
