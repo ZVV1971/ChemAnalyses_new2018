@@ -450,8 +450,10 @@ namespace SA_EF
             get { return _defaultClaculationScheme; }
             set
             {
-                if (value != SaltCalculationSchemes.Chloride)
-                    throw new NotImplementedException("Доступна только хлоридная схема");
+                if (!(value == SaltCalculationSchemes.Chloride 
+                    || value == SaltCalculationSchemes.SulfateSodiumI))
+                    throw new NotImplementedException(
+                        "На данный момент доступны только хлоридная и сульфатно-натриевая(I) схемы");
                 _defaultClaculationScheme = value;
                 OnPropertyChanged("DefaultCalculationScheme");
             }

@@ -11,7 +11,7 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <DocumentViewer x:Name="dvSAView" Grid.Row="0">
-            <FixedDocument x:Name="fdSAChlorideScheme"/>
+            <FixedDocument x:Name="fdSA"/>
         </DocumentViewer>
         <Grid x:Name="grdOptions" Grid.Row="1">
             <Grid.ColumnDefinitions>

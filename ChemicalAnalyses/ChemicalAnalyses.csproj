@@ -115,7 +115,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Alumni\ChlorideSchemePrintingGrid.xaml">
+    <Page Include="Alumni\SchemesPrintingGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -161,8 +161,8 @@
     </Page>
     <Compile Include="Alumni\BindingProxy.cs" />
     <Compile Include="Alumni\ChartHelper.cs" />
-    <Compile Include="Alumni\ChlorideSchemePrintingGrid.xaml.cs">
-      <DependentUpon>ChlorideSchemePrintingGrid.xaml</DependentUpon>
+    <Compile Include="Alumni\SchemesPrintingGrid.xaml.cs">
+      <DependentUpon>SchemesPrintingGrid.xaml</DependentUpon>
     </Compile>
     <Compile Include="Alumni\Converters.cs" />
     <Compile Include="Alumni\SampleFilterFields.cs" />
@@ -267,7 +267,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UseGlobalSettings="True" />
+      <UserProperties BuildVersion_UseGlobalSettings="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

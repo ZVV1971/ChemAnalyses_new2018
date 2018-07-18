@@ -71,6 +71,7 @@
     <Compile Include="DataPointTests.cs" />
     <Compile Include="SampleTests.cs" />
     <Compile Include="SaltAnalysisDataTests.cs" />
+    <Compile Include="ClSchemePrintingGridTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

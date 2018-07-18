@@ -11,7 +11,7 @@ namespace ChemicalAnalyses.Dialogs
         public SAPrintPreview()
         {
             InitializeComponent();
-            fdSAChlorideScheme.DocumentPaginator.PageSize = new Size(1056, 816);
+            fdSA.DocumentPaginator.PageSize = new Size(1056, 816);
         }
 
         public IDocumentPaginatorSource Document

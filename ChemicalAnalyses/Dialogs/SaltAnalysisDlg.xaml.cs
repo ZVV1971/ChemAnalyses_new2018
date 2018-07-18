@@ -13,6 +13,7 @@ using SettingsHelper;
 using SA_EF;
 using System.Diagnostics;
 using System.Data.Entity;
+using SA_EF.Interfaces;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -75,8 +76,6 @@ namespace ChemicalAnalyses.Dialogs
             {
 #if DEBUG
                 context.Database.Log = s => { Debug.WriteLine(s); };
-#else
-                context.Databade.Log = s => { CALogger.WriteToLogfile(s); };
 #endif
                 if (Labnumbers?.Count == 1)
                 {
@@ -153,8 +152,6 @@ namespace ChemicalAnalyses.Dialogs
                     {
                         dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
                         {
-                            //context.SaltAnalysisDatas.Add(p);
-                            //p.Insert();
                             context.Entry(p).State = EntityState.Added;
                             s.AppendLine(p.LabNumber);
                         });
@@ -169,7 +166,6 @@ namespace ChemicalAnalyses.Dialogs
                         dgrdSA.Items.Cast<SaltAnalysisData>().ToList().ForEach(p =>
                         {
                             context.Entry(p).State = EntityState.Modified;
-                            //p.Update();
                             s.AppendLine(p.LabNumber);
                         });
                         context.SaveChanges();
@@ -202,7 +198,6 @@ namespace ChemicalAnalyses.Dialogs
                     dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p =>
                         {
                             s.AppendLine(p.LabNumber);
-                            //SaltAnalysisData.Delete(p.IDSaltAnalysis);
                             context.Entry(p).State=EntityState.Deleted;
                         });
                     context.SaveChanges();
@@ -241,16 +236,24 @@ namespace ChemicalAnalyses.Dialogs
 
         private void CalculateCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = dgrdSA.SelectedItems.Count != 0;
+            e.CanExecute = dgrdSA.SelectedItems.Count != 0 && _validationErrorCount == 0;
         }
 
         private void CalculateCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            if(dgrdSA.SelectedItems.Cast<SaltAnalysisData>()
+                .Any(p => p.DefaultCalculationScheme != p.RecommendedCalculationScheme))
+            {
+                if (MessageBox.Show("В одном из выбранных для расчета образцов рекомендуемая схема расчета" +
+                    " не совпадает с выбранной.\nПродолжить?", "Внимание", MessageBoxButton.YesNo,
+                    MessageBoxImage.Hand, MessageBoxResult.No) == MessageBoxResult.No) return;
+            }
+
             dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p => {
                 p.CalcDryValues();
                 p.KDry = p.CalcKaliumValue();
-                p.CalcSchemeResults(p,p.DefaultCalculationScheme);
-                p.RecommendedCalculationScheme = p.CalcRecommendedScheme();
+                p.CalcSchemeResults(p, p.DefaultCalculationScheme);
+                p.RecommendedCalculationScheme = p.CalcRecommendedScheme(p);
             });
             MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны");
             btnPrint.Visibility = Visibility.Visible;
@@ -261,36 +264,51 @@ namespace ChemicalAnalyses.Dialogs
             SAPrintPreview sAPrintPreview = new SAPrintPreview
             {
                 Owner = this,
-                Title = @"Предварительный просмотр результатов расчета, схема ""Хлоридная"" (IV)" };
-            ChlorideSchemePrintingGrid pgrdChloride =
-                new ChlorideSchemePrintingGrid(dgrdSA.SelectedItems.Cast<SaltAnalysisData>()
-                .Where(p => p.RecommendedCalculationScheme == SaltCalculationSchemes.Chloride).ToList())
-                { Name = "pg1", ResultsType = SaltCalculationSchemes.Chloride };
-            TextBox tbTitle = new TextBox()
-            {
-                Text = "Химический состав, %",
-                FontSize = 24,
-                FontWeight = FontWeights.Bold,
-                Width = 1000,
-                HorizontalContentAlignment = HorizontalAlignment.Center,
-                BorderThickness = new Thickness(0),
-                IsReadOnly = true
+                Title = @"Предварительный просмотр результатов расчета, схема ""Хлоридная"" (IV)"
             };
-            sAPrintPreview.fdSAChlorideScheme.Pages.Add(
-                new PageContent()
-                {
-                    Name = "pk1",
-                    Child = new FixedPage()
-                    {
-                        Name = "fp1", Width=1056, Height=890,
-                        Children = { new Canvas() { Children = { pgrdChloride, tbTitle } } }
-                    }
+
+            List<SchemesPrintingGrid> pGrids = new List<SchemesPrintingGrid>();
+            IEnumerable<ISaltAnalysisCalcResults> res = dgrdSA.SelectedItems.Cast<ISaltAnalysisCalcResults>();
+            foreach (SaltCalculationSchemes schem in Enum.GetValues(typeof(SaltCalculationSchemes))
+                .Cast<SaltCalculationSchemes>())
+            {
+                var tmp = res.Where(p => p.RecommendedCalculationScheme == schem);
+                if (tmp.Count() > 0) pGrids.Add(new SchemesPrintingGrid(tmp) {
+                    Name = "pg" + schem.ToString(),
+                    ResultsType = schem
                 });
-            
-            Canvas.SetLeft(pgrdChloride,10);
-            Canvas.SetTop(pgrdChloride, 50);
-            Canvas.SetTop(tbTitle, 10);
-            Canvas.SetLeft(tbTitle, 10);
+            }
+           
+            foreach (SchemesPrintingGrid pgrd in pGrids)
+            {
+                TextBox tbTitle = new TextBox()
+                {
+                    Text = "Химический состав, %",
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    Width = 1000,
+                    HorizontalContentAlignment = HorizontalAlignment.Center,
+                    BorderThickness = new Thickness(0),
+                    IsReadOnly = true
+                };
+                sAPrintPreview.fdSA.Pages.Add(
+                    new PageContent()
+                    {
+                        Name = "pk1_" + pgrd.Name,
+                        Child = new FixedPage()
+                        {
+                            Name = "fp1_"+pgrd.Name,
+                            Width = 1056,
+                            Height = 890,
+                            Children = { new Canvas() { Children = { pgrd, tbTitle } } }
+                        }
+                    });
+                Canvas.SetLeft(pgrd, 10);
+                Canvas.SetTop(pgrd, 50);
+                Canvas.SetTop(tbTitle, 10);
+                Canvas.SetLeft(tbTitle, 10);
+            }
+
             StackPanel spHygro = new StackPanel() { Orientation = Orientation.Horizontal };
             sAPrintPreview.grdOptions.Children.Add(spHygro);
 
@@ -299,7 +317,8 @@ namespace ChemicalAnalyses.Dialogs
             Label lbHygro = new Label() { Content = "Выводить гигроскопическую влагу для всех образцов? " };
             spHygro.Children.Add(lbHygro);
             CheckBox cbHygro = new CheckBox();
-            Binding bdHygro = new Binding("ShowHygroscopicWaterForAll") { Source = pgrdChloride};
+            Binding bdHygro = new Binding("ShowHygroscopicWaterForAll") {
+                Source = pGrids.Where(p=>p.ResultsType == SaltCalculationSchemes.Chloride).FirstOrDefault()};
             cbHygro.SetBinding(CheckBox.IsCheckedProperty, bdHygro);
             spHygro.Children.Add(cbHygro);
 
@@ -309,6 +328,11 @@ namespace ChemicalAnalyses.Dialogs
         private void dgrdSA_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             e.Row.AddHandler(Validation.ErrorEvent, new RoutedEventHandler(OnRowErrorEvent));
+        }
+
+        private void PrintCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = dgrdSA.SelectedItems.Count != 0 && _validationErrorCount == 0;
         }
     }
 }

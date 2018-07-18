@@ -1290,7 +1290,7 @@ namespace SATest
             //Calculate values
             mock.CalcDryValues();
             //Calculate recommended scheme
-            Assert.AreEqual(SaltCalculationSchemes.Chloride, mock.CalcRecommendedScheme());
+            Assert.AreEqual(SaltCalculationSchemes.Chloride, mock.CalcRecommendedScheme(mock));
             //Set tolerance for rounding in 0.5%
             decimal threshold = 0.005M;
             //Check if calculated values fall into allowable range
