@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using SA_EF;
 using System.Windows;
+using System.Linq;
 
 namespace ChemicalAnalyses.Alumni
 {
@@ -119,6 +120,28 @@ namespace ChemicalAnalyses.Alumni
                 }
             }
             return res * 100;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("Backward conversion is not possible");
+        }
+    }
+
+    /// <summary>
+    /// Check if all arguments are of the same value
+    /// first stands for the current scheme and the following represent
+    /// those schemes where the column shall be visible
+    /// </summary>
+    public class SchemeTypeToVisibilityConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null) return Visibility.Hidden;
+            if (values.Any(p => p.GetType() != typeof(SaltCalculationSchemes))) return Visibility.Hidden;
+            if (values.All(p => ((SaltCalculationSchemes)values.First())
+                .Equals((SaltCalculationSchemes)p))) return Visibility.Visible;
+            else return Visibility.Hidden;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
