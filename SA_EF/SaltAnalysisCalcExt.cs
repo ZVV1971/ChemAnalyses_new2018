@@ -6,6 +6,7 @@ using SA_EF.Interfaces;
 using System.Reflection;
 using System.Globalization;
 using System.IO;
+using System.ComponentModel;
 
 namespace SA_EF
 {
@@ -421,26 +422,32 @@ namespace SA_EF
         /// <summary>
         /// Carbonate calculation scheme
         /// </summary>
+        [Description("Карбонатная")]
         Carbonate,
         /// <summary>
         /// The first variant of Sulfate-Sodium calculation scheme
         /// </summary>
+        [Description("Сульфатно-натриевая (I тип)")]
         SulfateSodiumI,
         /// <summary>
         /// The second variant of Sulfate-Sodium calculation scheme
         /// </summary>
+        [Description("Сульфатно-натриевая (II тип)")]
         SulfateSodiumII,
         /// <summary>
         /// The first variant of Sulfate-Magnesium calculation scheme
         /// </summary>
+        [Description("Сульфатно-магниевая (I тип)")]
         SulfateMagnesiumI,
         /// <summary>
         /// The second variant of Sulfate-Magnesium calculation scheme
         /// </summary>
+        [Description("Сульфатно-магниевая (II тип)")]
         SulfateMagnesiumII,
         /// <summary>
         /// Chloride calculation scheme
         /// </summary>
+        [Description("Хлоридная")]
         Chloride
     };
 }

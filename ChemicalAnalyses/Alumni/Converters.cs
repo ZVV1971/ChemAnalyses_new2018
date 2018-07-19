@@ -128,28 +128,6 @@ namespace ChemicalAnalyses.Alumni
         }
     }
 
-    /// <summary>
-    /// Check if all arguments are of the same value
-    /// first stands for the current scheme and the following represent
-    /// those schemes where the column shall be visible
-    /// </summary>
-    public class SchemeTypeToVisibilityConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values == null) return Visibility.Hidden;
-            if (values.Any(p => p.GetType() != typeof(SaltCalculationSchemes))) return Visibility.Hidden;
-            if (values.All(p => ((SaltCalculationSchemes)values.First())
-                .Equals((SaltCalculationSchemes)p))) return Visibility.Visible;
-            else return Visibility.Hidden;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException("Backward conversion is not possible");
-        }
-    }
-
     [ValueConversion(typeof(bool), typeof(Visibility))]
     public class BooleanToVisibilityConverter : IValueConverter
     {
@@ -183,6 +161,24 @@ namespace ChemicalAnalyses.Alumni
         {
             if (value is null || !(bool)value) return Visibility.Visible;
             else return Visibility.Collapsed;
+        }
+    }
+
+    [ValueConversion(typeof(SaltCalculationSchemes), typeof(Visibility))]
+    public class SchemeToVisibilityConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("Backward conversion is not possible");
+        }
+
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            if (value == null || parameter == null) return Visibility.Collapsed;
+            if ((SaltCalculationSchemes)value == (SaltCalculationSchemes)parameter) return Visibility.Visible;
+            return Visibility.Collapsed;
         }
     }
 }

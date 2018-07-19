@@ -252,7 +252,9 @@ namespace ChemicalAnalyses.Dialogs
             dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p => {
                 p.CalcDryValues();
                 p.KDry = p.CalcKaliumValue();
+                //calculate using the user-selected scheme
                 p.CalcSchemeResults(p, p.DefaultCalculationScheme);
+                //set recommended scheme to the calculated one
                 p.RecommendedCalculationScheme = p.CalcRecommendedScheme(p);
             });
             MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны");
@@ -264,7 +266,7 @@ namespace ChemicalAnalyses.Dialogs
             SAPrintPreview sAPrintPreview = new SAPrintPreview
             {
                 Owner = this,
-                Title = @"Предварительный просмотр результатов расчета, схема ""Хлоридная"" (IV)"
+                Title = @"Предварительный просмотр результатов расчета"
             };
 
             List<SchemesPrintingGrid> pGrids = new List<SchemesPrintingGrid>();
@@ -272,7 +274,7 @@ namespace ChemicalAnalyses.Dialogs
             foreach (SaltCalculationSchemes schem in Enum.GetValues(typeof(SaltCalculationSchemes))
                 .Cast<SaltCalculationSchemes>())
             {
-                var tmp = res.Where(p => p.RecommendedCalculationScheme == schem);
+                var tmp = res.Where(p => p.DefaultCalculationScheme == schem);
                 if (tmp.Count() > 0) pGrids.Add(new SchemesPrintingGrid(tmp) {
                     Name = "pg" + schem.ToString(),
                     ResultsType = schem

@@ -45,5 +45,6 @@
          string LabNumber { get; set; }
          string AnalysisDescription { get; set; }
          SaltCalculationSchemes RecommendedCalculationScheme { get; set; }
+         SaltCalculationSchemes DefaultCalculationScheme { get; set; }
     }
 }

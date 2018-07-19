@@ -54,6 +54,6 @@ namespace ChemicalAnalyses.Alumni
         public static readonly DependencyProperty ResultsTypeProperty =
            DependencyProperty.Register("ResultsType",
                 typeof(SaltCalculationSchemes), typeof(SchemesPrintingGrid),
-                new PropertyMetadata());
+                new FrameworkPropertyMetadata(SaltCalculationSchemes.Chloride));
     }
 }

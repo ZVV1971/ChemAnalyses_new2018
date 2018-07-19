@@ -7,13 +7,14 @@
              xmlns:saef="clr-namespace:SA_EF;assembly=SA_EF"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="1100" 
-             Foreground="Transparent">
+             Foreground="Transparent"
+             DataContext="{Binding}">
     <UserControl.Resources>
         <local:DoubleToPercentageConverter x:Key="dbl2prcConv"/>
         <local:DecimalsToSumConverter x:Key="dcml2SumConv"/>
         <local:BooleanToVisibilityConverter x:Key="bln2VisibilityConv"/>
         <local:BooleanToVisibilityNegativeConverter x:Key="bln2VisibilityNegConv"/>
-        <local:SchemeTypeToVisibilityConverter x:Key="schm2VisibilityConv"/>
+        <local:SchemeToVisibilityConverter x:Key="sch2VisibilityConv"/>
     </UserControl.Resources>
     <DataGrid AutoGenerateColumns="False" BorderThickness="0"
               x:Name="dgrdMain" CanUserAddRows="False" ItemsSource="{Binding Path=lSA}"
@@ -43,6 +44,7 @@
                 <Setter Property="TextBlock.TextAlignment" Value="Center"></Setter>
             </Style>
             <local:BindingProxy x:Key="FirstColumnCheckedProxy" Data="{Binding ShowHygroscopicWaterForAll}"/>
+            <local:BindingProxy x:Key="ResultsTypeProxy" Data="{Binding ResultsType}"/>
         </DataGrid.Resources>
         <DataGrid.Columns>
             <DataGridTextColumn Binding="{Binding Path=LabNumber, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">
@@ -156,15 +158,10 @@
                 </DataGridTextColumn.Header>
             </DataGridTextColumn>
             <DataGridTextColumn Binding="{Binding Path=CaCl2, UpdateSourceTrigger=PropertyChanged, 
-                Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.00}}" IsReadOnly="True">
-                <DataGridTextColumn.Visibility>
-                    <MultiBinding Converter="{StaticResource schm2VisibilityConv}">
-                        <Binding Source="{RelativeSource Mode=FindAncestor,AncestorType={x:Type UserControl}}"
-                                 Path="DataContext.ResultsType" diag:PresentationTraceSources.TraceLevel="High"/>
-                        <Binding Source="{x:Static saef:SaltCalculationSchemes.Chloride}"/>
-                    </MultiBinding>
-                </DataGridTextColumn.Visibility>
-            <DataGridTextColumn.Header>
+                Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.00}}" IsReadOnly="True"
+                                Visibility="{Binding Path=Data, Converter={StaticResource sch2VisibilityConv},  
+                Source={StaticResource ResultsTypeProxy}, ConverterParameter={x:Static saef:SaltCalculationSchemes.Chloride}}">
+                <DataGridTextColumn.Header>
                     <TextBlock Text="CaCl₂"/>
                 </DataGridTextColumn.Header>
             </DataGridTextColumn>
@@ -182,7 +179,7 @@
             </DataGridTextColumn>
             <DataGridTextColumn Binding="{Binding Path=HygroWater, UpdateSourceTrigger=PropertyChanged, 
                 Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.00}, TargetNullValue=—}" IsReadOnly="True"
-                                Visibility="{Binding .Data, Converter={StaticResource  bln2VisibilityNegConv}, 
+                                Visibility="{Binding Path=Data, Converter={StaticResource  bln2VisibilityNegConv}, 
                 Source={StaticResource FirstColumnCheckedProxy}}">
                 <DataGridTextColumn.Header>
                     <StackPanel Orientation="Vertical">
