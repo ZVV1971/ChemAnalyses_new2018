@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ChemicalAnalyses.Alumni"
              xmlns:saef="clr-namespace:SA_EF;assembly=SA_EF"
-             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="1100" 
              Foreground="Transparent"
              DataContext="{Binding}">
@@ -15,6 +14,7 @@
         <local:BooleanToVisibilityConverter x:Key="bln2VisibilityConv"/>
         <local:BooleanToVisibilityNegativeConverter x:Key="bln2VisibilityNegConv"/>
         <local:SchemeToVisibilityConverter x:Key="sch2VisibilityConv"/>
+        <local:SchemeToVisibilityMultipleConverter x:Key="sch2VisibilityMultConv"/>
     </UserControl.Resources>
     <DataGrid AutoGenerateColumns="False" BorderThickness="0"
               x:Name="dgrdMain" CanUserAddRows="False" ItemsSource="{Binding Path=lSA}"
@@ -154,7 +154,20 @@
             <DataGridTextColumn Binding="{Binding Path=CaSO4, UpdateSourceTrigger=PropertyChanged, 
                 Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.00}}" IsReadOnly="True">
                 <DataGridTextColumn.Header>
-                    <TextBlock Text=" CaSO₄"/>
+                    <TextBlock Text="CaSO₄"/>
+                </DataGridTextColumn.Header>
+            </DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding Path=MgSO4, UpdateSourceTrigger=PropertyChanged, 
+                Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.00}}" IsReadOnly="True">
+                <DataGridTextColumn.Visibility>
+                    <MultiBinding Converter="{StaticResource sch2VisibilityMultConv}">
+                        <Binding Source="{StaticResource ResultsTypeProxy}" Path="Data"/>
+                        <Binding Source="{x:Static saef:SaltCalculationSchemes.SulfateSodiumI}"/>
+                        <Binding Source="{x:Static saef:SaltCalculationSchemes.SulfateMagnesiumI}"/>
+                    </MultiBinding>
+                </DataGridTextColumn.Visibility>
+                <DataGridTextColumn.Header>
+                    <TextBlock Text="MgSO₄"/>
                 </DataGridTextColumn.Header>
             </DataGridTextColumn>
             <DataGridTextColumn Binding="{Binding Path=CaCl2, UpdateSourceTrigger=PropertyChanged, 
@@ -167,14 +180,36 @@
             </DataGridTextColumn>
             <DataGridTextColumn Binding="{Binding Path=MgCl2, UpdateSourceTrigger=PropertyChanged, 
                 Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.00}}" IsReadOnly="True">
+                <DataGridTextColumn.Visibility>
+                    <MultiBinding Converter="{StaticResource sch2VisibilityMultConv}">
+                        <Binding Source="{StaticResource ResultsTypeProxy}" Path="Data"/>
+                        <Binding Source="{x:Static saef:SaltCalculationSchemes.Chloride}"/>
+                        <Binding Source="{x:Static saef:SaltCalculationSchemes.SulfateMagnesiumI}"/>
+                    </MultiBinding>
+                </DataGridTextColumn.Visibility>
                 <DataGridTextColumn.Header>
                     <TextBlock Text="MgCl₂"/>
                 </DataGridTextColumn.Header>
             </DataGridTextColumn>
             <DataGridTextColumn Binding="{Binding Path=KBr, UpdateSourceTrigger=PropertyChanged, 
-                Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.000}, TargetNullValue=—}" IsReadOnly="True">
+                Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.000}, TargetNullValue=—}" IsReadOnly="True"
+                                Visibility="{Binding Path=Data, Converter={StaticResource sch2VisibilityConv},  
+                Source={StaticResource ResultsTypeProxy}, ConverterParameter={x:Static saef:SaltCalculationSchemes.Chloride}}">
                 <DataGridTextColumn.Header>
                     <TextBlock  Text="KBr"/>
+                </DataGridTextColumn.Header>
+            </DataGridTextColumn>
+            <DataGridTextColumn Binding="{Binding Path=NaBr, UpdateSourceTrigger=PropertyChanged, 
+                Converter={StaticResource dbl2prcConv}, StringFormat={}{0:0.00}}" IsReadOnly="True">
+                <DataGridTextColumn.Visibility>
+                    <MultiBinding Converter="{StaticResource sch2VisibilityMultConv}">
+                        <Binding Source="{StaticResource ResultsTypeProxy}" Path="Data"/>
+                        <Binding Source="{x:Static saef:SaltCalculationSchemes.SulfateSodiumI}"/>
+                        <Binding Source="{x:Static saef:SaltCalculationSchemes.SulfateMagnesiumI}"/>
+                    </MultiBinding>
+                </DataGridTextColumn.Visibility>
+                <DataGridTextColumn.Header>
+                    <TextBlock Text="NaBr"/>
                 </DataGridTextColumn.Header>
             </DataGridTextColumn>
             <DataGridTextColumn Binding="{Binding Path=HygroWater, UpdateSourceTrigger=PropertyChanged, 

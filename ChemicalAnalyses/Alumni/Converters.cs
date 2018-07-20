@@ -181,4 +181,20 @@ namespace ChemicalAnalyses.Alumni
             return Visibility.Collapsed;
         }
     }
+
+    public class SchemeToVisibilityMultipleConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values == null || values[0] == null) return Visibility.Hidden;
+            if (values.Skip(1).Any(p => (SaltCalculationSchemes)(values[0]) == (SaltCalculationSchemes)p))
+                return Visibility.Visible;
+            return Visibility.Hidden;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("Backward conversion is not possible");
+        }
+    }
 }

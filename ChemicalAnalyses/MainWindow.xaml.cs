@@ -89,12 +89,10 @@ namespace ChemicalAnalyses
                 Assembly.GetExecutingAssembly().GetName().Version.ToString(), "О программе…",
                         MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
         private void ListCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             SamplesViewDlg dlg = new SamplesViewDlg();
-            if (dlg.ShowDialog() == true)
-            {}
+            if (dlg.ShowDialog() == true);
         }
         #endregion Commands
 

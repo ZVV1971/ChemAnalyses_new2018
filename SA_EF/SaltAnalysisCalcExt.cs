@@ -385,6 +385,29 @@ namespace SA_EF
                         Na = _Na_bound2_SO4 + _Na_bound2_Cl + _Na_bound2_Br;                        //20 18-19 skipped
                     }
                     return this;
+                case SaltCalculationSchemes.SulfateMagnesiumI:
+                    {
+                        decimal _Ca_bound2_HCO3 = dryData.HydrocarbonatesDry * _Ca_2_HCO3;              //1
+                        CaHCO3_2 = dryData.HydrocarbonatesDry + _Ca_bound2_HCO3;                    //2
+                        decimal _Ca_bound2_SO4 = dryData.CaDry - _Ca_bound2_HCO3;                       //3
+                        decimal _SO4_bound2_Ca = _Ca_bound2_SO4 * _SO4_2_Ca;                            //4
+                        CaSO4 = _Ca_bound2_SO4 + _SO4_bound2_Ca;                                    //5
+                        decimal _SO4_bound2_Mg = dryData.SulfatesDry * _SO4_2_Ca;                       //6
+                        decimal _Mg_bound2_SO4 = _SO4_bound2_Mg / _SO4_2_Mg;                        //7
+                        MgSO4 = _SO4_bound2_Mg + _Mg_bound2_SO4;                                     //8
+                        decimal _Mg_bound2_Cl = dryData.MgDry - _Mg_bound2_SO4;                         //9
+                        decimal _Cl_bound2_Mg = _Mg_bound2_Cl * 2 * awCl / awMg;                        //10
+                        MgCl2 = _Mg_bound2_Cl + _Cl_bound2_Mg;                                          //11
+                        decimal _Cl_bound2_K = dryData.KDry * awCl / awK;                               //12
+                        KCl = dryData.KDry + _Cl_bound2_K;                                              //13
+                        decimal _Cl_bound2_Na = dryData.ClDry - _Cl_bound2_K - _Cl_bound2_Mg;           //14
+                        decimal _Na_bound2_Cl = _Cl_bound2_Na * awNa / awCl;                            //15
+                        NaCl = _Cl_bound2_Na + _Na_bound2_Cl;                                           //16
+                        decimal _Na_bound2_Br = dryData.BrDry * awNa / awBr;                            //17
+                        NaBr = dryData.BrDry + _Na_bound2_Br;                                           //18
+                        Na = _Na_bound2_Cl + _Na_bound2_Br;                                             //21 19-20 skipped
+                    }
+                    return this;
                 default: //All others - not yet implemented
                     return this;
             }

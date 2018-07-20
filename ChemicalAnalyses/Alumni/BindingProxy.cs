@@ -6,7 +6,7 @@ namespace ChemicalAnalyses.Alumni
     {
         public static readonly DependencyProperty DataProperty =
            DependencyProperty.Register("Data", typeof(object),
-              typeof(BindingProxy));
+              typeof(BindingProxy), new UIPropertyMetadata(null));
 
         public object Data
         {

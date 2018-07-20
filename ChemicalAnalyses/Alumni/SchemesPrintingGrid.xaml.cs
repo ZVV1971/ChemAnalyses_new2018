@@ -29,7 +29,7 @@ namespace ChemicalAnalyses.Alumni
             get { return _showHygroscopicWaterForAll; }
             set { _showHygroscopicWaterForAll = value;
                 OnPropertyChanged(nameof(ShowHygroscopicWaterForAll));
-            }}
+        }}
 
         private bool _useBKRespresentationVariant = true;
         public bool UseBKRespresentationVariant
@@ -37,7 +37,7 @@ namespace ChemicalAnalyses.Alumni
             get { return _useBKRespresentationVariant; }
             set { _useBKRespresentationVariant = value;
                 OnPropertyChanged(nameof(UseBKRespresentationVariant));
-            }}
+        }}
         
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -55,5 +55,10 @@ namespace ChemicalAnalyses.Alumni
            DependencyProperty.Register("ResultsType",
                 typeof(SaltCalculationSchemes), typeof(SchemesPrintingGrid),
                 new FrameworkPropertyMetadata(SaltCalculationSchemes.Chloride));
+
+        private void dgrdMain_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
