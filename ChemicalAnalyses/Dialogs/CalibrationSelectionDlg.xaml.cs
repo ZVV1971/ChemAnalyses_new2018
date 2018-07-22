@@ -40,9 +40,7 @@ namespace ChemicalAnalyses.Dialogs
             lcList.Clear();
             using (var context = new ChemicalAnalysesEntities())
             {
-                foreach (LinearCalibration clbr in 
-                context.LineaCalibrations.Where(p=>p.CalibrationType== type))
-                //LinearCalibration.GetAllLC("[CalibrationType] = N'" + type + "'")
+                foreach (LinearCalibration clbr in context.LineaCalibrations.Where(p=>p.CalibrationType== type))
                 lcList.Add(clbr);
             }
             try
@@ -62,7 +60,6 @@ namespace ChemicalAnalyses.Dialogs
 
         private void EditCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //deep read the currently selected calibration
             using (var context = new ChemicalAnalysesEntities())
             {
 #if DEBUG
@@ -95,13 +92,7 @@ namespace ChemicalAnalyses.Dialogs
                                 });
                             });
                         }
-
-                        var proc = new UpdateLCWithSP()
-                        {
-                            tmp = t
-                        };
-
-                        context.Database.ExecuteStoredProcedure(proc);
+                        context.Database.ExecuteStoredProcedure(new UpdateLCWithSP() { tmp = t });
                         context.SaveChanges();
                         context.Database.CurrentTransaction.Commit();
                         CALogger.WriteToLogFile(string.Format("Изменена калибровка ID{0};{1} - {2}",
@@ -124,7 +115,6 @@ namespace ChemicalAnalyses.Dialogs
 
         private void ViewCommand_Executed (object sender, ExecutedRoutedEventArgs e)
         {
-            //deep read the currently selected calibration
             using (var context = new ChemicalAnalysesEntities())
             {
                 LinearCalibration lc = context.LineaCalibrations
@@ -143,9 +133,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            LinearCalibration lc = new LinearCalibration() { CalibrationType = 
-                //(ChemicalElemetCalibration)Enum.Parse(typeof(ChemicalElemetCalibration), 
-                type};
+            LinearCalibration lc = new LinearCalibration() { CalibrationType = type};
             CalibrationDataDialog cldDlg = new CalibrationDataDialog(ref lc);
             if (cldDlg.ShowDialog() == true)
             {

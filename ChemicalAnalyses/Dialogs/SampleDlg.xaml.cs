@@ -20,6 +20,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            smpl.LabNumber = smpl.LabNumber.Trim();
             this.DialogResult = true;
         }
     }

@@ -24,6 +24,10 @@ namespace ChemicalAnalyses.Dialogs
         public ObservableCollection<SaltAnalysisData> sa { get; set; }
         public string TypeOfWork { get; set; }
         public List<Sample> Labnumbers { get; set; }
+        private bool _all_selected = false;
+
+        public static ObservableCollection<KeyValuePair<SaltCalculationSchemes, string>> SchemesNames { get; set; }
+        //public static ObservableCollection<string> SchemesNames { get; private set; }
 
         public SaltAnalysisDlg(List<Sample> lst, string typeOfWork = "Create")
         {
@@ -38,6 +42,10 @@ namespace ChemicalAnalyses.Dialogs
 
             Labnumbers = lst;
 
+            if (SchemesNames == null) SchemesNames = new ObservableCollection<KeyValuePair< SaltCalculationSchemes, string>>
+                (Enum.GetValues(typeof(SaltCalculationSchemes)).OfType<SaltCalculationSchemes>()
+                .Select(p => new KeyValuePair<SaltCalculationSchemes, string>( p, p.ToName())));
+               
             sa = new ObservableCollection<SaltAnalysisData>();
             InitializeComponent();
             if (TypeOfWork == "Create")
@@ -241,13 +249,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private void CalculateCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if(dgrdSA.SelectedItems.Cast<SaltAnalysisData>()
-                .Any(p => p.DefaultCalculationScheme != p.RecommendedCalculationScheme))
-            {
-                if (MessageBox.Show("В одном из выбранных для расчета образцов рекомендуемая схема расчета" +
-                    " не совпадает с выбранной.\nПродолжить?", "Внимание", MessageBoxButton.YesNo,
-                    MessageBoxImage.Hand, MessageBoxResult.No) == MessageBoxResult.No) return;
-            }
+            if (!ConfirmWhenSchemesDiffer()) return;
 
             dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p => {
                 p.CalcDryValues();
@@ -263,6 +265,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private void PrintCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            if (!ConfirmWhenSchemesDiffer()) return;
             SAPrintPreview sAPrintPreview = new SAPrintPreview
             {
                 Owner = this,
@@ -285,7 +288,7 @@ namespace ChemicalAnalyses.Dialogs
             {
                 TextBox tbTitle = new TextBox()
                 {
-                    Text = "Химический состав, %",
+                    Text = string.Format( "Химический состав, % (схема: {0})", pgrd.ResultsType.ToName()),
                     FontSize = 24,
                     FontWeight = FontWeights.Bold,
                     Width = 1000,
@@ -335,6 +338,30 @@ namespace ChemicalAnalyses.Dialogs
         private void PrintCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = dgrdSA.SelectedItems.Count != 0 && _validationErrorCount == 0;
+        }
+
+        private void SelectAllCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = dgrdSA.Items.Count != 0;
+        }
+
+        private void SelectAllCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!_all_selected) dgrdSA.SelectAll();
+            else dgrdSA.UnselectAll();
+            _all_selected = !_all_selected;
+        }
+
+        private bool ConfirmWhenSchemesDiffer()
+        {
+            if (dgrdSA.SelectedItems.Cast<SaltAnalysisData>()
+               .Any(p => p.DefaultCalculationScheme != p.RecommendedCalculationScheme))
+            {
+                if (MessageBox.Show("В одном из выбранных для расчета образцов рекомендуемая схема расчета" +
+                    " не совпадает с выбранной.\nПродолжить?", "Внимание", MessageBoxButton.YesNo,
+                    MessageBoxImage.Hand, MessageBoxResult.No) == MessageBoxResult.No) return false;
+            }
+            return true;
         }
     }
 }

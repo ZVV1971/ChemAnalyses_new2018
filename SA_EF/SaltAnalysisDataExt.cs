@@ -451,9 +451,10 @@ namespace SA_EF
             set
             {
                 if (!(value == SaltCalculationSchemes.Chloride 
-                    || value == SaltCalculationSchemes.SulfateSodiumI))
+                    || value == SaltCalculationSchemes.SulfateSodiumI
+                    || value == SaltCalculationSchemes.SulfateMagnesiumI))
                     throw new NotImplementedException(
-                        "На данный момент доступны только хлоридная и сульфатно-натриевая(I) схемы");
+                        "На данный момент доступны только хлоридная, сульфатно-натриевая(I) и сульфатно-магниевая(I) схемы");
                 _defaultClaculationScheme = value;
                 OnPropertyChanged("DefaultCalculationScheme");
             }

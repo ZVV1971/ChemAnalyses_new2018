@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace ChemicalAnalyses.Alumni
 {
@@ -7,8 +8,6 @@ namespace ChemicalAnalyses.Alumni
     {
         //Taken from https://stackoverflow.com/questions/1799370/getting-attributes-of-enums-value
         //response of Troy Alford
-        // This extension method is broken out so you can use a similar pattern with 
-        // other MetaData elements in the future. This is your base method for each.
         public static T GetAttribute<T>(this Enum value) where T : Attribute
         {
             var type = value.GetType();
@@ -23,6 +22,29 @@ namespace ChemicalAnalyses.Alumni
         {
             var attribute = value.GetAttribute<DescriptionAttribute>();
             return attribute == null ? value.ToString() : attribute.Description;
+        }
+
+        public static T GetValueFromDescription<T>(this string description)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException();
+            foreach (var field in type.GetFields())
+            {
+                var attribute = Attribute.GetCustomAttribute(field,
+                    typeof(DescriptionAttribute)) as DescriptionAttribute;
+                if (attribute != null)
+                {
+                    if (attribute.Description == description)
+                        return (T)field.GetValue(null);
+                }
+                else
+                {
+                    if (field.Name == description)
+                        return (T)field.GetValue(null);
+                }
+            }
+            throw new ArgumentException("Not found.", "description");
+            // or return default(T);
         }
     }
 }

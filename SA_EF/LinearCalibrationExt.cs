@@ -178,16 +178,18 @@ namespace SA_EF
             {//calculate by the way of interpolation between two dots
                 try
                 {
-                    int i = LinearCalibrationData[diap].IndexOf(LinearCalibrationData[diap].Where(p => p.Value > val).First());
-                    //LinearCalibrationData[diap].FindIndex(p => p.Value > val);
+                    int i = LinearCalibrationData[diap].IndexOf(LinearCalibrationData[diap]
+                        .Where(p => p.Value > val).First());
                     return (val - LinearCalibrationData[diap][i - 1].Value)
-                        * (LinearCalibrationData[diap][i].Concentration - LinearCalibrationData[diap][i - 1].Concentration)
+                        * (LinearCalibrationData[diap][i].Concentration 
+                        - LinearCalibrationData[diap][i - 1].Concentration)
                         / (LinearCalibrationData[diap][i].Value - LinearCalibrationData[diap][i - 1].Value)
                         + LinearCalibrationData[diap][i - 1].Concentration;
                 }
                 catch (Exception ex)
                 {
-                    throw new ArgumentOutOfRangeException(@"Две последующие точки в калибровочных данных имеют одинаковые значения показателя", ex);
+                    throw new ArgumentOutOfRangeException(@"Две последующие точки в калибровочных данных 
+                            имеют одинаковые значения показателя", ex);
                 }
             }
         }
@@ -198,13 +200,13 @@ namespace SA_EF
             {
                 try
                 {
-                    var d = (LinearCalibrationData[diap].ToList()).ToDictionary(p => p.Concentration, p => p);
-                    var t = (LinearCalibrationData[diap].ToList()).ToDictionary(p => p.Value, p => p);
+                    (LinearCalibrationData[diap].ToList()).ToDictionary(p => p.Concentration, p => p);
+                    (LinearCalibrationData[diap].ToList()).ToDictionary(p => p.Value, p => p);
                     return false;
                 }
                 catch
                 {
-                    return true;
+                    return true; //exception thrown by dictionary - diapason contains equal
                 }
             }
             else return true;
@@ -234,7 +236,7 @@ namespace SA_EF
         public int Diapason { get; set; }
         [UserDefinedTableTypeColumn(4, "Concentration")]
         public decimal Concentration { get; set; }
-        [UserDefinedTableTypeColumn(4, "Value")]
+        [UserDefinedTableTypeColumn(5, "Value")]
         public decimal Value { get; set; }
     }
 }

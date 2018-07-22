@@ -24,7 +24,7 @@ namespace ChemicalAnalyses
                 MessageBox.Show("Ошибка в файле конфигурации");
                 Close();
             }
-            CALogger.WriteToLogFile("Программа запущена");
+            CALogger.WriteToLogFile("Программа запущена. Версия:" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             CALogger.WriteToLogFile("Подключение к БД…");
             try
             {
@@ -84,7 +84,8 @@ namespace ChemicalAnalyses
         }
         private void HelpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Дипломнаяработа по теме «Программное средство для расчета химического состава образцов»" +
+            MessageBox.Show("Дипломная работа по теме" +
+                "\n«Программное средство для расчета химического состава образцов»" +
                 "\nЗахаренков В.В. группа №60325-2\nВерсия: " +
                 Assembly.GetExecutingAssembly().GetName().Version.ToString(), "О программе…",
                         MessageBoxButton.OK, MessageBoxImage.Information);

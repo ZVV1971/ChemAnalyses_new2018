@@ -10,6 +10,9 @@ using SettingsHelper;
 using SA_EF;
 using ChemicalAnalyses.Alumni;
 using System.Diagnostics;
+using System.Windows.Controls;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -49,16 +52,28 @@ namespace ChemicalAnalyses.Dialogs
                 using (var context = new ChemicalAnalysesEntities())
                 {
 #if DEBUG
-                    context.Database.Log = s => { Debug.WriteLine(s); };
+                    context.Database.Log = (s) => { Debug.WriteLine(s); };
 #endif
-                    foreach (Sample smpl in
-                        ((fFields.LabNumber == null) || (fFields.LabNumber.Equals(string.Empty)) ?
-                        (context.Samples) : (context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber)))
-                        .Where(p => p.SamplingDate <= fFields.EndDate
-                        && p.SamplingDate >= fFields.StartDate))) 
+                    string[] lnArray = null;
+                    if (fFields.LabNumber != null && !fFields.LabNumber.Equals(string.Empty))
                     {
-                        SamplesCollection.Add(smpl);
+                        if (fFields.LabNumber.Contains(';'))
+                        {
+                            lnArray = Regex.Split(fFields.LabNumber, "|");
+                            context.Samples.Join(
+                                inner: lnArray.ToList(),
+                                outerKeySelector: e => e.LabNumber,
+                                innerKeySelector: o => o.Trim(),
+                                resultSelector: (e, o) => e)
+                             .ToList().ForEach(d => SamplesCollection.Add(d));
+                            
+                        }
+                        else context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber))
+                                .Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
+                                .ToList().ForEach(d => SamplesCollection.Add(d));
                     }
+                    else context.Samples.Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
+                                .ToList().ForEach(d => SamplesCollection.Add(d)); ;
                 }
             }
             catch (Exception ex)
@@ -182,10 +197,7 @@ namespace ChemicalAnalyses.Dialogs
             saltADlg.Title = "Новые данные анализов для " + ((lbSamples.SelectedItems.Count == 1) ?
              "образца №" + ((Sample)lbSamples.SelectedItem).IDSample.ToString():
              title.ToString());
-            if (saltADlg.ShowDialog() == true)
-            {   //Resample only if OK is pressed otherwise no new data are available
-                FillData();
-            }
+            if (saltADlg.ShowDialog() == true) FillData();
         }
 
         private void EditCommand_CanExecute (object sender, CanExecuteRoutedEventArgs e)
@@ -203,8 +215,7 @@ namespace ChemicalAnalyses.Dialogs
             saltADlg.Title = "Редактирование данных анализов для " + ((lbSamples.SelectedItems.Count == 1) ?
              "образца №" + ((Sample)lbSamples.SelectedItem).IDSample.ToString() :
              title.ToString());
-            if (saltADlg.ShowDialog() == true) { };
-            //Resample in any case since user could have deleted all analyses and quitted by ESC
+            if (saltADlg.ShowDialog() == true);
             FillData();
         }
 

@@ -287,3 +287,23 @@ CREATE PROCEDURE GetSamplesByMultipleIDs
 AS
 	SELECT * FROM SaltAnalysis
 	INNER JOIN [@tmp] ON [SaltAnalysis].IDSaltAnalysis = [@tmp].ID
+
+//let tooltips be shown on disabled controls as well
+            //ToolTipService.ShowOnDisabledProperty.OverrideMetadata(
+            //    typeof(Control),
+            //    new FrameworkPropertyMetadata(true));
+
+<!--<ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="SA_EF:SaltCalculationSchemes"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>-->
+
+xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+
+                          <!--<ComboBox SelectedItem="{Binding Path=DefaultCalculationScheme, 
+                                    ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged,
+                                    NotifyOnValidationError=True, Mode=TwoWay, NotifyOnTargetUpdated=True}"
+                                         ItemsSource="{Binding Source={StaticResource dataFromEnum}}" 
+                                         ToolTip="Выберите требуемую схему расчета, принимая во внимание предполагаемую.&#x0a;Данные буду обсчитаны с использованием выбранной вами схемы!"/>-->

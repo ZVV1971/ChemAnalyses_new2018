@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ChemicalAnalyses.Dialogs"
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
@@ -17,9 +16,12 @@
     <Window.CommandBindings>
         <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed"/>
         <CommandBinding Command="New" CanExecute="AddCommand_CanExecute" Executed="AddCommand_Executed"/>
-        <CommandBinding Command="commands:CustomCommands.Update" Executed="UpdateCommand_Executed" CanExecute="UpdateCommand_CanExecute" />
-        <CommandBinding Command="commands:CustomCommands.Filter" CanExecute="FilterCommand_CanExecute" Executed="FilterCommand_Executed"/>
-        <CommandBinding Command="commands:CustomCommands.Edit" CanExecute="EditCommand_CanExecute" Executed="EditCommand_Executed"/>
+        <CommandBinding Command="commands:CustomCommands.Update" Executed="UpdateCommand_Executed" 
+                        CanExecute="UpdateCommand_CanExecute" />
+        <CommandBinding Command="commands:CustomCommands.Filter" CanExecute="FilterCommand_CanExecute" 
+                        Executed="FilterCommand_Executed"/>
+        <CommandBinding Command="commands:CustomCommands.Edit" CanExecute="EditCommand_CanExecute" 
+                        Executed="EditCommand_Executed"/>
     </Window.CommandBindings>
     <Grid x:Name="grdMain">
         <Grid.ColumnDefinitions>
@@ -32,23 +34,24 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Margin="0,10,0,0">
-            <Button Content="Загрузить список" Click="ReadButton_Click" ToolTip="Загрузить список"/>
-            <Button Content="Добавить" Command="New" ToolTip="Добавить новый образец"/>
-            <Button Content="Редактировать" Command="commands:CustomCommands.Update" 
-                    ToolTip="Редактировать данные образца"/>
+            <Button Content="Загрузить список" Click="ReadButton_Click" ToolTip="Загрузить список образцов из базы в соответствии с "/>
+            <Button Content="Добавить…" Command="New" ToolTip="Добавить новый образец"/>
+            <Button Content="Редактировать…" Command="commands:CustomCommands.Update" 
+                    ToolTip="Редактировать данные образца" ToolTipService.ShowOnDisabled="True"/>
             <Button Command="Delete" Content="Удалить" ToolTip="Удалить образец из базы"/>
-            <Button Content="Фильтр" Command="commands:CustomCommands.Filter" 
-                    ToolTip="Фильтровать записи"/>
+            <Button Content="Фильтр…" Command="commands:CustomCommands.Filter" 
+                    ToolTip="Фильтровать записи" ToolTipService.ShowOnDisabled="True"/>
             <Button Content="Выход" IsCancel="True" ToolTip="Закрыть окно" Click="CancelButton_Click"/>
                    </StackPanel>
         <TextBlock Grid.Column="1" Grid.Row="0" x:Name="txFilters" 
                    Text="{Binding Path=FilterText, TargetNullValue=Фильтр сброшен}" 
-                   HorizontalAlignment="Center" TextWrapping="Wrap">
+                   HorizontalAlignment="Center" TextWrapping="Wrap" ToolTip="Образцы в списке отобраны в соответствии с указанными параметрами&#x0a;Для сброса перейдите в контекстное меню">
             <TextBlock.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Clear filter" Click="ClearFilterMenuItem_Click" 
                               IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor},
-                        Path=PlacementTarget.Text, Converter={StaticResource str2bool}, NotifyOnSourceUpdated=True}"/>
+                        Path=PlacementTarget.Text, Converter={StaticResource str2bool}, NotifyOnSourceUpdated=True}" 
+                              ToolTip="Устанавливает фильтр по-умолчанию: интервал дат 1 — год с текущего момента&#x0a;Фильтрация по номеру образца отсутствует"/>
                 </ContextMenu>
             </TextBlock.ContextMenu>
         </TextBlock>
@@ -56,13 +59,17 @@
                  SelectionMode="Extended">
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Ввести данные новых анализов" Click="NewAnalysisMenuItem_Click"/>
+                    <MenuItem Header="Ввести данные новых анализов" Click="NewAnalysisMenuItem_Click"
+                              ToolTip="Добавляет к каждому образцу по одной записи для данных анализа"/>
                     <MenuItem Header="Редактировать данные анализов" Command="commands:CustomCommands.Edit"/>
+                    <MenuItem Header="Удалить образец" Command="Delete" ToolTip="Удалить образец из базы"/>
+                    <MenuItem Header="Редактировать…" Command="commands:CustomCommands.Update" 
+                              ToolTip="Редактировать данные образца"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
         <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding ElementName=lbSamples, Path=Items.Count, 
             StringFormat={}{0} записей загружено, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"
-                   Margin="7"/>
+                   Margin="7" ToolTip="Отображает количество загруженных на данный момент образцов"/>
     </Grid>
 </Window>

@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
-        xmlns:System="clr-namespace:System;assembly=mscorlib"
-        xmlns:SA_EF="clr-namespace:SA_EF;assembly=SA_EF"
         mc:Ignorable="d"
         Title="{Binding}" Height="500" Width="1150" MinHeight="500" MinWidth="1050" 
             x:Name="wSAWindow"  Validation.Error="OnErrorEvent">
@@ -15,14 +13,11 @@
         <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed"/>
         <CommandBinding Command="commands:CustomCommands.Calculate" CanExecute="CalculateCommand_CanExecute" Executed="CalculateCommand_Executed"/>
         <CommandBinding Command="Print" Executed="PrintCommand_Executed" CanExecute="PrintCommand_CanExecute"/>
+        <CommandBinding Command="SelectAll" CanExecute="SelectAllCommand_CanExecute" Executed="SelectAllCommand_Executed"/>
     </Window.CommandBindings>
     <Window.Resources>
-        <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
-                            ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="SA_EF:SaltCalculationSchemes"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+        <alumni:SchemeToSchemeDescriptionConverter x:Key="sch2descConv"/>
+        <alumni:SchemeToSchemeDescriptionKVPairConverter x:Key="sch2descKVPairConv"/>
     </Window.Resources>
     <Grid x:Name="grdMain">
         <Grid.RowDefinitions>
@@ -207,7 +202,8 @@
                                 <Label Content=" мг-экв/мл"/>
                                 <Label Content=" Рекомендуемая схема расчета: "/>
                                 <TextBlock Text="{Binding Path=RecommendedCalculationScheme, 
-                                    UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"/>
+                                    UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True,
+                                    Converter={StaticResource sch2descConv}}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Grid.Row="1">
                                 <Label Content="Холостой сульфаты:"/>
@@ -225,9 +221,12 @@
                                 <Label Content=" мг-экв/мл; Предполагаемая схема расчета:"/>
                                 <ComboBox SelectedItem="{Binding Path=DefaultCalculationScheme, 
                                     ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged,
-                                    NotifyOnValidationError=True, Mode=TwoWay, NotifyOnTargetUpdated=True}"
-                                         ItemsSource="{Binding Source={StaticResource dataFromEnum}}" 
-                                         ToolTip="Выберите требуемую схему расчета, принимая во внимание предполагаемую.&#x0a;Данные буду обсчитаны с использованием выбранной вами схемы!"/>
+                                    NotifyOnValidationError=True, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True,
+                                    Converter={StaticResource sch2descKVPairConv}}"
+                                         ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                    AncestorType=Window}, Path=SchemesNames, Mode=TwoWay}"
+                                          DisplayMemberPath="Value" SelectedValuePath="Key"
+                                          ToolTip="Выберите требуемую схему расчета, принимая во внимание предполагаемую.&#x0a;Данные буду обсчитаны с использованием выбранной вами схемы!"/>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

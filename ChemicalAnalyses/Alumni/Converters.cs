@@ -4,9 +4,11 @@ using System.Windows.Data;
 using SA_EF;
 using System.Windows;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ChemicalAnalyses.Alumni
 {
+    [ValueConversion(typeof(string),typeof(bool))]
     public class StringToBooleanConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType,
@@ -23,9 +25,10 @@ namespace ChemicalAnalyses.Alumni
         }
     }
 
+    [ValueConversion(typeof(object[]),typeof(bool))]
     public class SampleAvConverter : IMultiValueConverter
     {
-        object IMultiValueConverter.Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             string labnm;
             string descr;
@@ -50,7 +53,7 @@ namespace ChemicalAnalyses.Alumni
             catch { return false; }
         }
 
-        object[] IMultiValueConverter.ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException("Обратная конвертация невозможна!");
         }
@@ -164,7 +167,8 @@ namespace ChemicalAnalyses.Alumni
         }
     }
 
-    [ValueConversion(typeof(SaltCalculationSchemes), typeof(Visibility))]
+    [ValueConversion(typeof(SaltCalculationSchemes), typeof(Visibility), 
+        ParameterType =typeof(SaltCalculationSchemes))]
     public class SchemeToVisibilityConverter : IValueConverter
     {
         public object ConvertBack(object value, Type targetType,
@@ -182,6 +186,7 @@ namespace ChemicalAnalyses.Alumni
         }
     }
 
+    [ValueConversion(typeof(object[]),typeof(Visibility))]
     public class SchemeToVisibilityMultipleConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -195,6 +200,43 @@ namespace ChemicalAnalyses.Alumni
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException("Backward conversion is not possible");
+        }
+    }
+
+    [ValueConversion(typeof(SaltCalculationSchemes), typeof(string))]
+    public class SchemeToSchemeDescriptionConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException("Backward conversion not implemented");
+        }
+
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            if (value != null) return ((SaltCalculationSchemes)value).ToName();
+            return null;
+        }
+    }
+
+    [ValueConversion(typeof(SaltCalculationSchemes), typeof(KeyValuePair<SaltCalculationSchemes, string>))]
+    public class SchemeToSchemeDescriptionKVPairConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            if (value !=null)
+            return ((KeyValuePair<SaltCalculationSchemes, string>)value).Key;
+            return null;
+        }
+
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            if (value != null) return new KeyValuePair<SaltCalculationSchemes,string>
+               ((SaltCalculationSchemes)value, ((SaltCalculationSchemes)value).ToName());
+            return null;
         }
     }
 }

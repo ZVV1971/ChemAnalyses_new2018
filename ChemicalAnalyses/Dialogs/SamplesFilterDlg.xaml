@@ -68,7 +68,8 @@
         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.ColumnSpan="2">
             <Label Content="_Лабораторный номер (точное совпадение):" Target="{Binding ElementName=tbLR}"/>
             <TextBox x:Name="tbLR"  Text="{Binding Path=Filter.LabNumber, NotifyOnTargetUpdated=True, 
-                UpdateSourceTrigger=PropertyChanged}"/>
+                UpdateSourceTrigger=PropertyChanged}" 
+                     ToolTip="Введите лабораторный номер для поиска&#x0a;Несколько номеров можно разделить символом'|'&#x0a;Начальные и конечные пробелы игнорируются"/>
         </StackPanel>
         <Button Content="OK" IsCancel="False" IsDefault="False" Grid.Row="3" Grid.Column="0" Margin="5"
                 Command="Save" Width="90"/>

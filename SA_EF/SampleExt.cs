@@ -12,8 +12,13 @@ namespace SA_EF
             get { return _labnumber; }
             set
             {
+                if (value == null || value.Equals(String.Empty))
+                    throw new ArgumentNullException("LabNumber", "Номер не может быть пустой строкой," +
+                        "\nтак как используется для идентификации");
                 if (value?.Length > 15 || value?.Length < 2)
                     throw new ArgumentOutOfRangeException("LabNumber", "Неверный формат номера!");
+                if (value.Contains("|"))
+                    throw new ArgumentOutOfRangeException("LabNumber", "Номер не может содержать символ '|'!");
                 _labnumber = value;
                 OnPropertyChanged("LabNumber");
             }
@@ -38,6 +43,8 @@ namespace SA_EF
             get { return _desc; }
             set
             {
+                if (value == null || value.Equals(string.Empty))
+                    throw new ArgumentNullException("Description", "Описание не может быть пустым");
                 if (value?.Length > 200) throw new ArgumentOutOfRangeException("Description", "Слишком длинная строка!");
                 _desc = value;
                 OnPropertyChanged("Description");

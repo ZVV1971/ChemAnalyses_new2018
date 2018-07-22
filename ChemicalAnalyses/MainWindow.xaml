@@ -20,7 +20,7 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <!--*********************  Menu **************************-->
-        <Menu x:Name="mnMainMenu" Grid.Row="0">
+        <Menu x:Name="mnMainMenu" Grid.Row="0" ToolTip="Главное меню программы">
             <MenuItem Header="Файл" ToolTip="Работа с файлами…">
                 <Separator/>
                 <MenuItem Command="commands:CustomCommands.Exit" ToolTip="Выход из программы"
