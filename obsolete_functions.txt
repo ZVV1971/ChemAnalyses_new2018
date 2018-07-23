@@ -302,8 +302,8 @@ AS
 
 xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 
-                          <!--<ComboBox SelectedItem="{Binding Path=DefaultCalculationScheme, 
-                                    ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged,
-                                    NotifyOnValidationError=True, Mode=TwoWay, NotifyOnTargetUpdated=True}"
-                                         ItemsSource="{Binding Source={StaticResource dataFromEnum}}" 
-                                         ToolTip="Выберите требуемую схему расчета, принимая во внимание предполагаемую.&#x0a;Данные буду обсчитаны с использованием выбранной вами схемы!"/>-->
+<!--<ComboBox SelectedItem="{Binding Path=DefaultCalculationScheme, 
+ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged,
+NotifyOnValidationError=True, Mode=TwoWay, NotifyOnTargetUpdated=True}"
+ItemsSource="{Binding Source={StaticResource dataFromEnum}}" 
+ToolTip="Выберите требуемую схему расчета, принимая во внимание предполагаемую.&#x0a;Данные буду обсчитаны с использованием выбранной вами схемы!"/>-->

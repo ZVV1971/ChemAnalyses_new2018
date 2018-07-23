@@ -4,10 +4,11 @@ namespace SA_EF
 {
     public partial class ChemicalAnalysesEntities : DbContext
     {
+        public static string connectionString { get; set; } = "name=CAEntities";
+
         public ChemicalAnalysesEntities()
-            : base("name=CAEntities")
-        {
-        }
+            : base(connectionString)
+        {}
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

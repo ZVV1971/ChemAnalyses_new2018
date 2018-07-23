@@ -7,6 +7,7 @@ using System.Reflection;
 using ChemicalAnalyses.Dialogs;
 using SettingsHelper;
 using SA_EF;
+using System.Data.Entity.Infrastructure;
 
 namespace ChemicalAnalyses
 {
@@ -28,14 +29,24 @@ namespace ChemicalAnalyses
             CALogger.WriteToLogFile("Подключение к БД…");
             try
             {
-                //string UserLevelPath = Properties.Settings.Default.DBFilePath;
-                //if (ConnectionStringGiver.GetValidConnectionString(UserLevelPath) != null)
-                //    Properties.Settings.Default.DBFilePath = UserLevelPath;
+                string UserLevelPath = Properties.Settings.Default.DBFilePath;
                 try
                 {
                     var context = new ChemicalAnalysesEntities();
+                    if (!((IObjectContextAdapter)context).ObjectContext.DatabaseExists())
+                    {
+                        CALogger.WriteToLogFile("Не найдена БД сохраненная в строке подключения");
+                        string szTmp = ConnectionStringGiver.GetValidConnectionString(UserLevelPath);
+                        if (szTmp == null)
+                        {
+                            MessageBox.Show("Не найдена указанная в строке подключения БД!",
+                              "Ошибка при подключении к БД!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            Close();
+                        }
+                        ChemicalAnalysesEntities.connectionString = szTmp;
+                    }
                 }
-                catch
+                catch (Exception ex)
                 {
                     CALogger.WriteToLogFile("Не найдена БД");
                     Close();
@@ -58,7 +69,7 @@ namespace ChemicalAnalyses
         }
 
         public static readonly DependencyProperty HoverToolTipProperty =
-            DependencyProperty.Register(nameof(HoverToolTip), typeof(object), typeof(MainWindow),
+            DependencyProperty.Register(nameof(HoverToolTip), typeof(object), typeof(Window),
                 new PropertyMetadata(null));
         #endregion HoverToolTip Property
 

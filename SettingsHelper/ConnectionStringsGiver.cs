@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Windows;
+using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
 
@@ -20,7 +21,7 @@ namespace SettingsHelper
             try
             {
                 connstr = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).
-                    ConnectionStrings.ConnectionStrings["ChemAnConnectionString"].ToString();
+                    ConnectionStrings.ConnectionStrings["CAEntities"].ToString();
             }
             catch
             {
@@ -28,12 +29,25 @@ namespace SettingsHelper
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return null;
             }
+
+            //try to split the connection string in order to extract DB filename
+            string pattern = @"(.+provider connection string=)(.+)";
+            Regex regex = new Regex(pattern);
+            MatchCollection match = regex.Matches(connstr);
+            if (match.Count != 1 || match[0].Groups.Count != 3)
+            {
+                CALogger.WriteToLogFile("В конфигурации содержится ошибочная строка подключения!");
+                return null;
+            }
+            string metadata = match[0].Groups[1].Value;
+            connstr = match[0].Groups[2].Value.Trim('"');
+
             SqlConnection sqlconnection = new SqlConnection(connstr);
             try
             {
                 sqlconnection.Open();
                 sqlconnection.Close();
-                return connection = sqlconnection.ConnectionString;
+                return connection = metadata + '"'+ sqlconnection.ConnectionString + '"';
             }
             catch
             {
@@ -41,50 +55,52 @@ namespace SettingsHelper
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connstr);
                 //will try to use other filename stored in the user config
                 builder.AttachDBFilename = szUserLevelDBPath;
-                sqlconnection = new SqlConnection(builder.ConnectionString);
-                try
+                using (sqlconnection = new SqlConnection(builder.ConnectionString))
                 {
-                    sqlconnection.Open();
-                    sqlconnection.Close();
-                    return connection = sqlconnection.ConnectionString;
-                }
-                catch
-                {
-                    //this was wrong too select another one
-                    OpenFileDialog ofDlg = new OpenFileDialog();
-                    ofDlg.FileName = builder.AttachDBFilename;
-                    ofDlg.CheckFileExists = true;
-                    ofDlg.Filter = "MS SQL server files|*.mdf";
-                    while (true)
+                    try
                     {
-                        if (ofDlg.ShowDialog() == true)
+                        sqlconnection.Open();
+                        sqlconnection.Close();
+                        return connection = metadata + '"' + sqlconnection.ConnectionString + '"';
+                    }
+                    catch
+                    {
+                        //this was wrong too select another one
+                        OpenFileDialog ofDlg = new OpenFileDialog();
+                        ofDlg.FileName = builder.AttachDBFilename;
+                        ofDlg.CheckFileExists = true;
+                        ofDlg.Filter = "MS SQL server files|*.mdf";
+                        while (true)
                         {
-                            builder.AttachDBFilename = ofDlg.FileName;
-                            //try again
-                            try
+                            if (ofDlg.ShowDialog() == true)
                             {
-                                sqlconnection = new SqlConnection(builder.ConnectionString);
-                                sqlconnection.Open();
-                                szUserLevelDBPath = ofDlg.FileName;
-                                sqlconnection.Close();
-                                return connection = sqlconnection.ConnectionString;
+                                builder.AttachDBFilename = ofDlg.FileName;
+                                //try again
+                                try
+                                {
+                                    sqlconnection = new SqlConnection(builder.ConnectionString);
+                                    sqlconnection.Open();
+                                    szUserLevelDBPath = ofDlg.FileName;
+                                    sqlconnection.Close();
+                                    return connection = metadata + '"' + sqlconnection.ConnectionString + '"';
+                                }
+                                catch
+                                {
+                                    if (MessageBox.Show("Указана неверная база данных!" + Environment.NewLine +
+                                        "Программа не может работать без базы данных!" + Environment.NewLine
+                              + "Продолжить выбор базы данных?", "Необходима база данных!", MessageBoxButton.YesNo,
+                              MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.No)
+                                        return null;//the program will close
+                                    else continue;
+                                }
                             }
-                            catch
+                            else
                             {
-                                if (MessageBox.Show("Указана неверная база данных!" + Environment.NewLine +
-                                    "Программа не может работать без базы данных!" + Environment.NewLine
-                          + "Продолжить выбор базы данных?", "Необходима база данных!", MessageBoxButton.YesNo,
-                          MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.No)
+                                if (MessageBox.Show("Программа не может работать без базы данных!" + Environment.NewLine
+                              + "Продолжить выбор базы данных?", "Необходима база данных!", MessageBoxButton.YesNo,
+                              MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.No)
                                     return null;//the program will close
-                                else continue;
                             }
-                        }
-                        else
-                        {
-                            if (MessageBox.Show("Программа не может работать без базы данных!" + Environment.NewLine
-                          + "Продолжить выбор базы данных?", "Необходима база данных!", MessageBoxButton.YesNo,
-                          MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.No)
-                                return null;//the program will close
                         }
                     }
                 }
