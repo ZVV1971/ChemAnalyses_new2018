@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using SA_EF;
+using ChemicalAnalyses.Alumni;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -12,19 +16,20 @@ namespace ChemicalAnalyses.Dialogs
         private bool fdNoEqualDP = true;
         private bool sdNoEqualDP = true;
         public LinearCalibration lc { get; set; }
+
+        public static ObservableCollection<KeyValuePair<string, string>> elems { get; set; }
+
         public CalibrationDataDialog (ref LinearCalibration calibration)
          {
             InitializeComponent();
             lc = calibration;
+            lc.CalibrationType = lc.CalibrationType.Trim();
             grdCalibrationDialog.DataContext = this;
-            Array values = Enum.GetValues(typeof(ChemicalElemetCalibration));
-            foreach (int value in values)
-            {
-                string display = Enum.GetName(typeof(ChemicalElemetCalibration), value);
-                cbChemicalElemets.Items.Add(display);
-                cbChemicalElemets.SelectedIndex = Array.IndexOf(values, calibration.CalibrationType, 0);
-                cbChemicalElemets.IsEnabled = false;
-            }
+            if (elems == null) elems = new ObservableCollection<KeyValuePair<string, string>>
+                 (Enum.GetValues(typeof(ChemicalElemetCalibration)).OfType<ChemicalElemetCalibration>()
+                .Select(p => new KeyValuePair<string, string>(p.ToString(), p.ToName())));
+            // if new is being created don't disable type selector
+            if (lc.CalibrationData.Count != 0) cbChemicalElemets.IsEnabled = false;
         }
 
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)

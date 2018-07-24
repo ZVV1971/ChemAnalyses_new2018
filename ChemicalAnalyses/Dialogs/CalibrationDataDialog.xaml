@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
         Title="CalibrationDataDialog" MinHeight="40" MinWidth="400" Height="400" Width="400"
         Validation.Error="OnErrorEvent">
@@ -12,6 +13,7 @@
             <Setter Property="CanUserReorderColumns" Value="False"/>
             <Setter Property="AutoGenerateColumns" Value="False"/>
         </Style>
+        <alumni:ElementToElementDescriptionKVPairConverter x:Key="elem2descKVPairConv"/>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
@@ -61,8 +63,14 @@
             <Button  Content="Cancel" IsDefault="False" IsCancel="True" Margin="5" Width="70"/>
         </StackPanel>
         <ComboBox Margin="15,0,15,0" Grid.Column="1" Grid.Row="2" Height="20" x:Name="cbChemicalElemets"
-                  ItemsSource="{Binding}" SelectedItem="{Binding Path=lc.CalibrationType,
-                    UpdateSourceTrigger=PropertyChanged}"/>
+                  ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                    AncestorType=Window}, Path=elems, Mode=TwoWay}"
+                  SelectedItem="{Binding Path=lc.CalibrationType, Mode=TwoWay,
+                  ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged,
+                  NotifyOnValidationError=True, Converter={StaticResource elem2descKVPairConv}}"
+                  DisplayMemberPath="Value" SelectedValuePath="Key"
+                  ToolTip="Тип калибровки можно выбрать из предложенного списка&#x0a;(Только на этапе создания)"
+                  ToolTipService.IsEnabled="True"/>
         <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <Label Content="_Краткое описание: "/>
             <TextBox x:Name="tbDescription" TextWrapping="WrapWithOverflow" Text="{Binding Path=lc.Description,

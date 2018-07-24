@@ -239,4 +239,30 @@ namespace ChemicalAnalyses.Alumni
             return null;
         }
     }
+
+    [ValueConversion(typeof(string), typeof(KeyValuePair<string, string>))]
+    public class ElementToElementDescriptionKVPairConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            if (value != null)
+                return ((KeyValuePair<string, string>)value).Key;
+            return null;
+        }
+
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        {
+            try
+            {
+                if (value != null) return new KeyValuePair<string, string>
+                   ((string)value,
+                   ((ChemicalElemetCalibration)Enum.Parse(typeof(ChemicalElemetCalibration),
+                        ((string)value).Trim())).ToName());
+            }
+            catch { return null; }
+            return null;
+        }
+    }
 }

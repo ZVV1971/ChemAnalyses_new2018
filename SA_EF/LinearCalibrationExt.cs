@@ -216,7 +216,13 @@ namespace SA_EF
     /// <summary>
     /// Enumerates the possible chemical elements the calibration can be applied to
     /// </summary>
-    public enum ChemicalElemetCalibration { Kalium, Natrium };
+    public enum ChemicalElemetCalibration
+    {
+        [Description("Калий")]
+        Kalium,
+        [Description("Натрий")]
+        Natrium
+    };
 
     [StoredProcedure("UpdateCalibrationData")]
     public class UpdateLCWithSP
@@ -238,5 +244,12 @@ namespace SA_EF
         public decimal Concentration { get; set; }
         [UserDefinedTableTypeColumn(5, "Value")]
         public decimal Value { get; set; }
+    }
+
+    [StoredProcedure("DeleteCalibrationByID")]
+    public class DeleteCalibrationByID
+    {
+        [StoredProcedureParameter(SqlDbType.Int)]
+        public List<LCData> Calibration_ID { get; set; }
     }
 }

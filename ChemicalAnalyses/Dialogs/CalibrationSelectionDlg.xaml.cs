@@ -12,6 +12,7 @@ using System.Data;
 using EntityFrameworkExtras.EF6;
 using System.Windows.Controls;
 
+
 namespace ChemicalAnalyses.Dialogs
 {
     public partial class CalibrationSelectionDlg : Window
@@ -30,9 +31,13 @@ namespace ChemicalAnalyses.Dialogs
             Title = "Выбор калибровки для: " + type;
             grdMain.DataContext = this;
             //let tooltips be shown on disabled controls as well
-            ToolTipService.ShowOnDisabledProperty.OverrideMetadata(
+            try
+            {
+                ToolTipService.ShowOnDisabledProperty.OverrideMetadata(
                 typeof(Control),
                 new FrameworkPropertyMetadata(true));
+            }
+            catch { }//if it's already overridden
         }
 
         private void FillData()
