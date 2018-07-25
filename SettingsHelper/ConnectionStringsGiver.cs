@@ -5,14 +5,13 @@ using System.Windows;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
-
 namespace SettingsHelper
 {
     public class ConnectionStringGiver
     {
-        static string connection;
+        private static string connection;
 
-        public static Func<string, string> GetValidConnectionString = (szUserLevelDBPath) =>
+        public static Func< string, string> GetValidConnectionString = (szUserLevelDBPath) =>
         {
             string connstr;
             //if connection has already been made and new is not needed just return static connection
@@ -70,6 +69,7 @@ namespace SettingsHelper
                         ofDlg.FileName = builder.AttachDBFilename;
                         ofDlg.CheckFileExists = true;
                         ofDlg.Filter = "MS SQL server files|*.mdf";
+                        ofDlg.Title = "Укажите файл с БД";
                         while (true)
                         {
                             if (ofDlg.ShowDialog() == true)
@@ -82,6 +82,7 @@ namespace SettingsHelper
                                     sqlconnection.Open();
                                     szUserLevelDBPath = ofDlg.FileName;
                                     sqlconnection.Close();
+                                    szUserLevelDBPath = sqlconnection.ConnectionString;
                                     return connection = metadata + '"' + sqlconnection.ConnectionString + '"';
                                 }
                                 catch

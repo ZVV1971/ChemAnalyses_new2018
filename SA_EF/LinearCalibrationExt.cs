@@ -250,6 +250,6 @@ namespace SA_EF
     public class DeleteCalibrationByID
     {
         [StoredProcedureParameter(SqlDbType.Int)]
-        public List<LCData> Calibration_ID { get; set; }
+        public int Calibration_ID { get; set; }
     }
 }

@@ -210,12 +210,12 @@ namespace ChemicalAnalyses.Dialogs
 #if DEBUG
                     context.Database.Log = s => { Debug.WriteLine(s); };
 #endif
-                    LinearCalibration tmpLC = context.LineaCalibrations
-                    .Find(((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID);
                     CALogger.WriteToLogFile(string.Format("Удалена калибровка ID{0};{1} - {2}",
-                         tmpLC.CalibrationID, tmpLC.Description, tmpLC.CalibrationType.ToString()));
-                    tmpLC.CalibrationData.ToList().ForEach(p => context.Entry(p).State = EntityState.Deleted);
-                    context.Entry(tmpLC).State = EntityState.Deleted;
+                         ((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID,
+                         ((LinearCalibration)cbLCSelection.SelectedItem).Description,
+                         ((LinearCalibration)cbLCSelection.SelectedItem).CalibrationType.ToString()));
+                    context.Database.ExecuteStoredProcedure(new DeleteCalibrationByID()
+                        {Calibration_ID = ((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID });
                     context.SaveChanges();
                 }
                 FillData();

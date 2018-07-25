@@ -208,30 +208,6 @@ namespace ChemicalAnalyses.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int KaliumCalibrationNumber {
-            get {
-                return ((int)(this["KaliumCalibrationNumber"]));
-            }
-            set {
-                this["KaliumCalibrationNumber"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int NatriumCalibrationNumber {
-            get {
-                return ((int)(this["NatriumCalibrationNumber"]));
-            }
-            set {
-                this["NatriumCalibrationNumber"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("e:\\non_existing file.mdb")]
         public string DBFilePath {
             get {
@@ -262,6 +238,30 @@ namespace ChemicalAnalyses.Properties {
             }
             set {
                 this["PreviousFilter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int KaliumCalibrationNumber {
+            get {
+                return ((int)(this["KaliumCalibrationNumber"]));
+            }
+            set {
+                this["KaliumCalibrationNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int NatriumCalibrationNumber {
+            get {
+                return ((int)(this["NatriumCalibrationNumber"]));
+            }
+            set {
+                this["NatriumCalibrationNumber"] = value;
             }
         }
     }

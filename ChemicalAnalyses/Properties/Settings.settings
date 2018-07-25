@@ -56,12 +56,6 @@
     <Setting Name="MgTrilonB" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1.0782</Value>
     </Setting>
-    <Setting Name="KaliumCalibrationNumber" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
-    <Setting Name="NatriumCalibrationNumber" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
     <Setting Name="DBFilePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">e:\non_existing file.mdb</Value>
     </Setting>
@@ -70,6 +64,12 @@
     </Setting>
     <Setting Name="PreviousFilter" Type="ChemicalAnalyses.Alumni.SampleFilterFields" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="KaliumCalibrationNumber" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="NatriumCalibrationNumber" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
     </Setting>
   </Settings>
 </SettingsFile>
