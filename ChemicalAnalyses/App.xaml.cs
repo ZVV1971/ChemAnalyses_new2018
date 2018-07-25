@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace ChemicalAnalyses
 {
@@ -14,9 +15,25 @@ namespace ChemicalAnalyses
     {
         private const int MINIMUM_SPLASH_TIME = 1500; // Miliseconds  
 
+        // Use a name unique to the application (including GUID)
+        private static Mutex mutex = new Mutex(false, 
+            @"ZVV_Diploma_Mutex/{DF776A4B-389C-4A4F-AD0B-1BE989F11ED9}");
+
         protected override void OnStartup(StartupEventArgs e)
-        {// check for config file presence
-            Configuration config;
+        {
+            if (!mutex.WaitOne(TimeSpan.FromSeconds(1), false))
+            {
+                MessageBox.Show("Запущена еще одна копия приложения.", "Ошибка", 
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                //And post message (WM_SHOWME) to the running instance
+                NativeMethods.PostMessage((IntPtr)NativeMethods.HWND_BROADCAST,
+                    NativeMethods.WM_SHOWME, IntPtr.Zero, IntPtr.Zero);
+                Shutdown(-2);
+                return;
+            }
+
+                // check for config file presence
+                Configuration config;
             try
             {
                 Uri UriAssemblyFolder = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase));
@@ -52,5 +69,17 @@ namespace ChemicalAnalyses
 
             splash.Close(TimeSpan.FromSeconds(2)); //two seconds fade away
         }
+    }
+
+    internal class NativeMethods
+    {
+        public const int HWND_BROADCAST = 0xffff;
+        public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");
+        [DllImport("user32")]
+        public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
+        [DllImport("user32")]
+        public static extern int RegisterWindowMessage(string message);
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int cmdShow);
     }
 }

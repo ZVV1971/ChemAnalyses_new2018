@@ -9,14 +9,18 @@ using ChemicalAnalyses.Dialogs;
 using SettingsHelper;
 using SA_EF;
 using System.Data.Entity.Infrastructure;
+using System.Windows.Interop;
 
 namespace ChemicalAnalyses
 {
     public partial class MainWindow : Window
     {
+        private Window wndThis = null;
+
         public MainWindow()
         {
             InitializeComponent();
+            wndThis = this;
             try
             {
                 CALogger.InitLogFile(Properties.Settings.Default.LogFile);
@@ -193,6 +197,32 @@ namespace ChemicalAnalyses
         {
             base.OnClosed(e);
             Application.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// A private delegate processing user-level WM_SHOWME message already 
+        /// registered either by the current or the previous application instance 
+        /// </summary>
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == NativeMethods.WM_SHOWME)
+            {
+                wndThis.WindowState = WindowState.Normal;//return to the normal window size
+                bool b = wndThis.Topmost; // save state
+                wndThis.Topmost = true; // put on the top
+                wndThis.Topmost = b;    //recover the state
+                handled = true; // mark message as handled
+            }
+            return IntPtr.Zero;
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            //get handle of the current window
+            HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
+            //and add an hook to process WM_SHOWME messages
+            source.AddHook(new HwndSourceHook(WndProc));
         }
     }
 }
