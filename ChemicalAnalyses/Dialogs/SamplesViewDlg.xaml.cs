@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -58,8 +59,8 @@ namespace ChemicalAnalyses.Dialogs
                     if (fFields.LabNumber != null && !fFields.LabNumber.Equals(string.Empty))
                     {
                         if (fFields.LabNumber.Contains(';'))
-                        {
-                            lnArray = Regex.Split(fFields.LabNumber, "|");
+                        {//a list of samples semicolon-separated
+                            lnArray = Regex.Split(fFields.LabNumber, ";");
                             context.Samples.Join(
                                 inner: lnArray.ToList(),
                                 outerKeySelector: e => e.LabNumber,
@@ -173,7 +174,6 @@ namespace ChemicalAnalyses.Dialogs
                         context.Samples.Add(smpl);
                         context.SaveChanges();
                     }
-                    //smpl.Insert();
                     FillData();
                 }
                 catch (Exception ex)
@@ -231,5 +231,26 @@ namespace ChemicalAnalyses.Dialogs
             try { Properties.Settings.Default.PreviousFilter = fFields; }
             catch { }
         }
+
+        private void Window_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            var element = Mouse.DirectlyOver as FrameworkElement;
+            HoverToolTip2 = GetTooltip(element);
+        }
+
+        protected static Object GetTooltip(FrameworkElement obj)
+        {
+            if (obj == null) { return null; }
+            else if (obj.ToolTip != null) { return obj.ToolTip; }
+            else { return GetTooltip(VisualTreeHelper.GetParent(obj) as FrameworkElement); }
+        }
+        public object HoverToolTip2
+        {
+            get { return (object)GetValue(HoverToolTip2Property); }
+            set { SetValue(HoverToolTip2Property, value); }
+        }
+        public static readonly DependencyProperty HoverToolTip2Property =
+            DependencyProperty.Register(nameof(HoverToolTip2), typeof(object), typeof(SamplesViewDlg),
+                new PropertyMetadata(null));
     }
 }

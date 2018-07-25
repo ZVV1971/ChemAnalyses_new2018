@@ -17,8 +17,8 @@ namespace SA_EF
                         "\nтак как используется для идентификации");
                 if (value?.Length > 15 || value?.Length < 2)
                     throw new ArgumentOutOfRangeException("LabNumber", "Неверный формат номера!");
-                if (value.Contains("|"))
-                    throw new ArgumentOutOfRangeException("LabNumber", "Номер не может содержать символ '|'!");
+                if (value.Contains(";"))
+                    throw new ArgumentOutOfRangeException("LabNumber", "Номер не может содержать символ ';'!");
                 _labnumber = value;
                 OnPropertyChanged("LabNumber");
             }

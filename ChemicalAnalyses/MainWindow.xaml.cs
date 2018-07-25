@@ -74,7 +74,7 @@ namespace ChemicalAnalyses
         }
 
         public static readonly DependencyProperty HoverToolTipProperty =
-            DependencyProperty.Register(nameof(HoverToolTip), typeof(object), typeof(Window),
+            DependencyProperty.Register(nameof(HoverToolTip), typeof(object), typeof(MainWindow),
                 new PropertyMetadata(null));
         #endregion HoverToolTip Property
 
