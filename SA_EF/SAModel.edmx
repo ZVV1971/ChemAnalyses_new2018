@@ -11,7 +11,7 @@
           </Key>
           <Property Name="IDCalibration" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Date" Type="date" Nullable="false" />
-          <Property Name="Comment" Type="text" />
+          <Property Name="Comment" Type="nvarchar"/>
           <Property Name="CalibrationType" Type="nchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="CalibrationData">

@@ -45,8 +45,13 @@ namespace ChemicalAnalyses.Dialogs
             lcList.Clear();
             using (var context = new ChemicalAnalysesEntities())
             {
-                foreach (LinearCalibration clbr in context.LineaCalibrations.Where(p=>p.CalibrationType== type))
-                lcList.Add(clbr);
+                try
+                {
+                    foreach (LinearCalibration clbr in context.LineaCalibrations
+                        .Where(p => p.CalibrationType.Trim() == type))
+                        lcList.Add(clbr);
+                }
+                catch(Exception ex) { }
             }
             try
             {

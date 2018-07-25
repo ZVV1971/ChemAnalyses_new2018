@@ -50,6 +50,16 @@
                                            DependentValueBinding="{Binding Path=Value}"
                                            ItemsSource="{Binding Path=lcCalibration.LinearCalibrationData[0]}"
                                            x:Name="serScatterSeries1"/>
+                <chartingToolkit:LineSeries ItemsSource="{Binding}" x:Name="lnSeries1"
+                                            DependentValuePath="Item2"
+                                            IndependentValuePath="Item1">
+                    <!--<chartingToolkit:LineSeries.DataPointStyle>
+                        <Style TargetType="{x:Type chartingToolkit:LineDataPoint}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Setter Property="Foreground" Value="Transparent"/>
+                        </Style>
+                    </chartingToolkit:LineSeries.DataPointStyle>-->
+                </chartingToolkit:LineSeries>
             </chartingToolkit:Chart>
             <chartingToolkit:Chart Grid.Row="1" x:Name="chrChart2" chHlpr:ChartHelpers.IsLegendHidden="True"
                                    MinHeight="350" Title="Второй диапазон">
@@ -62,6 +72,10 @@
                                            DependentValueBinding="{Binding Path=Value}"
                                            ItemsSource="{Binding Path=lcCalibration.LinearCalibrationData[1]}"
                                            x:Name="serScatterSeries2"/>
+                <chartingToolkit:LineSeries ItemsSource="{Binding}" x:Name="lnSeries2"
+                                            DependentValuePath="Item2"
+                                            IndependentValuePath="Item1">
+                </chartingToolkit:LineSeries>
             </chartingToolkit:Chart>
             <StackPanel Grid.Column="1" Grid.Row="0">
                 <TextBlock>
