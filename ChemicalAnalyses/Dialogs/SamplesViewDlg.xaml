@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
+        xmlns:talex="http://schemas.talex-soft.com/2010/xaml/presentation"
         mc:Ignorable="d"
         Title="Список образцов в базе" Height="350" Width="600" MinHeight="205" MinWidth="500"
         PreviewMouseMove="Window_PreviewMouseMove">
@@ -60,8 +61,14 @@
                  SelectionMode="Extended">
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Ввести данные новых анализов" Click="NewAnalysisMenuItem_Click"
-                              ToolTip="Добавляет к каждому образцу по одной записи для данных анализа"/>
+                    <MenuItem Click="NewAnalysisMenuItem_Click"
+                              ToolTip="Добавляет к каждому образцу по одной записи для данных анализа">
+                        <!--<StackPanel Orientation="Horizontal">-->
+                            <TextBlock Text="Ввести данные новых анализов"/>
+                            <talex:NumericUpDown/>
+                            <TextBlock Text="штук"/>
+                        <!--</StackPanel>-->
+                    </MenuItem>
                     <MenuItem Header="Редактировать данные анализов" Command="commands:CustomCommands.Edit"/>
                     <MenuItem Header="Удалить образец" Command="Delete" ToolTip="Удалить образец из базы"/>
                     <MenuItem Header="Редактировать…" Command="commands:CustomCommands.Update" 
