@@ -58,6 +58,9 @@
                                             IndependentValuePath="Item1" 
                                             DataPointStyle="{StaticResource pointStyle}">
                 </chartingToolkit:LineSeries>
+                <chartingToolkit:Chart.ToolTip>
+                    <TextBlock Text="Пример подсказки для графика"/>
+                </chartingToolkit:Chart.ToolTip>
             </chartingToolkit:Chart>
             <chartingToolkit:Chart Grid.Row="1" x:Name="chrChart2" chHlpr:ChartHelpers.IsLegendHidden="True"
                                    MinHeight="350" Title="Второй диапазон">
