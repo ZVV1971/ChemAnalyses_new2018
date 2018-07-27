@@ -71,5 +71,8 @@
     <Setting Name="NatriumCalibrationNumber" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="SumTolerance" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.005</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

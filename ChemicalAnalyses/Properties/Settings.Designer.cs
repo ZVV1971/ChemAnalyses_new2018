@@ -264,5 +264,17 @@ namespace ChemicalAnalyses.Properties {
                 this["NatriumCalibrationNumber"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.005")]
+        public decimal SumTolerance {
+            get {
+                return ((decimal)(this["SumTolerance"]));
+            }
+            set {
+                this["SumTolerance"] = value;
+            }
+        }
     }
 }

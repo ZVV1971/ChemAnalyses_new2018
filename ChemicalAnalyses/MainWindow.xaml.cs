@@ -177,6 +177,7 @@ namespace ChemicalAnalyses
             catch { return; }
 
             SaltAnalysisOptionsDlg saDlg = new SaltAnalysisOptionsDlg(sa as SaltAnalysisData);
+            saDlg.SumTolerance = Properties.Settings.Default.SumTolerance;
             if (saDlg.ShowDialog() == true)
             {//if OK save settings back to user.config
                 Properties.Settings.Default.HgCoefficient = sa.HgCoefficient;
@@ -191,6 +192,8 @@ namespace ChemicalAnalyses
                 CALogger.WriteToLogFile("Properties.Settings.Default.SulfatesBlank:" + sa.SulfatesBlank);
                 Properties.Settings.Default.BrBlank = sa.BromumBlank;
                 CALogger.WriteToLogFile("Properties.Settings.Default.SulfatesBlank:" + sa.BromumBlank);
+                Properties.Settings.Default.SumTolerance = saDlg.SumTolerance;
+                CALogger.WriteToLogFile("Properties.Settings.Default.SumTolerance:" + saDlg.SumTolerance);
             }
         }
         protected override void OnClosed(EventArgs e)

@@ -58,6 +58,6 @@ namespace ChemicalAnalyses.Alumni
             {
                 return new ValidationResult(false, ex.Message);
             }
-            }
         }
     }
+}
