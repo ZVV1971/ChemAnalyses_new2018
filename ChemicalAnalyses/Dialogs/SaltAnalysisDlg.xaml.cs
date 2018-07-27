@@ -27,9 +27,8 @@ namespace ChemicalAnalyses.Dialogs
         private bool _all_selected = false;
 
         public static ObservableCollection<KeyValuePair<SaltCalculationSchemes, string>> SchemesNames { get; set; }
-        //public static ObservableCollection<string> SchemesNames { get; private set; }
-
-        public SaltAnalysisDlg(List<Sample> lst, string typeOfWork = "Create")
+      
+        public SaltAnalysisDlg(List<Sample> lst, string typeOfWork = "Create", int qToAdd = 1)
         {
             TypeOfWork = typeOfWork;
             decimal HgCoeff = Properties.Settings.Default.HgCoefficient;
@@ -50,17 +49,21 @@ namespace ChemicalAnalyses.Dialogs
             InitializeComponent();
             if (TypeOfWork == "Create")
             {//Creating new analyses 'data with on-default settings
-                Labnumbers.ForEach(p => sa.Add(new SaltAnalysisData
-                {
-                    IDSample = p.IDSample,
-                    LabNumber = p.LabNumber,
-                    HgCoefficient = HgCoeff,
-                    BromumBlank = BrBlank,
-                    BromumStandardTitre = BrTitre,
-                    CalciumTrilonTitre = CaTrilonB,
-                    MagnesiumTrilonTitre = MgTrilonB,
-                    KaliumCalibration = KaliumCalibrationNumber
-                }));
+                Labnumbers.ForEach(p => {
+                    for (int i = 1; i <= qToAdd; i++) {
+                        sa.Add(
+                        new SaltAnalysisData
+                        {
+                            IDSample = p.IDSample,
+                            LabNumber = p.LabNumber,
+                            HgCoefficient = HgCoeff,
+                            BromumBlank = BrBlank,
+                            BromumStandardTitre = BrTitre,
+                            CalciumTrilonTitre = CaTrilonB,
+                            MagnesiumTrilonTitre = MgTrilonB,
+                            KaliumCalibration = KaliumCalibrationNumber
+                        }); //of Add
+                    }});//of for and Foreach
                 //Change OK button tooltip
                 btnOK.ToolTip = "Сохранить новые введенные данные для анализов";
                 btnDelete.Visibility = Visibility.Collapsed;
@@ -337,7 +340,9 @@ namespace ChemicalAnalyses.Dialogs
 
         private void PrintCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = dgrdSA.SelectedItems.Count != 0 && _validationErrorCount == 0;
+            e.CanExecute = dgrdSA.SelectedItems.Count != 0 
+                && _validationErrorCount == 0 
+                && dgrdSA.SelectedItems.OfType<ISaltAnalysisCalcResults>().All(p=>p.IsCalculated);
         }
 
         private void SelectAllCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -362,6 +367,11 @@ namespace ChemicalAnalyses.Dialogs
                     MessageBoxImage.Hand, MessageBoxResult.No) == MessageBoxResult.No) return false;
             }
             return true;
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ((ISaltAnalysisCalcResults)((ComboBox)sender).DataContext).IsCalculated = false;
         }
     }
 }

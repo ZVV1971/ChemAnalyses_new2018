@@ -78,6 +78,27 @@ namespace SA_EF
         public decimal Na2SO4 { get; set; }
         [NotMapped]
         public decimal NaBr { get; set; }
+        private bool _isCalculated = false;
+        [NotMapped]
+        public bool IsCalculated
+        {
+            get { return _isCalculated; }
+            set
+            {
+                _isCalculated =value;
+                OnPropertyChanged("IsCalculated");
+            }
+        }
+        private decimal _ionSum = 0;
+        public decimal IonSum
+        {
+            get { return _ionSum; }
+        }
+        private decimal _saltSum = 0;
+        public decimal SaltSum
+        {
+            get { return _saltSum; }
+        }
         #endregion SchemeResults
         #region AtomicWeights_Of_ChemicalElememts
         static decimal awMg;
@@ -331,6 +352,9 @@ namespace SA_EF
         public ISaltAnalysisCalcResults CalcSchemeResults(ISaltAnalysisDryData dryData, 
             SaltCalculationSchemes defSchema)
         {
+
+            decimal _IonSum = dryData.KDry + dryData.CaDry + dryData.MgDry 
+                + dryData.SulfatesDry + dryData.ClDry + dryData.BrDry + dryData.ResiduumDry;
             switch (defSchema)
             {
                 case SaltCalculationSchemes.Chloride:
@@ -361,8 +385,11 @@ namespace SA_EF
                         HygroWaterAnyCase = (dryData.MgWet >= carnalliteThreshold) ?
                             dryData.HumidityContent - dryData.MgDry * _water2MagnesiumRatioInCarnallite
                             : dryData.HumidityContent;
+                        IsCalculated = true;
+                        _ionSum = _IonSum + Na + (CrystWater.HasValue ? CrystWater.Value : 0);
+                        _saltSum = NaCl + KCl + CaSO4 + CaCl2 + (MgCl2.HasValue ? MgCl2.Value : 0) + KBr + ResiduumDry + Carnallite;
                     }
-                    return this;
+                    break;
                 case SaltCalculationSchemes.SulfateSodiumI:
                     {
                         decimal _Ca_bound2_HCO3 = dryData.HydrocarbonatesDry * _Ca_2_HCO3;              //1
@@ -383,8 +410,9 @@ namespace SA_EF
                         decimal _Na_bound2_Br = dryData.BrDry * awNa / awBr;                            //16
                         NaBr = dryData.BrDry + _Na_bound2_Br;                                       //17
                         Na = _Na_bound2_SO4 + _Na_bound2_Cl + _Na_bound2_Br;                        //20 18-19 skipped
+                        IsCalculated = true;
                     }
-                    return this;
+                    break;
                 case SaltCalculationSchemes.SulfateMagnesiumI:
                     {
                         decimal _Ca_bound2_HCO3 = dryData.HydrocarbonatesDry * _Ca_2_HCO3;              //1
@@ -406,11 +434,14 @@ namespace SA_EF
                         decimal _Na_bound2_Br = dryData.BrDry * awNa / awBr;                            //17
                         NaBr = dryData.BrDry + _Na_bound2_Br;                                           //18
                         Na = _Na_bound2_Cl + _Na_bound2_Br;                                             //21 19-20 skipped
+                        IsCalculated = true;
                     }
-                    return this;
+                    break;
                 default: //All others - not yet implemented
-                    return this;
+                    break;
             }
+            _ionSum = _IonSum + Na + (CrystWater.HasValue ? CrystWater.Value : 0);
+            return this;
         }
 
         /// <summary>

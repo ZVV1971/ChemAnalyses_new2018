@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using TAlex.WPF.Controls;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -32,6 +33,16 @@ namespace ChemicalAnalyses.Dialogs
 
         private static SampleFilterFields fFields;
         public SampleFilterFields GetFilter() { return fFields; }
+
+        public decimal NumberOfAnalysesToAdd
+        {
+            get { return (decimal)GetValue(NumberOfAnalysesToAddProperty); }
+            set { SetValue(NumberOfAnalysesToAddProperty, value); }
+        }
+
+        public static readonly DependencyProperty NumberOfAnalysesToAddProperty =
+            DependencyProperty.Register(nameof(NumberOfAnalysesToAdd), 
+                typeof(decimal), typeof(SamplesViewDlg), new PropertyMetadata(1M));
 
         public SamplesViewDlg()
         {
@@ -188,18 +199,6 @@ namespace ChemicalAnalyses.Dialogs
             FillData();
         }
 
-        private void NewAnalysisMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            List<Sample> lst = lbSamples.SelectedItems.Cast<Sample>().ToList<Sample>();
-            StringBuilder title = new StringBuilder("образцов №№ ");
-            lst.ForEach(p => { title.Append(p.LabNumber); title.Append(" "); });
-            SaltAnalysisDlg saltADlg = new SaltAnalysisDlg(lst);
-            saltADlg.Title = "Новые данные анализов для " + ((lbSamples.SelectedItems.Count == 1) ?
-             "образца №" + ((Sample)lbSamples.SelectedItem).IDSample.ToString():
-             title.ToString());
-            if (saltADlg.ShowDialog() == true) FillData();
-        }
-
         private void EditCommand_CanExecute (object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = (lbSamples?.SelectedItems.Count != 0) &&
@@ -252,5 +251,27 @@ namespace ChemicalAnalyses.Dialogs
         public static readonly DependencyProperty HoverToolTip2Property =
             DependencyProperty.Register(nameof(HoverToolTip2), typeof(object), typeof(SamplesViewDlg),
                 new PropertyMetadata(null));
+
+        private void NumericUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<decimal> e)
+        {
+            NumberOfAnalysesToAdd = ((NumericUpDown)sender).Value;
+        }
+
+        private void AddNewAnalysisCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (lbSamples.SelectedItems.Count != 0);
+        }
+
+        private void AddNewAnalysisCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            List<Sample> lst = lbSamples.SelectedItems.Cast<Sample>().ToList<Sample>();
+            StringBuilder title = new StringBuilder("образцов №№ ");
+            lst.ForEach(p => { title.Append(p.LabNumber); title.Append(" "); });
+            SaltAnalysisDlg saltADlg = new SaltAnalysisDlg(lst, "Create", (int)NumberOfAnalysesToAdd);
+            saltADlg.Title = "Новые данные анализов для " + ((lbSamples.SelectedItems.Count == 1) ?
+             "образца №" + ((Sample)lbSamples.SelectedItem).IDSample.ToString() :
+             title.ToString());
+            if (saltADlg.ShowDialog() == true) FillData();
+        }
     }
 }

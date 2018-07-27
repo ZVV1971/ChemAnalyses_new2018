@@ -89,5 +89,11 @@ namespace ChemicalAnalyses.Commands
                     new KeyGesture (Key.C,ModifierKeys.Alt)
               }
           );
+
+        public static readonly RoutedUICommand AddNewAnalysis = new RoutedUICommand(
+          "Добавить новый анализ",
+          "AddNewAnalysis",
+          typeof(CustomCommands)
+          );
     }
 }

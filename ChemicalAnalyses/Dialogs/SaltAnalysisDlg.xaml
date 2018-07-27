@@ -18,6 +18,7 @@
     <Window.Resources>
         <alumni:SchemeToSchemeDescriptionConverter x:Key="sch2descConv"/>
         <alumni:SchemeToSchemeDescriptionKVPairConverter x:Key="sch2descKVPairConv"/>
+        <alumni:BooleanToVisibilityConverter x:Key="bln2VisibilityConv"/>
     </Window.Resources>
     <Grid x:Name="grdMain">
         <Grid.RowDefinitions>
@@ -186,7 +187,11 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                                 <Label Content="Коэффициент Hg:"/>
                                 <TextBox Text="{Binding Path=HgCoefficient, StringFormat={}{0:0.0000}, 
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, 
@@ -205,7 +210,7 @@
                                     UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True,
                                     Converter={StaticResource sch2descConv}}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
                                 <Label Content="Холостой сульфаты:"/>
                                 <TextBox Text="{Binding Path=SulfatesBlank, StringFormat={}{0:0.0000}, 
                                     ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, 
@@ -226,7 +231,42 @@
                                          ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
                                     AncestorType=Window}, Path=SchemesNames, Mode=TwoWay}"
                                           DisplayMemberPath="Value" SelectedValuePath="Key"
+                                          SelectionChanged="ComboBox_SelectionChanged"
                                           ToolTip="Выберите требуемую схему расчета, принимая во внимание предполагаемую.&#x0a;Данные буду обсчитаны с использованием выбранной вами схемы!"/>
+                                <Label Content="_Расчитано:" Target="{Binding ElementName=cbIsCalculated}"/>
+                                <CheckBox IsChecked="{Binding Path=IsCalculated, NotifyOnSourceUpdated=True}" 
+                                          x:Name="cbIsCalculated" IsEnabled="False"/>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding Path=IsCalculated, Converter={StaticResource bln2VisibilityConv}}"
+                                            x:Name="spIonForm" Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                <StackPanel.ToolTip>
+                                    <ToolTip>
+                                        <ToolTip.Content>
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="1">
+                                                    <Ellipse Width="16" Height="16" Fill="Green"/>
+                                                    <TextBlock Text="— Сумма находится в пределах нормы"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Ellipse Width="16" Height="16" Fill="Blue"/>
+                                                    <TextBlock Text="— Значение суммы ниже допустимого предела"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Ellipse Width="16" Height="16" Fill="Red"/>
+                                                    <TextBlock Text="— Значение суммы выше допустимого предела"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </ToolTip.Content>
+                                    </ToolTip>
+                                </StackPanel.ToolTip>
+                                <Label Content="Ионная форма:"/>
+                                <Ellipse Width="16" Height="16" Fill="Green"/>
+                            </StackPanel>
+                            <StackPanel Visibility="{Binding Path=IsCalculated, Converter={StaticResource bln2VisibilityConv}}"
+                                            x:Name="spSaltForm" Orientation="Horizontal" ToolTip="{Binding ElementName=spIonForm, Path=ToolTip}"
+                                        Grid.Column="1" Grid.Row="0">
+                                <Label Content="Солевая форма:"/>
+                                <Ellipse Width="16" Height="16" Fill="Green"/>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

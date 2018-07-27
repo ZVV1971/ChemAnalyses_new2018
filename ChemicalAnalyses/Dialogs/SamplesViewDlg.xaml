@@ -24,6 +24,8 @@
                         Executed="FilterCommand_Executed"/>
         <CommandBinding Command="commands:CustomCommands.Edit" CanExecute="EditCommand_CanExecute" 
                         Executed="EditCommand_Executed"/>
+        <CommandBinding Command="commands:CustomCommands.AddNewAnalysis" CanExecute="AddNewAnalysisCommand_CanExecute"
+                        Executed="AddNewAnalysisCommand_Executed"/>
     </Window.CommandBindings>
     <Grid x:Name="grdMain">
         <Grid.ColumnDefinitions>
@@ -61,13 +63,16 @@
                  SelectionMode="Extended">
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Click="NewAnalysisMenuItem_Click"
-                              ToolTip="Добавляет к каждому образцу по одной записи для данных анализа">
-                        <!--<StackPanel Orientation="Horizontal">-->
-                            <TextBlock Text="Ввести данные новых анализов"/>
-                            <talex:NumericUpDown/>
-                            <TextBlock Text="штук"/>
-                        <!--</StackPanel>-->
+                    <MenuItem Command="commands:CustomCommands.AddNewAnalysis"
+                              ToolTip="Добавляет к каждому образцу выбранное количество записей для данных анализа">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Ввести данные новых анализов "/>
+                                <talex:NumericUpDown Minimum="1" Maximum="30" ValueChanged="NumericUpDown_ValueChanged"
+                                                     ToolTip="Установите количество добавляемых анализов к каждому образцу"/>
+                                <TextBlock Text=" штук"/>
+                        </StackPanel>
+                        </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Header="Редактировать данные анализов" Command="commands:CustomCommands.Edit"/>
                     <MenuItem Header="Удалить образец" Command="Delete" ToolTip="Удалить образец из базы"/>

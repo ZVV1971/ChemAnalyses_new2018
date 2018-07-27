@@ -46,5 +46,8 @@
          string AnalysisDescription { get; set; }
          SaltCalculationSchemes RecommendedCalculationScheme { get; set; }
          SaltCalculationSchemes DefaultCalculationScheme { get; set; }
+         bool  IsCalculated { get; set; }
+         decimal  IonSum { get; }
+         decimal  SaltSum { get; }
     }
 }
