@@ -135,6 +135,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\SADescriptionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\SaltAnalysisDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -166,6 +170,7 @@
     <Compile Include="Alumni\BindingProxy.cs" />
     <Compile Include="Alumni\ChartHelper.cs" />
     <Compile Include="Alumni\EnumExtensions.cs" />
+    <Compile Include="Alumni\IEnumerableExtensions.cs" />
     <Compile Include="Alumni\SchemesPrintingGrid.xaml.cs">
       <DependentUpon>SchemesPrintingGrid.xaml</DependentUpon>
     </Compile>
@@ -185,6 +190,9 @@
     </Compile>
     <Compile Include="Dialogs\CalibrationViewDialog.xaml.cs">
       <DependentUpon>CalibrationViewDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SADescriptionDialog.xaml.cs">
+      <DependentUpon>SADescriptionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SaltAnalysisDlg.xaml.cs">
       <DependentUpon>SaltAnalysisDlg.xaml</DependentUpon>
@@ -228,7 +236,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -268,13 +275,10 @@
   <ItemGroup>
     <Resource Include="SASplashScreen.png" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UseGlobalSettings="True" />
+      <UserProperties BuildVersion_UseGlobalSettings="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -47,6 +47,10 @@ namespace ChemicalAnalyses.Dialogs
                
             sa = new ObservableCollection<SaltAnalysisData>();
             InitializeComponent();
+
+            //Add handler to process cell editing events
+            dgrdSA.CellEditEnding += dgrdSA_CellEditEnding;
+
             if (TypeOfWork == "Create")
             {//Creating new analyses 'data with on-default settings
                 Labnumbers.ForEach(p => {
@@ -236,9 +240,9 @@ namespace ChemicalAnalyses.Dialogs
             
             CalibrationSelectionDlg dlg = null;
             dlg = new CalibrationSelectionDlg("Kalium", ((SaltAnalysisData)dgrdSA.SelectedItem).KaliumCalibration);
-            dlg.btnSetDefault.Content = "Установить для №" + ((SaltAnalysisData)dgrdSA.SelectedItem).LabNumber;
+            dlg.btnSetDefault.Content = "Установить для №" + ((ISaltAnalysisCalcResults)dgrdSA.SelectedItem).LabNumber;
             dlg.btnSetDefault.ToolTip = "Установить выбранную калибровку только для анализа образца с лабораторным № " +
-                ((SaltAnalysisData)dgrdSA.SelectedItem).LabNumber;
+                ((ISaltAnalysisCalcResults)dgrdSA.SelectedItem).LabNumber;
             if (dlg.ShowDialog() == true)
             {
                 ((SaltAnalysisData)dgrdSA.SelectedItem).KaliumCalibration = dlg.CalibrationNumber;
@@ -255,12 +259,14 @@ namespace ChemicalAnalyses.Dialogs
             if (!ConfirmWhenSchemesDiffer()) return;
 
             dgrdSA.SelectedItems.Cast<SaltAnalysisData>().ToList().ForEach(p => {
-                p.CalcDryValues();
+                p.CalcDryValues(p.DefaultCalculationScheme);
                 p.KDry = p.CalcKaliumValue();
                 //calculate using the user-selected scheme
                 p.CalcSchemeResults(p, p.DefaultCalculationScheme);
                 //set recommended scheme to the calculated one
                 p.RecommendedCalculationScheme = p.CalcRecommendedScheme(p);
+                p.IonSumColor = p.CalcSchemeTolerance(p).IonSumColor;
+                p.SaltSumColor = p.CalcSchemeTolerance(p).SaltSumColor;
             });
             MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны");
             btnPrint.Visibility = Visibility.Visible;
@@ -281,10 +287,29 @@ namespace ChemicalAnalyses.Dialogs
                 .Cast<SaltCalculationSchemes>())
             {
                 var tmp = res.Where(p => p.DefaultCalculationScheme == schem);
-                if (tmp.Count() > 0) pGrids.Add(new SchemesPrintingGrid(tmp) {
-                    Name = "pg" + schem.ToString(),
-                    ResultsType = schem
-                });
+                if (tmp.Count() > 0 )
+                {
+                    if (tmp.Count() <= 30)
+                    {
+                        pGrids.Add(new SchemesPrintingGrid(tmp)
+                        {
+                            Name = "pg" + schem.ToString(),
+                            ResultsType = schem
+                        });//of Add
+                    }
+                    else
+                    {
+                        int j = 0;
+                        foreach(var item in tmp.Chunk(30))
+                        {
+                            pGrids.Add(new SchemesPrintingGrid(item)
+                            {
+                                Name = "pg" + j++ + schem.ToString(),
+                                ResultsType=schem
+                            });
+                        }
+                    }
+                }
             }
            
             foreach (SchemesPrintingGrid pgrd in pGrids)
@@ -359,7 +384,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private bool ConfirmWhenSchemesDiffer()
         {
-            if (dgrdSA.SelectedItems.Cast<SaltAnalysisData>()
+            if (dgrdSA.SelectedItems.Cast<ISaltAnalysisCalcResults>()
                .Any(p => p.DefaultCalculationScheme != p.RecommendedCalculationScheme))
             {
                 if (MessageBox.Show("В одном из выбранных для расчета образцов рекомендуемая схема расчета" +
@@ -372,6 +397,32 @@ namespace ChemicalAnalyses.Dialogs
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ((ISaltAnalysisCalcResults)((ComboBox)sender).DataContext).IsCalculated = false;
+        }
+
+        void dgrdSA_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                DataGridRow row = e.Row as DataGridRow;
+                if (row != null) (row.DataContext as ISaltAnalysisCalcResults).IsCalculated = false;
+            }
+        }
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            if (row != null)
+            {
+                SADescriptionDialog sADescription = new SADescriptionDialog();
+                sADescription.Title = "Описание анализа";
+                ISaltAnalysisCalcResults analysisData = row.DataContext as ISaltAnalysisCalcResults;
+                sADescription.lblDescr.Content = "Введите описание анализа №: " + analysisData.LabNumber;
+                sADescription.Description = analysisData.AnalysisDescription;
+                if (sADescription.ShowDialog() == true)
+                {
+                    analysisData.AnalysisDescription = sADescription.Description;
+                }
+            }
         }
     }
 }

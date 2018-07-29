@@ -52,8 +52,10 @@
                     <TextBlock Text="Лаб.№"/>
                 </DataGridTextColumn.Header>
             </DataGridTextColumn>
-            <DataGridTextColumn IsReadOnly="False" MinWidth="150" MaxWidth="150"
-                Binding="{Binding Path=AnalysisDescription, UpdateSourceTrigger=PropertyChanged}">
+            <DataGridTextColumn IsReadOnly="True" MinWidth="150" MaxWidth="170"
+                Binding="{Binding Path=AnalysisDescription, UpdateSourceTrigger=PropertyChanged, 
+                Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, NotifyOnValidationError=True,
+                ValidatesOnExceptions=True}">
                 <DataGridTextColumn.Header>
                     <TextBlock Text="Описание"/>
                 </DataGridTextColumn.Header>

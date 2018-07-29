@@ -1288,7 +1288,7 @@ namespace SATest
             && p.SulfatesBlank == 0.0008M
             && p.RecommendedCalculationScheme == SaltCalculationSchemes.Chloride);
             //Calculate values
-            mock.CalcDryValues();
+            mock.CalcDryValues(mock.DefaultCalculationScheme);
             //Calculate recommended scheme
             Assert.AreEqual(SaltCalculationSchemes.Chloride, mock.CalcRecommendedScheme(mock));
             //Set tolerance for rounding in 0.5%
@@ -1343,7 +1343,7 @@ namespace SATest
             sa.HumidityCrucibleDry180SampleWeight = 15.6557M;
             sa.KaliumVolume = 100;
             sa.RecommendedCalculationScheme = SaltCalculationSchemes.Chloride;
-            sa.CalcDryValues();
+            sa.CalcDryValues(sa.DefaultCalculationScheme);
             sa.KaliumCalibration = lc.Object.CalibrationID;
             sa.KDry = sa.CalcKaliumValue();
             Assert.AreEqual(0.17M, Math.Round(sa.KDry, 2));

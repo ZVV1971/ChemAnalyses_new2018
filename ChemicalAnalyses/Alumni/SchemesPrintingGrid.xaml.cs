@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ChemicalAnalyses.Alumni;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
@@ -56,10 +57,5 @@ namespace ChemicalAnalyses.Alumni
            DependencyProperty.Register("ResultsType",
                 typeof(SaltCalculationSchemes), typeof(SchemesPrintingGrid),
                 new FrameworkPropertyMetadata(SaltCalculationSchemes.Chloride));
-
-        private void dgrdMain_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

@@ -2,14 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.SqlClient;
-using System.Data;
-using System.Windows;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Reflection;
-using System.Globalization;
-using System.IO;
 
 namespace SA_EF
 {

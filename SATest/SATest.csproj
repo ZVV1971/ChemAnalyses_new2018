@@ -72,6 +72,7 @@
     <Compile Include="SampleTests.cs" />
     <Compile Include="SaltAnalysisDataTests.cs" />
     <Compile Include="ClSchemePrintingGridTest.cs" />
+    <Compile Include="SADialogsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

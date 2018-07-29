@@ -39,7 +39,7 @@
         </Grid.Resources>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0"
                       VerticalScrollBarVisibility="Auto">
-            <DataGrid x:Name="dgrdSA" CanUserAddRows="False" 
+            <DataGrid x:Name="dgrdSA" CanUserAddRows="False"
                   ItemsSource="{Binding Path=sa, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                       AutoGenerateColumns="False" LoadingRow="dgrdSA_LoadingRow">
                 <DataGrid.ColumnHeaderStyle>
@@ -67,6 +67,21 @@
                     <alumni:SaltAnalysisValidationRule ValidatesOnTargetUpdated="True"
                                                        ValidationStep="RawProposedValue"/>
                 </DataGrid.RowValidationRules>
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                        <Setter Property="ToolTip">
+                            <Setter.Value>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Path=AnalysisDescription, 
+                                        UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, 
+                                        TargetNullValue=Описание отсутствует}"/>
+                                    <TextBlock Text="Для изменения дважды кликните мышью"/>
+                                </StackPanel>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Лабораторный&#10;номер" Binding="{Binding 
                         Path=LabNumber}" IsReadOnly="True"/>
@@ -260,13 +275,13 @@
                                     </ToolTip>
                                 </StackPanel.ToolTip>
                                 <Label Content="Ионная форма:"/>
-                                <Ellipse Width="16" Height="16" Fill="Green"/>
+                                <Ellipse Width="16" Height="16" Fill="{Binding Path=IonSumColor, NotifyOnSourceUpdated=True}"/>
                             </StackPanel>
                             <StackPanel Visibility="{Binding Path=IsCalculated, Converter={StaticResource bln2VisibilityConv}}"
                                             x:Name="spSaltForm" Orientation="Horizontal" ToolTip="{Binding ElementName=spIonForm, Path=ToolTip}"
                                         Grid.Column="1" Grid.Row="0">
                                 <Label Content="Солевая форма:"/>
-                                <Ellipse Width="16" Height="16" Fill="Green"/>
+                                <Ellipse Width="16" Height="16" Fill="{Binding Path=SaltSumColor, NotifyOnSourceUpdated=True}"/>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

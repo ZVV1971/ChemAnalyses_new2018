@@ -1,4 +1,6 @@
-﻿namespace SA_EF.Interfaces
+﻿using System.Windows.Media;
+
+namespace SA_EF.Interfaces
 {
      public interface ISaltAnalysisCalculation
     {
@@ -49,5 +51,7 @@
          bool  IsCalculated { get; set; }
          decimal  IonSum { get; }
          decimal  SaltSum { get; }
+         SolidColorBrush IonSumColor { get; set; }
+         SolidColorBrush SaltSumColor { get; set; }
     }
 }

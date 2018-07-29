@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Globalization;
 using System.IO;
 using System.ComponentModel;
+using System.Windows.Media;
 
 namespace SA_EF
 {
@@ -91,14 +92,38 @@ namespace SA_EF
             }
         }
         private decimal _ionSum = 0;
+        [NotMapped]
         public decimal IonSum
         {
             get { return _ionSum; }
         }
         private decimal _saltSum = 0;
+        [NotMapped]
         public decimal SaltSum
         {
             get { return _saltSum; }
+        }
+        private SolidColorBrush _ionSumColor;
+        [NotMapped]
+        public SolidColorBrush IonSumColor
+        {
+            get { return _ionSumColor; }
+            set
+            {
+                _ionSumColor = value;
+                OnPropertyChanged("IonSumColor");
+            }
+        }
+        private SolidColorBrush _saltSumColor;
+        [NotMapped]
+        public SolidColorBrush SaltSumColor
+        {
+            get {return _saltSumColor; }
+            set
+            {
+                _saltSumColor = value;
+                OnPropertyChanged("SaltSumColor");
+            }
         }
         #endregion SchemeResults
         #region AtomicWeights_Of_ChemicalElememts
@@ -139,6 +164,7 @@ namespace SA_EF
         [NotMapped]
         public string AnalysisDescription { get; set; }
         private static decimal sumTolerance;
+        private static SolidColorBrush redBrush, greenBrush, blueBrush;
 
         public SaltAnalysisData()
         {
@@ -156,41 +182,41 @@ namespace SA_EF
                     userSettings = (ClientSettingsSection)config.SectionGroups["userSettings"].Sections[0];
                 }
                 catch { }
-                
+
                 NumberFormatInfo nfi = new NumberFormatInfo { NumberDecimalSeparator = "." };
                 //read application level constants
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Mg").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Mg").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awMg))
                     awMg = 24.305M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("H").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("H").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awH))
                     awH = 1.008M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("O").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("O").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awO))
                     awO = 15.999M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Ca").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Ca").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awCa))
                     awCa = 40.078M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Cl").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Cl").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awCl))
                     awCl = 35.45M;
                 _water2MagnesiumRatioInCarnallite = 6 * (2 * awH + awO) / awMg;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Na").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Na").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awNa))
                     awNa = 23.99M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("K").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("K").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awK))
                     awK = 39.099M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("C").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("C").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awC))
                     awC = 12.011M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("S").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("S").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awS))
                     awS = 32.07M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Br").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("Br").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awBr))
                     awBr = 79.9M;
-                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("B").Value.ValueXml.InnerText, 
+                if (elementsWeights == null || !decimal.TryParse(elementsWeights.Settings.Get("B").Value.ValueXml.InnerText,
                     NumberStyles.Number, nfi, out awB))
                     awB = 10.81M;
                 if (userSettings == null || !decimal.TryParse(userSettings.Settings.Get("SumTolerance").Value.ValueXml.InnerText,
@@ -215,6 +241,14 @@ namespace SA_EF
                 _Eq_Mg = 1000 / (awMg);
                 _Eq_Ca = 1000 / (awCa);
                 _Eq_SO4 = 1000 / (awS + 4 * awO);
+                //brushes needed to signal quality of calcs
+                if (redBrush == null || greenBrush == null || blueBrush == null)
+                {
+                    var converter = new BrushConverter();
+                    greenBrush=(SolidColorBrush)converter.ConvertFromString(Colors.Green.ToString());
+                    blueBrush = (SolidColorBrush)converter.ConvertFromString(Colors.Blue.ToString());
+                    redBrush = (SolidColorBrush)converter.ConvertFromString(Colors.Red.ToString());
+                }
             }
         }
 
@@ -234,19 +268,28 @@ namespace SA_EF
             if (lc != null) lcDict = lc;
         }
 
-        public void CalcDryValues()
+        public void CalcDryValues(SaltCalculationSchemes defScheme)
         {
             MgWet = (MagnesiumTitre * MagnesiumTrilonTitre / MagnesiumAliquote
                 - CalciumTitre * CalciumTrilonTitre / CalciumAliquote)
                 //0.0125 = 0.5 * 0.05 * 500 /1000
                 * 0.0125M * awMg / WetWeight;
-
-            HumidityContent = (MgWet >= carnalliteThreshold)
+            switch (defScheme)
+            {
+                case SaltCalculationSchemes.Chloride:
+                    HumidityContent = (MgWet >= carnalliteThreshold)
                         ? (HumidityCrucibleWetSampleWeight - ((HumidityCrucibleDry180SampleWeight.HasValue) ?
                         HumidityCrucibleDry180SampleWeight.Value : HumidityCrucibleDry110SampleWeight))
                         / (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight)
                         : (HumidityCrucibleWetSampleWeight - HumidityCrucibleDry110SampleWeight)
                         / (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight);
+                    break;
+                default:
+                    HumidityContent = (HumidityCrucibleWetSampleWeight - HumidityCrucibleDry110SampleWeight)
+                        / (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight);
+                    break;
+            }
+            
             //Set corrected dry weight of the sample depending on the scheme
             SampleCorrectedDryWeight = CalcCorrectedDryWeight(this, DefaultCalculationScheme);
             
@@ -345,41 +388,28 @@ namespace SA_EF
                     / (dryData.CaDry * _Eq_Ca); }
             catch { }
             if (Coeff1 >= 1) return SaltCalculationSchemes.Carbonate;
-            else if (Coeff2 < 1)
+            if (Coeff2 >= 1)
             {
-                if (Coeff3 >= 1)
-                {
-                    if (Coeff4 < 1) return SaltCalculationSchemes.SulfateSodiumI;
-                    else return SaltCalculationSchemes.SulfateSodiumII;
-                }
-                else return SaltCalculationSchemes.Chloride;
+                if (Coeff4 < 1) return SaltCalculationSchemes.SulfateSodiumI;
+                return SaltCalculationSchemes.SulfateSodiumII;
             }
             else
             {
                 if (Coeff3 >= 1)
                 {
                     if (Coeff4 < 1) return SaltCalculationSchemes.SulfateMagnesiumI;
-                    else return SaltCalculationSchemes.SulfateMagnesiumII;
+                    return SaltCalculationSchemes.SulfateMagnesiumII;
                 }
-                else throw new ArgumentOutOfRangeException("RecommendedCalculationScheme",
-                     "Unknown calculation scheme results");
+                return SaltCalculationSchemes.Chloride;
             }
         }
-
+        
         public ISaltAnalysisCalcResults CalcSchemeResults(ISaltAnalysisDryData dryData, 
             SaltCalculationSchemes defSchema)
         {
 
             decimal _IonSum = dryData.KDry + dryData.CaDry + dryData.MgDry 
                 + dryData.SulfatesDry + dryData.ClDry + dryData.BrDry + dryData.ResiduumDry;
-            CrystWater = (dryData.MgWet >= carnalliteThreshold)
-                           ? dryData.MgDry * _water2MagnesiumRatioInCarnallite
-                           : (decimal?)null;
-            HygroWater = HumidityContent - CrystWater;
-            Carnallite = dryData.MgDry * _Carnallite_2_Magnesium;
-            HygroWaterAnyCase = (dryData.MgWet >= carnalliteThreshold) ?
-                dryData.HumidityContent - dryData.MgDry * _water2MagnesiumRatioInCarnallite
-                : dryData.HumidityContent;
             switch (defSchema)
             {
                 case SaltCalculationSchemes.Chloride:
@@ -402,6 +432,14 @@ namespace SA_EF
                         decimal _CL_bound2_Na = dryData.ClDry - _summaryCl;
                         Na = _CL_bound2_Na * awNa / awCl;
                         NaCl = Na + _CL_bound2_Na;
+                        CrystWater = (dryData.MgWet >= carnalliteThreshold)
+                          ? dryData.MgDry * _water2MagnesiumRatioInCarnallite
+                          : (decimal?)null;
+                        HygroWater = HumidityContent - CrystWater;
+                        Carnallite = dryData.MgDry * _Carnallite_2_Magnesium;
+                        HygroWaterAnyCase = (dryData.MgWet >= carnalliteThreshold) ?
+                            dryData.HumidityContent - dryData.MgDry * _water2MagnesiumRatioInCarnallite
+                            : dryData.HumidityContent;
                         IsCalculated = true;
                         _saltSum = NaCl + KCl + CaSO4 + CaCl2 + (MgCl2 ?? 0) + KBr + ResiduumDry + Carnallite;
                     }
@@ -409,37 +447,41 @@ namespace SA_EF
                 case SaltCalculationSchemes.SulfateSodiumI:
                     {
                         decimal _Ca_bound2_HCO3 = dryData.HydrocarbonatesDry * _Ca_2_HCO3;              //1
-                        CaHCO3_2 = dryData.HydrocarbonatesDry + _Ca_bound2_HCO3;                    //2
+                        CaHCO3_2 = dryData.HydrocarbonatesDry + _Ca_bound2_HCO3;                        //2
                         decimal _Ca_bound2_SO4 = dryData.CaDry - _Ca_bound2_HCO3;                       //3
                         decimal _SO4_bound2_Ca = _Ca_bound2_SO4 * _SO4_2_Ca;                            //4
-                        CaSO4 = _Ca_bound2_SO4 + _SO4_bound2_Ca;                                    //5
+                        CaSO4 = _Ca_bound2_SO4 + _SO4_bound2_Ca;                                        //5
                         decimal _SO4_bound2_Mg = dryData.MgDry * _SO4_2_Mg;                             //6
-                        MgSO4 = _SO4_bound2_Mg + dryData.MgDry;                                     //7
+                        MgSO4 = _SO4_bound2_Mg + dryData.MgDry;                                         //7
                         decimal _SO4_bound2_Na = dryData.SulfatesDry - _SO4_bound2_Ca - _SO4_bound2_Mg; //8
                         decimal _Na_bound2_SO4 = _SO4_bound2_Na * _Na_2_SO4;                            //9
-                        Na2SO4 = _SO4_bound2_Na + _Na_bound2_SO4;                                   //10
+                        Na2SO4 = _SO4_bound2_Na + _Na_bound2_SO4;                                       //10
                         decimal _Cl_bound2_K = dryData.KDry * awCl / awK;                               //11
-                        KCl = dryData.KDry + _Cl_bound2_K;                                          //12
+                        KCl = dryData.KDry + _Cl_bound2_K;                                              //12
                         decimal _Cl_bound2_Na = dryData.ClDry - _Cl_bound2_K;                           //13
                         decimal _Na_bound2_Cl = _Cl_bound2_Na * awNa / awCl;                            //14
-                        NaCl = _Cl_bound2_Na + _Na_bound2_Cl;                                       //15
+                        NaCl = _Cl_bound2_Na + _Na_bound2_Cl;                                           //15
                         decimal _Na_bound2_Br = dryData.BrDry * awNa / awBr;                            //16
-                        NaBr = dryData.BrDry + _Na_bound2_Br;                                       //17
-                        Na = _Na_bound2_SO4 + _Na_bound2_Cl + _Na_bound2_Br;                        //20 18-19 skipped
+                        NaBr = dryData.BrDry + _Na_bound2_Br;                                           //17
+                        Na = _Na_bound2_SO4 + _Na_bound2_Cl + _Na_bound2_Br;                            //20 18-19 skipped
+                        CrystWater = (HumidityCrucibleDry110SampleWeight - HumidityCrucibleDry180SampleWeight ?? 0 )/
+                            (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight);
+                        HygroWater = HygroWaterAnyCase = (HumidityCrucibleWetSampleWeight - HumidityCrucibleDry110SampleWeight) /
+                            (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight);
                         IsCalculated = true;
-                        _saltSum = NaCl + KCl + CaSO4 + NaBr + MgSO4 + Na2SO4 + ResiduumDry + Carnallite;
+                        _saltSum = NaCl + KCl + CaSO4 + NaBr + MgSO4 + Na2SO4 + ResiduumDry + CrystWater ?? 0;
                     }
                     break;
                 case SaltCalculationSchemes.SulfateMagnesiumI:
                     {
                         decimal _Ca_bound2_HCO3 = dryData.HydrocarbonatesDry * _Ca_2_HCO3;              //1
-                        CaHCO3_2 = dryData.HydrocarbonatesDry + _Ca_bound2_HCO3;                    //2
+                        CaHCO3_2 = dryData.HydrocarbonatesDry + _Ca_bound2_HCO3;                        //2
                         decimal _Ca_bound2_SO4 = dryData.CaDry - _Ca_bound2_HCO3;                       //3
                         decimal _SO4_bound2_Ca = _Ca_bound2_SO4 * _SO4_2_Ca;                            //4
-                        CaSO4 = _Ca_bound2_SO4 + _SO4_bound2_Ca;                                    //5
-                        decimal _SO4_bound2_Mg = dryData.SulfatesDry * _SO4_2_Ca;                       //6
-                        decimal _Mg_bound2_SO4 = _SO4_bound2_Mg / _SO4_2_Mg;                        //7
-                        MgSO4 = _SO4_bound2_Mg + _Mg_bound2_SO4;                                     //8
+                        CaSO4 = _Ca_bound2_SO4 + _SO4_bound2_Ca;                                        //5
+                        decimal _SO4_bound2_Mg = dryData.SulfatesDry - _SO4_bound2_Ca;                  //6
+                        decimal _Mg_bound2_SO4 = _SO4_bound2_Mg / _SO4_2_Mg;                            //7
+                        MgSO4 = _SO4_bound2_Mg + _Mg_bound2_SO4;                                        //8
                         decimal _Mg_bound2_Cl = dryData.MgDry - _Mg_bound2_SO4;                         //9
                         decimal _Cl_bound2_Mg = _Mg_bound2_Cl * 2 * awCl / awMg;                        //10
                         MgCl2 = _Mg_bound2_Cl + _Cl_bound2_Mg;                                          //11
@@ -451,8 +493,12 @@ namespace SA_EF
                         decimal _Na_bound2_Br = dryData.BrDry * awNa / awBr;                            //17
                         NaBr = dryData.BrDry + _Na_bound2_Br;                                           //18
                         Na = _Na_bound2_Cl + _Na_bound2_Br;                                             //21 19-20 skipped
+                        CrystWater = (HumidityCrucibleDry110SampleWeight - HumidityCrucibleDry180SampleWeight ?? 0) /
+                            (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight);
+                        HygroWater = HygroWaterAnyCase = (HumidityCrucibleWetSampleWeight - HumidityCrucibleDry110SampleWeight) /
+                            (HumidityCrucibleWetSampleWeight - HumidityCrucibleEmptyWeight);
                         IsCalculated = true;
-                        _saltSum = NaCl + KCl + CaSO4 + MgSO4 + (MgCl2 ?? 0) + NaBr + ResiduumDry + Carnallite;
+                        _saltSum = NaCl + KCl + CaSO4 + MgSO4 + (MgCl2 ?? 0) + NaBr + ResiduumDry + CrystWater ?? 0;
                     }
                     break;
                 default: //All others - not yet implemented
@@ -460,6 +506,25 @@ namespace SA_EF
             }
             _ionSum = _IonSum + Na + (CrystWater ?? 0);
             return this;
+        }
+
+        public ISaltAnalysisCalcResults CalcSchemeTolerance (ISaltAnalysisCalcResults res)
+        {
+            ISaltAnalysisCalcResults _res;
+            _res = res;
+            if (Math.Abs(1 - res.IonSum) < sumTolerance) _res.IonSumColor = greenBrush;
+            else
+            {
+                if ((1 - res.IonSum) > 0) _res.IonSumColor = redBrush;
+                else _res.IonSumColor = blueBrush;
+            }
+            if (Math.Abs(1 - res.SaltSum) < sumTolerance) _res.SaltSumColor = greenBrush;
+            else
+            {
+                if ((1 - res.SaltSum) > 0) _res.SaltSumColor = redBrush;
+                else _res.SaltSumColor = blueBrush;
+            }
+            return _res;
         }
 
         /// <summary>

@@ -70,6 +70,7 @@
           <Property Name="KaliumConcentration" Type="decimal" Precision="10" Scale="5" />
           <Property Name="KaliumDiapason" Type="int" Nullable="false" />
           <Property Name="KaliumCalibration" Type="int" Nullable="false" />
+          <Property Name="AnalysisDescription" Type="nvarchar" MaxLength="100" Nullable="true" />
         </EntityType>
         <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.CalibrationDataView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -224,6 +225,7 @@
           <Property Name="KaliumConcentration" Type="Decimal" Precision="10" Scale="5" />
           <Property Name="KaliumDiapason" Type="Int32" Nullable="false" />
           <Property Name="KaliumCalibration" Type="Int32" Nullable="false" />
+          <Property Name="AnalysisDescription" Type="String" MaxLength="100" Nullable="true" FixedLength="false" Unicode="true"/>
           <NavigationProperty Name="Calibration" Relationship="Self.FK_KaliumCalibration" FromRole="SaltAnalysis" ToRole="Calibration" />
           <NavigationProperty Name="Samples" Relationship="SAModel.SampleSaltAnalysisData" FromRole="SaltAnalysisData" ToRole="Sample" />
           </EntityType>
@@ -382,6 +384,7 @@
                 <ScalarProperty Name="KaliumConcentration" ColumnName="KaliumConcentration" />
                 <ScalarProperty Name="KaliumDiapason" ColumnName="KaliumDiapason" />
                 <ScalarProperty Name="KaliumCalibration" ColumnName="KaliumCalibration" />
+                <ScalarProperty Name="AnalysisDescription" ColumnName="AnalysisDescription" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
