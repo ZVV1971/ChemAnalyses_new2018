@@ -17,7 +17,8 @@ namespace ChemicalAnalyses
 
         // Use a name unique to the application (including GUID)
         private static Mutex mutex = new Mutex(false, 
-            @"ZVV_Diploma_Mutex/{DF776A4B-389C-4A4F-AD0B-1BE989F11ED9}");
+            @"ZVV_Diploma_Mutex/{DF776A4B-389C-4A4F-AD0B-1BE989F11ED9}", out mutexIsCreated);
+        private static bool mutexIsCreated;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -68,6 +69,13 @@ namespace ChemicalAnalyses
                 Thread.Sleep(remainingTimeToShowSplash); //sleep a little bit more
 
             splash.Close(TimeSpan.FromSeconds(2)); //two seconds fade away
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            try { if (mutexIsCreated) mutex.ReleaseMutex(); }
+            catch (Exception ex){ }
         }
     }
 

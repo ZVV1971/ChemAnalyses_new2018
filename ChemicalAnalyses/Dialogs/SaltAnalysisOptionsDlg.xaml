@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
         Title="Исходные настройки для анализа солей:" Height="250" Width="400" MaxHeight="250" MaxWidth="400"
         Validation.Error="Window_ValidationError">
@@ -21,6 +20,7 @@
         </Grid.ColumnDefinitions>
         <TabControl Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0">
             <TabItem Header="Анализ">
+                <AdornerDecorator>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -42,15 +42,18 @@
                             <TextBox x:Name="tbHg" Text="{Binding Path=sa_local.HgCoefficient,
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Target="{Binding ElementName=tbSulfatesBlank}" Content="Холостой SO₄²¯"/>
-                        <TextBox x:Name="tbSulfatesBlank" Text="{Binding Path=sa_local.SulfatesBlank}"/>
+                            <TextBox x:Name="tbSulfatesBlank" Text="{Binding Path=sa_local.SulfatesBlank,
+                                ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Титр Br мг-экв/мл:" Target="{Binding ElementName=tbBrTitre,
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBox x:Name="tbBrTitre" Text="{Binding Path=sa_local.BromumStandardTitre,
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                 </Grid>
+                </AdornerDecorator>
             </TabItem>
             <TabItem Header="Проверка">
+                <AdornerDecorator>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -73,6 +76,7 @@
                         </TextBox>
                     </StackPanel>
                 </Grid>
+                </AdornerDecorator>
             </TabItem>
         </TabControl>
         <Button Content="OK" Command="Save" IsDefault="False" IsCancel="False" Grid.Column="0" Grid.Row="1" Width="80" Height="25"/>

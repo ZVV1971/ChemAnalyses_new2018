@@ -88,37 +88,103 @@
                     <DataGridTemplateColumn Header="Дата&#10;анализа">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
+                                <AdornerDecorator>
                                 <DatePicker Text="{Binding AnalysisDate, UpdateSourceTrigger=PropertyChanged,
                                     Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True,
                                     NotifyOnTargetUpdated=True}" SelectedDateFormat="Short" Language="ru-RU"
                                     ToolTip="Ввести дату анализа"/>
+                                </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Масса сырой&#10;навески, г" Binding="{Binding Path=WetWeight, 
+                    <DataGridTemplateColumn Header="Масса сырой&#10;навески, г">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=WetWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Mg (титр),&#10;мл" Binding="{Binding Path=MagnesiumTitre, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Mg (титр),&#10;мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=MagnesiumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="(аликвота)&#10;Mg, мл" Binding="{Binding Path=MagnesiumAliquote, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="(аликвота)&#10;Mg, мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=MagnesiumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Ca (титр),&#10;мл" Binding="{Binding Path=CalciumTitre, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Ca (титр),&#10;мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=CalciumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="(аликвота)&#10;Ca, мл" Binding="{Binding Path=CalciumAliquote, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="(аликвота)&#10;Ca, мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=CalciumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="K,&#10;показание" Binding="{Binding Path=KaliumValue, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="K,&#10;показание">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=KaliumValue, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="K объём,&#10;мл" Binding="{Binding Path=KaliumVolume, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="K объём,&#10;мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=KaliumVolume, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="K, диапазон" Binding="{Binding Path=KaliumDiapason, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="K, диапазон">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                <TextBox Text="{Binding Path=KaliumDiapason, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="K, калибровка">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -129,74 +195,172 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Г.Влажность,&#10;пустой бюкс,&#10;г" 
-                                        Binding="{Binding Path=HumidityCrucibleEmptyWeight, 
+                    <DataGridTemplateColumn Header="Г.Влажность,&#10;пустой бюкс,&#10;г">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=HumidityCrucibleEmptyWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Г.Влажность,&#10;сырая навеска,&#10;г" 
-                                        Binding="{Binding Path=HumidityCrucibleWetSampleWeight, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Г.Влажность,&#10;сырая навеска,&#10;г">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=HumidityCrucibleWetSampleWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Г.Влажность,&#10;сухая навеска,&#10;110°, г" 
-                                        Binding="{Binding Path=HumidityCrucibleDry110SampleWeight, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Г.Влажность,&#10;сухая навеска,&#10;110°, г">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=HumidityCrucibleDry110SampleWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Г.Влажность,&#10;сухая навеска,&#10;180°, г" 
-                                        Binding="{Binding Path=HumidityCrucibleDry180SampleWeight, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Г.Влажность,&#10;сухая навеска,&#10;180°, г">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=HumidityCrucibleDry180SampleWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Cl титр,&#10;мл" Binding="{Binding Path=ChlorumTitre, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Cl титр,&#10;мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=ChlorumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Cl (аликвота),&#10;мл" Binding="{Binding Path=ChlorumAliquote, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Cl (аликвота),&#10;мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=ChlorumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Br титр,&#10;мл" Binding="{Binding Path=BromumTitre, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Br титр,&#10;мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=BromumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Br (аликвота),&#10;мл" Binding="{Binding Path=BromumAliquote, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Br (аликвота),&#10;мл">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=BromumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Н.О,&#10;бюкс, г" Binding="{Binding Path=ResiduumCrucibleEmptyWeight, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Н.О,&#10;бюкс, г">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=ResiduumCrucibleEmptyWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Header="Н.О,&#10;бюкс c&#10;навеской, г" Binding="{Binding Path=ResiduumCrucibleFullWeight, 
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Н.О,&#10;бюкс c&#10;навеской, г">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=ResiduumCrucibleFullWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
                         StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
-                    <DataGridTextColumn Binding="{Binding Path=SulfatesCrucibleEmptyWeight, 
-                        NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}">
-                        <DataGridTextColumn.Header>
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.Header>
                             <TextBlock>
                                 <Run>SO₄²¯</Run>
                                 <LineBreak/>
                                 <Run>вес тигля, г</Run>
                             </TextBlock>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=SulfatesCrucibleFullWeight, 
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=SulfatesCrucibleEmptyWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}">
-                        <DataGridTextColumn.Header>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.Header>
                             <TextBlock>
                                 <Run>SO₄²¯, тигель с</Run>
                                 <LineBreak/>
                                 <Run>осадком, г</Run>
                             </TextBlock>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=SulfatesAliquote, 
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=SulfatesCrucibleFullWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}">
-                        <DataGridTextColumn.Header>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.Header>
                             <TextBlock >
                                 <Run>SO₄²¯</Run><LineBreak/><Run>аликвота, мл</Run>
                             </TextBlock>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
+                        </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <AdornerDecorator>
+                                    <TextBox Text="{Binding Path=SulfatesAliquote, 
+                        NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                                </AdornerDecorator>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
                 <DataGrid.RowDetailsTemplate>
                     <DataTemplate>
+                        <AdornerDecorator> <!--Wrap in adoernerdecorator to preserve validation errors-->
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
@@ -284,6 +448,7 @@
                                 <Ellipse Width="16" Height="16" Fill="{Binding Path=SaltSumColor, NotifyOnSourceUpdated=True}"/>
                             </StackPanel>
                         </Grid>
+                        </AdornerDecorator>
                     </DataTemplate>
                 </DataGrid.RowDetailsTemplate>
                 <DataGrid.ContextMenu>

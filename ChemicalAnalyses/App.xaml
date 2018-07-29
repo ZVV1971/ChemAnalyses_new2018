@@ -4,9 +4,8 @@
     <Application.Resources>
         <ControlTemplate x:Key="ErrorTemplate1">
             <StackPanel Orientation="Horizontal">
-                <Border BorderThickness="2" BorderBrush="Red">
-                    <AdornedElementPlaceholder x:Name="placeholder"/>
-                </Border>
+                <Border BorderThickness="2" BorderBrush="Red"/>
+                <AdornedElementPlaceholder x:Name="placeholder"/>
                 <TextBlock Foreground="Red" 
                  FontSize="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=FontSize}">*</TextBlock>
             </StackPanel>
@@ -22,6 +21,35 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid>
+                            <Border BorderBrush="#FFCB2E2E" BorderThickness="1" Background="#11FF0000" IsHitTestVisible="False" x:Name="errorBorder"/>
+                            <AdornedElementPlaceholder x:Name="placeholder" />
+                            <Popup AllowsTransparency="True" HorizontalAlignment="Right" HorizontalOffset="0" VerticalOffset="0" PopupAnimation="Fade" Placement="Right" 
+                                   PlacementTarget="{Binding ElementName=errorBorder}" IsOpen="{Binding ElementName=placeholder, Path=AdornedElement.IsFocused, Mode=OneWay}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Polygon  VerticalAlignment="Center" Points="0,4 4,0 4,8" Fill="#FFCB2E2E" Stretch="Fill" Stroke="#FFCB2E2E"
+                                      StrokeThickness="2" />
+                                    <Border Background="#FFCB2E2E" CornerRadius="4" Padding="4">
+                                        <TextBlock HorizontalAlignment="Center" Foreground="White" FontWeight="Bold" Margin="2,0,0,0"
+                                                   Text="{Binding ElementName=placeholder, Path=AdornedElement.ToolTip, Mode=OneWay}" />
+                                    </Border>
+                                </StackPanel>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+<!-- Pictures -->
         <Viewbox x:Key="icHelpApplication"  Width="16" Height="16">
             <Rectangle Width="16" Height="16">
                 <Rectangle.Fill>
