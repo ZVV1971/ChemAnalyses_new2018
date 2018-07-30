@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
-        Title="CalibrationDataDialog" MinHeight="40" MinWidth="400" Height="400" Width="400"
+        Title="Данные калибровки" MinHeight="40" MinWidth="400" Height="400" Width="400"
         Validation.Error="OnErrorEvent">
     <Window.Resources>
         <Style TargetType="{x:Type DataGrid}">
@@ -29,19 +29,46 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+            </Style>
+        </Grid.Resources>
         <TextBlock Text="Первый диапазон" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"/>
         <TextBlock Text="Второй диапазон" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center"/>
         <DataGrid Grid.Column="0" Grid.Row="1" x:Name="dgrdFirstDiapason"
                   ItemsSource="{Binding Path=lc.LinearCalibrationData[0],
-                    UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" 
+                    UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True"
                   CurrentCellChanged="DataGrids_CurrentCellChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Концентрация" Width="*" Binding="{Binding Path=Concentration, 
-                    UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, 
-                    NotifyOnValidationError=True}"/>
-                <DataGridTextColumn Header="Показания" Width="*" Binding="{Binding Path= Value, 
-                    UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.0}, ValidatesOnExceptions=True,
-                    NotifyOnValidationError=True}"/>
+                <DataGridTemplateColumn Header="Концентрация" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Concentration, StringFormat={}{0:0.000 мг/л}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Path=Concentration, UpdateSourceTrigger=PropertyChanged,
+                    StringFormat={}{0:0.000}, ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" Header="Показания">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Value}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <AdornerDecorator>
+                                <TextBox Text="{Binding Path= Value, UpdateSourceTrigger=PropertyChanged, 
+                    StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
+                            </AdornerDecorator>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid Grid.Column="1" Grid.Row="1" x:Name="dgrdSecondDiapason"
@@ -49,12 +76,36 @@
                     UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True"
                   CurrentCellChanged="DataGrids_CurrentCellChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Концентрация" Width="*" Binding="{Binding Path=Concentration, 
+                <DataGridTemplateColumn Header="Концентрация" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Concentration, StringFormat={}{0:0.000 мг/л}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Path=Concentration, 
                     UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.000}, ValidatesOnExceptions=True, 
                     NotifyOnValidationError=True}"/>
-                <DataGridTextColumn Header="Показания" Width="*" Binding="{Binding Path= Value, 
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" Header="Показания">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Value}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <AdornerDecorator>
+                                <TextBox Text="{Binding Path= Value, 
                     UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.0}, ValidatesOnExceptions=True,
                     NotifyOnValidationError=True}"/>
+                            </AdornerDecorator>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -77,12 +128,14 @@
                 UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, NotifyOnTargetUpdated=True, 
                 ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
                 ToolTip="Введите краткое описание, которое максимально точно характиризует калибровку.&#x0a;(Будет отображаться в списке)"/>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 2">
                 <Label Content="_Дата: " Target="{Binding ElementName=dpckCalibrationDate}"/>
+                <AdornerDecorator>
                 <DatePicker Text="{Binding lc.CalibrationDate, UpdateSourceTrigger=PropertyChanged, 
                 Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True}" 
                             SelectedDateFormat="Short" Language="ru-RU"
                         ToolTip="Ввести дату калибровки" x:Name="dpckCalibrationDate"/>
+                </AdornerDecorator>
             </StackPanel>
         </StackPanel>
     </Grid>

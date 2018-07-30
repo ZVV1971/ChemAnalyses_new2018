@@ -10,7 +10,7 @@ namespace ChemicalAnalyses.Dialogs
     {
         public SaltAnalysisData sa_local { get; set; }
         private int errorCount = 0;
-
+        
         public decimal SumTolerance
         {
             get { return (decimal)GetValue(SumToleranceProperty); }

@@ -246,8 +246,11 @@ namespace SA_EF
                 {
                     var converter = new BrushConverter();
                     greenBrush=(SolidColorBrush)converter.ConvertFromString(Colors.Green.ToString());
+                    greenBrush.Freeze();
                     blueBrush = (SolidColorBrush)converter.ConvertFromString(Colors.Blue.ToString());
+                    blueBrush.Freeze();
                     redBrush = (SolidColorBrush)converter.ConvertFromString(Colors.Red.ToString());
+                    redBrush.Freeze();
                 }
             }
         }
