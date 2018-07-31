@@ -424,5 +424,11 @@ namespace ChemicalAnalyses.Dialogs
                 }
             }
         }
+
+        private void dgrdSA_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if((dgrdSA?.CurrentItem as ISaltAnalysisCalcResults)!=null)
+                (dgrdSA?.CurrentItem as ISaltAnalysisCalcResults).IsCalculated = false;
+        }
     }
 }

@@ -39,7 +39,7 @@
         </Grid.Resources>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0"
                       VerticalScrollBarVisibility="Auto">
-            <DataGrid x:Name="dgrdSA" CanUserAddRows="False"
+            <DataGrid x:Name="dgrdSA" CanUserAddRows="False" TargetUpdated="dgrdSA_SourceUpdated"
                   ItemsSource="{Binding Path=sa, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                       AutoGenerateColumns="False" LoadingRow="dgrdSA_LoadingRow">
                 <DataGrid.ColumnHeaderStyle>
