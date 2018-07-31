@@ -1,13 +1,34 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Text.RegularExpressions;
+
 namespace SA_EF
 {
     public partial class ChemicalAnalysesEntities : DbContext
     {
-        public static string connectionString { get; set; } = "name=CAEntities";
+        private static string _connectionString = "name=CAEntities";
+        public static string connectionString
+        {
+            get
+            {
+                if (_connectionString.Contains("name=")) return _connectionString;
+                string pattern = @"(.+integrated security=)([^;]+)(.+)";
+                RegexOptions options = RegexOptions.Multiline | RegexOptions.IgnoreCase;
+                Regex regex = new Regex(pattern, options);
+                return regex.Replace(connectionString, m => m.Groups[1].Value + "False;User ID = "
+                + UserName + ";Password=" + Password + m.Groups[3].Value);
+            }
+            set
+            {
+                _connectionString = value;
+            }
+        } 
+        public static string UserName { get; set; } = "guest";
+        public static string Password { get; set; } = "guestpassword";
 
         public ChemicalAnalysesEntities()
-            : base(connectionString)
+            :base(connectionString)
         {}
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
