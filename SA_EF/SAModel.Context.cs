@@ -7,25 +7,26 @@ namespace SA_EF
 {
     public partial class ChemicalAnalysesEntities : DbContext
     {
+        public static bool IsLoginPwdSet { get; set; } = false;
         private static string _connectionString = "name=CAEntities";
         public static string connectionString
         {
             get
             {
-                if (_connectionString.Contains("name=")) return _connectionString;
-                string pattern = @"(.+integrated security=)([^;]+)(.+)";
+                if (_connectionString.StartsWith("name=")) return _connectionString;
+                string pattern = @"(.+integrated security=)([^;]+)(;initial catalog=[^;]+)(.+)";
                 RegexOptions options = RegexOptions.Multiline | RegexOptions.IgnoreCase;
                 Regex regex = new Regex(pattern, options);
-                return regex.Replace(connectionString, m => m.Groups[1].Value + "False;User ID = "
-                + UserName + ";Password=" + Password + m.Groups[3].Value);
+                return regex.Replace(_connectionString, m => m.Groups[1].Value + "False;User ID="
+                + UserName + ";Password=" + Password + m.Groups[4].Value);
             }
             set
             {
                 _connectionString = value;
             }
         } 
-        public static string UserName { get; set; } = "guest";
-        public static string Password { get; set; } = "guestpassword";
+        public static string UserName { get; set; } = "CAlogin";
+        public static string Password { get; set; } = "guestpwd";
 
         public ChemicalAnalysesEntities()
             :base(connectionString)
