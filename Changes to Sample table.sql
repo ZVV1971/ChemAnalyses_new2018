@@ -1,0 +1,6 @@
+﻿ALTER TABLE [dbo].[Sample]
+DROP CONSTRAINT [DF__Sample__Principa__3D491139];
+ALTER TABLE [dbo].[Sample]
+DROP COLUMN [PrincipalID];
+ALTER TABLE [dbo].[Sample]
+ADD PrincipalID VARCHAR(100) NOT NULL DEFAULT SYSTEM_USER;
