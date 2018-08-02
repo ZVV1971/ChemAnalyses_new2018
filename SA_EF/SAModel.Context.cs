@@ -2,8 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Text.RegularExpressions;
-using System.Data.SqlClient;
-using System.Data;
+
 
 namespace SA_EF
 {
@@ -29,31 +28,11 @@ namespace SA_EF
         //} 
         public static string UserName { get; set; } = "CAAdmin";
         public static string Password { get; set; } = "CAAdminPassword";
+        public static string DBName { get; set; }
 
         public static string connectionString { get; set; }= "name=CAEntities";
 
         public ChemicalAnalysesEntities() :base(connectionString) {}
-
-        public void s()
-        {
-            this.Database.Connection.StateChange += (sender, args) =>
-             {
-                 if (args.CurrentState == ConnectionState.Open)
-                 {
-                //     SqlCommand cmd = new SqlCommand();
-
-                //     cmd.CommandText = "StoredProcedureName";
-                //     cmd.CommandType = CommandType.StoredProcedure;
-                //     cmd.Parameters.AddRange(new SqlParameter[]
-                //     {
-                //new SqlParameter("rolename", UserName),
-                //new SqlParameter("password", Password)
-                //     });
-                //     //((IObjectContextAdapter)this).ObjectContext.Connection
-                //     cmd.ExecuteScalar();
-                 }
-             };
-        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

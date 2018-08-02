@@ -76,6 +76,7 @@
     <Compile Include="CalibrationType.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EFDBConnectionApplicationRoleInterception.cs" />
     <Compile Include="DataPointExt.cs" />
     <Compile Include="DataPoint.cs">
       <DependentUpon>SAModel.tt</DependentUpon>

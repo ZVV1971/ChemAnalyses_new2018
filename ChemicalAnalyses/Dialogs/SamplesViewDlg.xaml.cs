@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using TAlex.WPF.Controls;
+using System.Data.Entity.Infrastructure.Interception;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -63,29 +64,34 @@ namespace ChemicalAnalyses.Dialogs
             {
                 using (var context = new ChemicalAnalysesEntities())
                 {
-#if DEBUG
-                    context.Database.Log = (s) => { Debug.WriteLine(s); };
-#endif
-                    string[] lnArray = null;
-                    if (fFields.LabNumber != null && !fFields.LabNumber.Equals(string.Empty))
+                    if (context != null)
                     {
-                        if (fFields.LabNumber.Contains(';'))
-                        {//a list of samples semicolon-separated
-                            lnArray = Regex.Split(fFields.LabNumber, ";");
-                            context.Samples.Join(
-                                inner: lnArray.ToList(),
-                                outerKeySelector: e => e.LabNumber,
-                                innerKeySelector: o => o.Trim(),
-                                resultSelector: (e, o) => e)
-                             .ToList().ForEach(d => SamplesCollection.Add(d));
-                            
+#if DEBUG
+                        context.Database.Log = (s) => { Debug.WriteLine(s); };
+#endif
+                        DbInterception.Add(new EFDBConnectionApplicationRoleInterception(
+                            ChemicalAnalysesEntities.UserName, ChemicalAnalysesEntities.Password, "ChemicalAnalyses"));
+                        string[] lnArray = null;
+                        if (fFields.LabNumber != null && !fFields.LabNumber.Equals(string.Empty))
+                        {
+                            if (fFields.LabNumber.Contains(';'))
+                            {//a list of samples semicolon-separated
+                                lnArray = Regex.Split(fFields.LabNumber, ";");
+                                context.Samples.Join(
+                                    inner: lnArray.ToList(),
+                                    outerKeySelector: e => e.LabNumber,
+                                    innerKeySelector: o => o.Trim(),
+                                    resultSelector: (e, o) => e)
+                                 .ToList().ForEach(d => SamplesCollection.Add(d));
+
+                            }
+                            else context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber))
+                                    .Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
+                                    .ToList().ForEach(d => SamplesCollection.Add(d));
                         }
-                        else context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber))
-                                .Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
-                                .ToList().ForEach(d => SamplesCollection.Add(d));
+                        else context.Samples.Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
+                                    .ToList().ForEach(d => SamplesCollection.Add(d)); ;
                     }
-                    else context.Samples.Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
-                                .ToList().ForEach(d => SamplesCollection.Add(d)); ;
                 }
             }
             catch (Exception ex)
