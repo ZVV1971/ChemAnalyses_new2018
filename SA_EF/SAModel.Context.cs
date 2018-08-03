@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Infrastructure.Interception;
 using System.Text.RegularExpressions;
-
 
 namespace SA_EF
 {
     public partial class ChemicalAnalysesEntities : DbContext
     {
-        //public static bool IsLoginPwdSet { get; set; } = false;
         //private static string _connectionString = "name=CAEntities";
         //public static string connectionString
         //{
@@ -26,13 +25,20 @@ namespace SA_EF
         //        _connectionString = value;
         //    }
         //} 
-        public static string UserName { get; set; } = "CAAdmin";
-        public static string Password { get; set; } = "CAAdminPassword";
-        public static string DBName { get; set; }
+        public static string UserName { private get; set; }
+        public static string Password { private get; set; }
+        public static bool AreUserNameAndPwdSet { get; private set; }
 
-        public static string connectionString { get; set; }= "name=CAEntities";
+        public static string connectionString { get; set; } = "name=CAEntities";
 
-        public ChemicalAnalysesEntities() :base(connectionString) {}
+        public ChemicalAnalysesEntities() :base(connectionString)
+        {
+            if (UserName != null && Password != null)
+            {
+                DbInterception.Add(new DbConnectionApplicationRoleInterceptor(UserName, Password));
+                AreUserNameAndPwdSet = true;
+            }
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

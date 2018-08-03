@@ -64,6 +64,22 @@ namespace ChemicalAnalyses
                 MessageBox.Show("Ошибка в файле конфигурации");
                 Close();
             }
+
+            if (!ChemicalAnalysesEntities.AreUserNameAndPwdSet)
+            {
+                UserNamePwdDlg userDlg = new UserNamePwdDlg();
+                if (userDlg.ShowDialog() == true)
+                {
+                    ChemicalAnalysesEntities.UserName = userDlg.UserName;
+                    ChemicalAnalysesEntities.Password = userDlg.pbPassword.Password;
+                }
+                else
+                {
+                    CALogger.WriteToLogFile("Отказ от авторизации!");
+                    MessageBox.Show("Без авторизации работа невозможна!");
+                    Close();
+                }
+            }
         }
 
         #region HoverToolTip Property

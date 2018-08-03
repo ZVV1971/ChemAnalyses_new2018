@@ -1,48 +1,43 @@
-﻿// By Mirek on 2/6/2015 (tags: Application Role, Entity Framework, SQL Server, categories: architecture, code)
-//http://www.eidias.com/blog/2015/2/6/sql-server-application-roles-with-entity-framework-code-first-migrations
-
+﻿//https://gist.github.com/crmckenzie/f19df419453bd12adaa1
+//EF6 with Application Roles
 using System;
 using System.Data.Entity.Infrastructure.Interception;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data;
+using System.Diagnostics;
 
 namespace SA_EF
 {
-    public class EFDBConnectionApplicationRoleInterception : IDbConnectionInterceptor
+    public class DbConnectionApplicationRoleInterceptor : IDbConnectionInterceptor
     {
-        private string _sqlServerApplicationRoleName;
-        private string _password;
-        private string _dbname;
+        private readonly string _appRole;
+        private readonly string _password;
         private byte[] _cookie;
 
-        public EFDBConnectionApplicationRoleInterception() { }
+        private static bool _set_approle_executed = false;
 
-        public EFDBConnectionApplicationRoleInterception(string sqlAppRoleName, string password, string dbname)
+        public DbConnectionApplicationRoleInterceptor()
         {
-            _sqlServerApplicationRoleName = sqlAppRoleName;
+        }
+
+        public DbConnectionApplicationRoleInterceptor(string appRole, string password)
+        {
+            _appRole = appRole;
             _password = password;
-            _dbname = dbname;
         }
 
         public void Opened(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
         {
+            Debug.WriteLine("Connection Opened.");
             if (connection.State != ConnectionState.Open) return;
-            if (!connection.Database.Equals(_dbname)) return;
-            ActivateApplicationRole(connection, this._sqlServerApplicationRoleName, _password);
+            ActivateApplicationRole(connection, _appRole, _password);
         }
 
         public void Closing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
         {
+            Debug.WriteLine("Connection Closing.");
             if (connection.State != ConnectionState.Open) return;
-            if (!connection.Database.Equals(_dbname)) return;
-            DeActivateApplicationRole(connection, _cookie);
-        }
-
-        public void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
-        {
-            if (connection.State != ConnectionState.Open) return;
-            if (!connection.Database.Equals(_dbname)) return;
             DeActivateApplicationRole(connection, _cookie);
         }
 
@@ -56,82 +51,202 @@ namespace SA_EF
                 throw new ArgumentNullException("appRoleName");
             if (password == null)
                 throw new ArgumentNullException("password");
+            SetApplicationRole(dbConn, appRoleName, password);
+        }
 
-            using (DbCommand cmd = dbConn.CreateCommand())
+        private string GetCurrentUserName(DbConnection dbConn)
+        {
+            using (var cmd = dbConn.CreateCommand())
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "sp_setapprole";
-                cmd.Parameters.Add(new SqlParameter("@rolename", appRoleName));
-                cmd.Parameters.Add(new SqlParameter("@password", password));
-                cmd.Parameters.Add(new SqlParameter("@fCreateCookie", SqlDbType.Bit) { Value = true });
-                SqlParameter cookie = new SqlParameter("@cookie", SqlDbType.Binary, 50)
-                { Direction = ParameterDirection.InputOutput };
-
-                cmd.Parameters.Add(cookie);
-                cmd.ExecuteNonQuery();
-
-                if (cookie.Value == null)
-                {
-                    throw new InvalidOperationException("Failed to set application role.");
-                }
-                _cookie = (byte[])cookie.Value;
+                cmd.CommandText = "SELECT USER_NAME();";
+                return (string)cmd.ExecuteScalar();
             }
+        }
+
+        private void SetApplicationRole(DbConnection dbConn, string appRoleName, string password)
+        {
+            var currentUser = GetCurrentUserName(dbConn);
+            if (!_set_approle_executed) {
+                using (var cmd = dbConn.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "sp_setapprole";
+                    cmd.Parameters.Add(new SqlParameter("@rolename", appRoleName));
+                    cmd.Parameters.Add(new SqlParameter("@password", password));
+                    cmd.Parameters.Add(new SqlParameter("@fCreateCookie", SqlDbType.Bit) { Value = true });
+                    var cookie = new SqlParameter("@cookie", SqlDbType.Binary, 50)
+                    {
+                        Direction = ParameterDirection.InputOutput
+                    };
+
+                    cmd.Parameters.Add(cookie);
+
+                    Debug.WriteLine("ExecutingNonQuery to Set Application Role");
+
+                    cmd.ExecuteNonQuery();
+
+                    if (cookie.Value == null)
+                    {
+                        throw new InvalidOperationException(
+                            "Failed to set application role, verify the database is configure correctly and the application role name / passwordis valid.");
+                    }
+
+                    _cookie = (byte[])cookie.Value;
+                    _set_approle_executed = true;
+                }
+            }
+
+            //var appUserName = GetCurrentUserName(dbConn);
+            //The new user name should be the application role and not the app pool account.
+
+            //if (string.Compare(currentUser, appUserName, true) == 0)
+            //{
+            //    throw new InvalidOperationException(
+            //        "Failed to set MediaTypeNames.Application Role, verify the app role is configure correctly or the web configuration is valid.");
+            //}
         }
 
         public virtual void DeActivateApplicationRole(DbConnection dbConn, byte[] cookie)
         {
-            using (DbCommand cmd = dbConn.CreateCommand())
+            if (_set_approle_executed)
             {
-                cmd.CommandText = "sp_unsetapprole";
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add(new SqlParameter("@cookie", SqlDbType.VarBinary, 50) { Value = cookie });
-                cmd.ExecuteNonQuery();
+                using (var cmd = dbConn.CreateCommand())
+                {
+                    cmd.CommandText = "sp_unsetapprole";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@cookie", SqlDbType.VarBinary, 50) { Value = cookie });
+                    Debug.WriteLine("ExecutingNonQuery to Unset Application Role");
+                    cmd.ExecuteNonQuery();
+                }
+                _set_approle_executed = false;
             }
         }
 
-        #region Not used interceptions
+        #region Other DbConnection Interception
 
-        public void BeganTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext) { }
+        public void BeganTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Transaction Began.");
+        }
 
-        public void BeginningTransaction(DbConnection connection, BeginTransactionInterceptionContext interceptionContext) { }
+        public void BeginningTransaction(DbConnection connection,
+            BeginTransactionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Transaction BeginningTransaction.");
+        }
 
-        public void Closed(DbConnection connection, DbConnectionInterceptionContext interceptionContext) { }
+        public void Closed(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Connection Closed.");
+        }
 
-        public void ConnectionStringGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void ConnectionStringGetting(DbConnection connection,
+            DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection ConnectionStringGetting.");
+        }
 
-        public void ConnectionStringGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void ConnectionStringGot(DbConnection connection,
+            DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection ConnectionStringGot.");
+        }
 
-        public void ConnectionStringSet(DbConnection connection, DbConnectionPropertyInterceptionContext<string> interceptionContext) { }
+        public void ConnectionStringSet(DbConnection connection,
+            DbConnectionPropertyInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection ConnectionStringSet.");
+        }
 
-        public void ConnectionStringSetting(DbConnection connection, DbConnectionPropertyInterceptionContext<string> interceptionContext) { }
+        public void ConnectionStringSetting(DbConnection connection,
+            DbConnectionPropertyInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection ConnectionStringSetting.");
+        }
 
-        public void ConnectionTimeoutGetting(DbConnection connection, DbConnectionInterceptionContext<int> interceptionContext) { }
+        public void ConnectionTimeoutGetting(DbConnection connection,
+            DbConnectionInterceptionContext<int> interceptionContext)
+        {
+            Debug.WriteLine("Connection ConnectionTimeoutGetting.");
+        }
 
-        public void ConnectionTimeoutGot(DbConnection connection, DbConnectionInterceptionContext<int> interceptionContext) { }
+        public void ConnectionTimeoutGot(DbConnection connection,
+            DbConnectionInterceptionContext<int> interceptionContext)
+        {
+            Debug.WriteLine("Connection ConnectionTimeoutGot.");
+        }
 
-        public void DataSourceGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void DataSourceGetting(DbConnection connection,
+            DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection DataSourceGetting.");
+        }
 
-        public void DataSourceGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void DataSourceGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection DataSourceGot.");
+        }
 
-        public void DatabaseGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void DatabaseGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection DatabaseGetting.");
+        }
 
-        public void DatabaseGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void DatabaseGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection DatabaseGot.");
+        }
 
-        public void Disposed(DbConnection connection, DbConnectionInterceptionContext interceptionContext) { }
+        public void Disposed(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Connection Disposed.");
+        }
 
-        public void EnlistedTransaction(DbConnection connection, EnlistTransactionInterceptionContext interceptionContext) { }
+        public void Disposing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Connection Disposing.");
+        }
 
-        public void EnlistingTransaction(DbConnection connection, EnlistTransactionInterceptionContext interceptionContext) { }
+        public void EnlistedTransaction(DbConnection connection,
+            EnlistTransactionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Connection EnlistedTransaction.");
+        }
 
-        public void Opening(DbConnection connection, DbConnectionInterceptionContext interceptionContext) { }
+        public void EnlistingTransaction(DbConnection connection,
+            EnlistTransactionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Connection EnlistingTransaction.");
+        }
 
-        public void ServerVersionGetting(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void Opening(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+        {
+            Debug.WriteLine("Connection Opening.");
+        }
 
-        public void ServerVersionGot(DbConnection connection, DbConnectionInterceptionContext<string> interceptionContext) { }
+        public void ServerVersionGetting(DbConnection connection,
+            DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection ServerVersionGetting.");
+        }
 
-        public void StateGetting(DbConnection connection, DbConnectionInterceptionContext<ConnectionState> interceptionContext) { }
+        public void ServerVersionGot(DbConnection connection,
+            DbConnectionInterceptionContext<string> interceptionContext)
+        {
+            Debug.WriteLine("Connection ServerVersionGot.");
+        }
 
-        public void StateGot(DbConnection connection, DbConnectionInterceptionContext<ConnectionState> interceptionContext) { }
+        public void StateGetting(DbConnection connection,
+            DbConnectionInterceptionContext<ConnectionState> interceptionContext)
+        {
+            Debug.WriteLine("Connection StateGetting.");
+        }
+
+        public void StateGot(DbConnection connection,
+            DbConnectionInterceptionContext<ConnectionState> interceptionContext)
+        {
+            Debug.WriteLine("Connection StateGot.");
+        }
 
         #endregion
     }
