@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using TAlex.WPF.Controls;
+using System.Data.Entity.Infrastructure;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -156,14 +157,28 @@ namespace ChemicalAnalyses.Dialogs
             if (MessageBox.Show("Удаленные данные будет невозможно восстановить\n Продолжить?", "Удаление",
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.No)
                 return;
-            CALogger.WriteToLogFile(string.Format("Удален образец {0}", 
-                SamplesCollection[lbSamples.SelectedIndex].ToString()));
+            string sample_to_log = SamplesCollection[lbSamples.SelectedIndex].ToString();
             using (var context = new ChemicalAnalysesEntities())
             {
                 context.Entry(SamplesCollection[lbSamples.SelectedIndex] as Sample)
                     .State = EntityState.Deleted;
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    MessageBox.Show("Удалить образец не удалось. По-видимому, в базе данных для данного образца " +
+                        "присутствуют анализы, введенные другими пользователями.", "Ошибка", MessageBoxButton.OK, 
+                        MessageBoxImage.Hand);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    return;
+                }
             }
+            CALogger.WriteToLogFile(string.Format("Удален образец {0}", sample_to_log));
             FillData();
         }
 

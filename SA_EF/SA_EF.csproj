@@ -53,6 +53,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.1\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -76,6 +77,7 @@
     <Compile Include="CalibrationType.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EFCommandInterceptor.cs" />
     <Compile Include="EFDBConnectionApplicationRoleInterception.cs" />
     <Compile Include="DataPointExt.cs" />
     <Compile Include="DataPoint.cs">

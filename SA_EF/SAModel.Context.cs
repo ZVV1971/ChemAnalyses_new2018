@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Infrastructure.Interception;
@@ -6,6 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace SA_EF
 {
+    [DbConfigurationType(typeof(FE6CodeConfig))]
     public partial class ChemicalAnalysesEntities : DbContext
     {
         //private static string _connectionString = "name=CAEntities";

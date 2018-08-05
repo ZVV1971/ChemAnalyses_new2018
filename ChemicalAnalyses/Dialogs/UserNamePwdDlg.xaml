@@ -31,9 +31,11 @@
         <StackPanel Orientation="Vertical" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
             <Label Content="Введите имя пользователя:" Target="{Binding ElementName=tbUserName}"/>
             <TextBox Text="{Binding Path=UserName, NotifyOnValidationError=True, Mode=TwoWay, 
-                ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="tbUserName"/>
+                ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="tbUserName"
+                     Margin="3,0,3,0"/>
             <Label Content="Введите пароль:" Target="{Binding ElementName=pbPassword}"/>
-            <PasswordBox x:Name="pbPassword" PasswordChanged="pbPassword_PasswordChanged" MaxLength="50"/>
+            <PasswordBox x:Name="pbPassword" PasswordChanged="pbPassword_PasswordChanged" MaxLength="50"
+                         Margin="3,0,3,0"/>
             <Label Visibility="{Binding Path=wrongPwd, Converter={StaticResource bln2VisibilityConverter}}">
                 <TextBlock Text="Пароль от 3 символов!" Foreground="Red"/>
             </Label>
