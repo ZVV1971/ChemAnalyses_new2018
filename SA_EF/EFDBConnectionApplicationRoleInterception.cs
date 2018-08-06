@@ -62,7 +62,7 @@ namespace SA_EF
 
         private void SetApplicationRole(DbConnection dbConn, string appRoleName, string password)
         {
-            //var currentUser = GetCurrentUserName(dbConn);
+            var currentUser = GetCurrentUserName(dbConn);
             if (!_set_approle_executed) {
                 using (var cmd = dbConn.CreateCommand())
                 {
@@ -95,9 +95,9 @@ namespace SA_EF
                     _set_approle_executed = true;
                 }
             }
-            //var appUserName = GetCurrentUserName(dbConn);
-            //if (string.Compare(currentUser, appUserName, true) == 0)
-            //{throw new InvalidOperationException("Failed to set MediaTypeNames.Application Role.");}
+            var appUserName = GetCurrentUserName(dbConn);
+            if (!currentUser.Equals(appUserName))
+            {throw new InvalidOperationException("Failed to set MediaTypeNames.Application Role.");}
         }
 
         public virtual void DeActivateApplicationRole(DbConnection dbConn, byte[] cookie)

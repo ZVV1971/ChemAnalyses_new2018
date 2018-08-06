@@ -16,6 +16,7 @@ namespace ChemicalAnalyses
     public partial class MainWindow : Window
     {
         private Window wndThis = null;
+        private static bool _isClosed = false;
 
         public MainWindow()
         {
@@ -30,8 +31,11 @@ namespace ChemicalAnalyses
                 MessageBox.Show("Ошибка в файле конфигурации");
                 Close();
             }
-            CALogger.WriteToLogFile("Программа запущена. Версия:" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
-            CALogger.WriteToLogFile("Подключение к БД…");
+            if (!_isClosed)
+            {
+                CALogger.WriteToLogFile("Программа запущена. Версия:" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                CALogger.WriteToLogFile("Подключение к БД…");
+            }
             try
             {
                 string UserLevelPath = Properties.Settings.Default.DBFilePath;
@@ -75,9 +79,13 @@ namespace ChemicalAnalyses
                 }
                 else
                 {
-                    CALogger.WriteToLogFile("Отказ от авторизации!");
-                    MessageBox.Show("Без авторизации работа невозможна!");
-                    Close();
+                    if (!_isClosed)
+                    {
+                        CALogger.WriteToLogFile("Отказ от авторизации!");
+                        MessageBox.Show("Без авторизации работа невозможна!");
+                        _isClosed = true;
+                        Close();
+                    }
                 }
             }
         }

@@ -69,8 +69,6 @@ namespace ChemicalAnalyses.Dialogs
 #if DEBUG
                         context.Database.Log = (s) => { Debug.WriteLine(s); };
 #endif
-                        //DbInterception.Add(new EFDBConnectionApplicationRoleInterception(
-                        //    ChemicalAnalysesEntities.UserName, ChemicalAnalysesEntities.Password, "ChemicalAnalyses"));
                         string[] lnArray = null;
                         if (fFields.LabNumber != null && !fFields.LabNumber.Equals(string.Empty))
                         {

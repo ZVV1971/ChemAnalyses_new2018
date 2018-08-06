@@ -418,9 +418,12 @@ namespace ChemicalAnalyses.Dialogs
                 ISaltAnalysisCalcResults analysisData = row.DataContext as ISaltAnalysisCalcResults;
                 sADescription.lblDescr.Content = "Введите описание анализа №: " + analysisData.LabNumber;
                 sADescription.Description = analysisData.AnalysisDescription;
+                sADescription.Topmost = true;
                 if (sADescription.ShowDialog() == true)
                 {
                     analysisData.AnalysisDescription = sADescription.Description;
+                    CALogger.WriteToLogFile(string.Format("Введено описание для образца №{0} — {1}",
+                        analysisData.LabNumber, analysisData.AnalysisDescription));
                 }
             }
         }

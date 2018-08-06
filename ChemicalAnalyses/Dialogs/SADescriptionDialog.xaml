@@ -27,7 +27,8 @@
         <StackPanel Orientation="Vertical" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
             <Label Content="{Binding}" Target="{Binding ElementName=tbDescription}" x:Name="lblDescr"/>
             <TextBox Text="{Binding Path=Description, NotifyOnValidationError=True, Mode=TwoWay, 
-                ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="tbDescription"/>
+                ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="tbDescription" 
+                     TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto"/>
         </StackPanel>
         <Button Content="OK" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Command="Save"
                 VerticalAlignment="Center" IsCancel="False" IsDefault="True"/>
