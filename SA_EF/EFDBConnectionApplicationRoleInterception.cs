@@ -14,7 +14,7 @@ namespace SA_EF
         private readonly string _appRole;
         private readonly string _password;
         private byte[] _cookie;
-        private static bool _set_approle_executed = false;
+        private static bool _isSetApproleExecuted = false;
 
         public DbConnectionApplicationRoleInterceptor(){}
 
@@ -51,19 +51,9 @@ namespace SA_EF
             SetApplicationRole(dbConn, appRoleName, password);
         }
 
-        private string GetCurrentUserName(DbConnection dbConn)
-        {
-            using (var cmd = dbConn.CreateCommand())
-            {
-                cmd.CommandText = "SELECT USER_NAME();";
-                return (string)cmd.ExecuteScalar();
-            }
-        }
-
         private void SetApplicationRole(DbConnection dbConn, string appRoleName, string password)
         {
-            var currentUser = GetCurrentUserName(dbConn);
-            if (!_set_approle_executed) {
+            if (!_isSetApproleExecuted) {
                 using (var cmd = dbConn.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -78,31 +68,28 @@ namespace SA_EF
 
                     Debug.WriteLine("ExecutingNonQuery to Set Application Role");
 
-                    try {cmd.ExecuteNonQuery();}
-                    catch (Exception ex){}
+                    try { cmd.ExecuteNonQuery(); }
+                    catch (Exception ex) { }
 
-                    if (cookie.Value == null)
+                    if (cookie.Value != null && BitConverter.ToInt32((byte[])cookie.Value, 0) != -1)
                     {
-                        throw new InvalidOperationException(
-                            "Failed to set application role, verify the database is configured correctly and" +
-                            " the application role name/password is valid.");
+                        _cookie = (byte[])cookie.Value;
+                        _isSetApproleExecuted = true;
                     }
 
-                    //cmd.CommandType = CommandType.Text;
-                    //cmd.CommandText = "SELECT IS_MEMBER(N'db_accessadmin')";
-                    //var res = cmd.ExecuteScalar();
-                    _cookie = (byte[])cookie.Value;
-                    _set_approle_executed = true;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "SELECT IS_MEMBER(N'db_accessadmin')";
+                    int res = 0;
+                    try { res = (int)cmd.ExecuteScalar(); }
+                    catch { }
+                    OnAppRoleTreatment(new AppRoleTreatmentEventArgs(_isSetApproleExecuted, res == 1));
                 }
             }
-            var appUserName = GetCurrentUserName(dbConn);
-            if (!currentUser.Equals(appUserName))
-            {throw new InvalidOperationException("Failed to set MediaTypeNames.Application Role.");}
         }
 
         public virtual void DeActivateApplicationRole(DbConnection dbConn, byte[] cookie)
         {
-            if (_set_approle_executed)
+            if (_isSetApproleExecuted)
             {
                 using (var cmd = dbConn.CreateCommand())
                 {
@@ -114,7 +101,7 @@ namespace SA_EF
                     { cmd.ExecuteNonQuery();}
                     catch (Exception ex) {}
                 }
-                _set_approle_executed = false;
+                _isSetApproleExecuted = false;
             }
         }
         #region Other DbConnection Interception
@@ -198,5 +185,36 @@ namespace SA_EF
             DbConnectionInterceptionContext<ConnectionState> interceptionContext)
         { }
         #endregion
+
+        public static event AppRoleTreatmentEventHandler AppRoleTreatment;
+
+        protected virtual void OnAppRoleTreatment (AppRoleTreatmentEventArgs e)
+        {
+            AppRoleTreatment?.Invoke(this, e);
+        }
     }
+
+    public class AppRoleTreatmentEventArgs : EventArgs
+    {
+        private readonly bool _hasAppRolePassed = false;
+        private readonly bool _isMemberOfAdmin = false;
+        
+        public AppRoleTreatmentEventArgs(bool hasApprolePassed, bool isMemberOfAdmin)
+        {
+            _isMemberOfAdmin = isMemberOfAdmin;
+            _hasAppRolePassed = hasApprolePassed;
+        }
+
+        public bool HasAppRolePassed
+        {
+            get { return _hasAppRolePassed; }
+        }
+
+        public bool IsMemberOfAdmin
+        {
+            get { return _isMemberOfAdmin; }
+        }
+    }
+
+    public delegate void AppRoleTreatmentEventHandler(object sender, AppRoleTreatmentEventArgs e);
 }

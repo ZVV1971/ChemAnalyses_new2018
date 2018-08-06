@@ -24,8 +24,6 @@
           <Property Name="Concentration" Type="decimal" Precision="7" Scale="5" Nullable="false" />
           <Property Name="Value" Type="decimal" Precision="5" Scale="2" Nullable="false" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.CalibrationType" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="CalibrationType">
           <Key>
             <PropertyRef Name="Type" />
@@ -72,12 +70,6 @@
           <Property Name="KaliumCalibration" Type="int" Nullable="false" />
           <Property Name="AnalysisDescription" Type="nvarchar" MaxLength="100" Nullable="true" />
         </EntityType>
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.CalibrationDataView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.SaltAnalysisView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
-        <!--Ошибки, обнаруженные при создании:
-предупреждение 6002: В таблице или представлении "ChemicalAnalyses.dbo.SamplesView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
         <EntityType Name="SamplesView">
           <Key>
             <PropertyRef Name="IDSample" />
@@ -124,8 +116,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="GetSamplesByMultipleIDs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <Function Name="UpdateCalibrationData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="Хранилище SAModelContainer">
           <EntitySet Name="Calibration" EntityType="Self.Calibration" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CalibrationData" EntityType="Self.CalibrationData" Schema="dbo" store:Type="Tables" />
@@ -301,8 +291,6 @@
             <End Role="Calibration" EntitySet="LineaCalibrations" />
             <End Role="SaltAnalysis" EntitySet="SaltAnalysisDatas" />
           </AssociationSet>
-          <FunctionImport Name="GetSamplesByMultipleIDs" />
-          <FunctionImport Name="UpdateCalibrationData" />
           <AssociationSet Name="SampleSaltAnalysisData" Association="SAModel.SampleSaltAnalysisData">
             <End Role="Sample" EntitySet="Samples" />
             <End Role="SaltAnalysisData" EntitySet="SaltAnalysisDatas" />
@@ -406,8 +394,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetSamplesByMultipleIDs" FunctionName="Хранилище SAModel.GetSamplesByMultipleIDs" />
-          <FunctionImportMapping FunctionImportName="UpdateCalibrationData" FunctionName="Хранилище SAModel.UpdateCalibrationData" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

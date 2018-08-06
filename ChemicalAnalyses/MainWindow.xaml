@@ -6,7 +6,8 @@
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
         mc:Ignorable="d"
         Title="Химический анализ" Height="250" Width="425"
-        PreviewMouseMove="Window_PreviewMouseMove">
+        PreviewMouseMove="Window_PreviewMouseMove"
+        SourceInitialized="Window_SourceInitialized">
     <Window.CommandBindings>
         <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="Help" Executed="HelpCommand_Executed"/>

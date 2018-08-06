@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,6 +7,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Reflection;
 using ChemicalAnalyses.Dialogs;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.Common;
 using SettingsHelper;
 using SA_EF;
 using System.Data.Entity.Infrastructure;
@@ -16,60 +20,27 @@ namespace ChemicalAnalyses
     public partial class MainWindow : Window
     {
         private Window wndThis = null;
-        private static bool _isClosed = false;
+
+        public bool IsAdmin
+        {
+            get { return (bool)GetValue(IsAdminProperty); }
+            set { SetValue(IsAdminProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsAdminProperty =
+            DependencyProperty.Register("IsAdmin", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+
+
 
         public MainWindow()
-        {
+        {    
             InitializeComponent();
             wndThis = this;
-            try
-            {
-                CALogger.InitLogFile(Properties.Settings.Default.LogFile);
-            }
-            catch
-            {
-                MessageBox.Show("Ошибка в файле конфигурации");
-                Close();
-            }
-            if (!_isClosed)
-            {
-                CALogger.WriteToLogFile("Программа запущена. Версия:" + Assembly.GetExecutingAssembly().GetName().Version.ToString());
-                CALogger.WriteToLogFile("Подключение к БД…");
-            }
-            try
-            {
-                string UserLevelPath = Properties.Settings.Default.DBFilePath;
-                try
-                {
-                    var context = new ChemicalAnalysesEntities();
-                    if (!((IObjectContextAdapter)context).ObjectContext.DatabaseExists())
-                    {
-                        CALogger.WriteToLogFile("Не найдена БД сохраненная в строке подключения");
-                        string szTmp = ConnectionStringGiver.GetValidConnectionString(UserLevelPath);
-                        if (szTmp == null)
-                        {
-                            MessageBox.Show("Не найдена указанная в строке подключения БД!",
-                              "Ошибка при подключении к БД!", MessageBoxButton.OK, MessageBoxImage.Error);
-                            Close();
-                        }
-                        ChemicalAnalysesEntities.connectionString = szTmp;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CALogger.WriteToLogFile("Не найдена БД");
-                    Close();
-                }
-                
-            }
-            catch
-            {
-                CALogger.WriteToLogFile("Ошибка при считывании строки подключения!");
-                MessageBox.Show("Ошибка в файле конфигурации");
-                Close();
-            }
+        }
 
-            if (!ChemicalAnalysesEntities.AreUserNameAndPwdSet)
+        private bool Authorize()
+        {
+            while (true)
             {
                 UserNamePwdDlg userDlg = new UserNamePwdDlg();
                 if (userDlg.ShowDialog() == true)
@@ -79,14 +50,37 @@ namespace ChemicalAnalyses
                 }
                 else
                 {
-                    if (!_isClosed)
+                    MessageBoxResult res = MessageBox.Show("Неверные логин или пароль!" + Environment.NewLine
+                        + "Продолжить?", "Ошибка!!!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation,
+                        MessageBoxResult.Yes);
+                    if (res == MessageBoxResult.No) return false;
+                    continue;
+                }
+                try
+                {
+                    using (var context = new ChemicalAnalysesEntities())
                     {
-                        CALogger.WriteToLogFile("Отказ от авторизации!");
-                        MessageBox.Show("Без авторизации работа невозможна!");
-                        _isClosed = true;
-                        Close();
+                        var sql = @"SELECT 1 FROM sys.tables AS T
+                            INNER JOIN sys.schemas AS S ON T.schema_id = S.schema_id
+                            WHERE S.Name = @0 AND T.Name = @1";
+                        var e = context.Database.ExecuteSqlCommand(sql, new SqlParameter("@0", "dbo"),
+                            new SqlParameter("@1", "Sample"));
                     }
                 }
+                catch (Exception ex)
+                {
+                    CALogger.WriteToLogFile("Не найдена БД" + ex.Message);
+                }
+                if (!ChemicalAnalysesEntities.AreUserNameAndPwdSet)
+                {
+                    MessageBoxResult res = MessageBox.Show("Неверные логин или пароль!" + Environment.NewLine
+                        + "Продолжить?", "Ошибка!!!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation,
+                        MessageBoxResult.Yes);
+                    if (res == MessageBoxResult.No) return false;
+                    continue;
+                }
+                IsAdmin = ChemicalAnalysesEntities.IsAdmin;
+                return true;
             }
         }
 
@@ -249,7 +243,35 @@ namespace ChemicalAnalyses
             //get handle of the current window
             HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
             //and add an hook to process WM_SHOWME messages
-            source.AddHook(new HwndSourceHook(WndProc));
+            try
+            {
+                source.AddHook(new HwndSourceHook(WndProc));
+            }
+            catch { }
+        }
+
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            try
+            {
+                CALogger.InitLogFile(Properties.Settings.Default.LogFile);
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка в файле конфигурации");
+                Close();
+            }
+            
+            CALogger.WriteToLogFile("Программа запущена. Версия:" 
+                + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            CALogger.WriteToLogFile("Подключение к БД…");
+
+            if (!Authorize())
+            {
+                CALogger.WriteToLogFile("Ошибка авторизации!");
+                MessageBox.Show("Без авторизации работа невозможна!");
+                Close();
+            }
         }
     }
 }
