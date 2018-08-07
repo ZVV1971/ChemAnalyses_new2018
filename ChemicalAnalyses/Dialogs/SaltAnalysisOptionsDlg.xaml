@@ -60,19 +60,19 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel>
+                        <StackPanel.ToolTip>
+                            <ToolTip>
+                                <ToolTip.Content>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Значение толеранса, с которым оцениваются суммы."/>
+                                        <TextBlock Text="Должно находиться в интервале от 0.1% до 10%"/>
+                                    </StackPanel>
+                                </ToolTip.Content>
+                            </ToolTip>
+                        </StackPanel.ToolTip>
                         <Label Content="_Толеранс сумм:" Target="{Binding ElementName=tbSumTolerance}"/>
                         <TextBox x:Name="tbSumTolerance" Grid.Column="0" Text="{Binding Path=SumTolerance, 
                             ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBox.ToolTip>
-                                <ToolTip>
-                                    <ToolTip.Content>
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="Значение толеранса, с которым оцениваются суммы."/>
-                                            <TextBlock Text="Должно находиться в интервале от 0.1% до 10%"/>
-                                        </StackPanel>
-                                    </ToolTip.Content>
-                                </ToolTip>
-                            </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
                 </Grid>

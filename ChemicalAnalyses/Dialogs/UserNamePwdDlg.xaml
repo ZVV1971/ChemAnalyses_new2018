@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
-        Title="Авторизация" Height="180" Width="250" MaxWidth="250" MaxHeight="180"
+        Title="Авторизация" Height="180" Width="250" MaxHeight="180" MinHeight="180" MinWidth="250"
          Validation.Error="Window_ValidationError">
     <Window.CommandBindings>
         <CommandBinding Command="Save" Executed="SaveCommand_Executed" CanExecute="SaveCommand_CanExecute"/>

@@ -30,8 +30,6 @@ namespace ChemicalAnalyses
         public static readonly DependencyProperty IsAdminProperty =
             DependencyProperty.Register("IsAdmin", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
 
-
-
         public MainWindow()
         {    
             InitializeComponent();
@@ -143,16 +141,15 @@ namespace ChemicalAnalyses
         }
         #endregion Commands
 
-        private void CalibrationMenuItem_Click(object sender, RoutedEventArgs e)
+        private void CalibrationMenuItem_Click(object sender, ExecutedRoutedEventArgs e)
         {
             CalibrationSelectionDlg dlg = null;
-            string type = ((MenuItem)sender).Header.ToString();
-            switch (type)
+            switch ((string)(e?.Parameter))
             {
-                case "Калий":
+                case "Kalium":
                     dlg = new CalibrationSelectionDlg("Kalium", Properties.Settings.Default.KaliumCalibrationNumber);
                     break;
-                case "Натрий":
+                case "Natrium":
                     dlg = new CalibrationSelectionDlg("Natrium", Properties.Settings.Default.NatriumCalibrationNumber);
                     break;
                 default:
@@ -162,13 +159,13 @@ namespace ChemicalAnalyses
             dlg.btnSetDefault.ToolTip = "Установить выбранную калибровку по умолчанию для всех новых анализов";
             if (dlg.ShowDialog() == true)
             {
-                switch (type)
+                switch ((string)(e?.Parameter))
                 {
-                    case "Калий":
+                    case "Kalium":
                         Properties.Settings.Default.KaliumCalibrationNumber = dlg.CalibrationNumber;
                         CALogger.WriteToLogFile("Properties.Settings.Default.KaliumCalibrationNumber set to: " + dlg.CalibrationNumber);
                         break;
-                    case "Натрий":
+                    case "Natrium":
                         Properties.Settings.Default.NatriumCalibrationNumber = dlg.CalibrationNumber;
                         CALogger.WriteToLogFile("Properties.Settings.Default.NatriumCalibrationNumber set to: " + dlg.CalibrationNumber);
                         break;
@@ -192,7 +189,11 @@ namespace ChemicalAnalyses
                 sa.SulfatesBlank = Properties.Settings.Default.SulfatesBlank;
                 sa.BromumBlank = Properties.Settings.Default.BrBlank;
             }
-            catch { return; }
+            catch
+            {
+                CALogger.WriteToLogFile("Ошибка при считывании настроек из файла конфигурации!");
+                return;
+            }
 
             SaltAnalysisOptionsDlg saDlg = new SaltAnalysisOptionsDlg(sa as SaltAnalysisData);
             saDlg.SumTolerance = Properties.Settings.Default.SumTolerance;
@@ -270,9 +271,7 @@ namespace ChemicalAnalyses
             }
         }
 
-        private void Relogin_Click(object sender, RoutedEventArgs e)
-        {
-            Authorize(true);
-        }
+        private void Relogin_Click(object sender, ExecutedRoutedEventArgs e)
+        { Authorize(true); }
     }
 }

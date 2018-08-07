@@ -463,7 +463,7 @@
             </DataGrid>
         </ScrollViewer>
         <Button x:Name="btnOK" Content="OK" Grid.Column="0" Grid.Row="1" Command="Save" IsDefault="False"/>
-        <Button Content="Cancel" Grid.Column="1" Grid.Row="1" IsDefault="True" IsCancel="True"/>
+        <Button Content="Отмена" Grid.Column="1" Grid.Row="1" IsDefault="True" IsCancel="True"/>
         <Button x:Name="btnDelete" Grid.Row="1" Grid.Column="2" Command="Delete" Content="Удалить" Visibility="{Binding}"/>
         <Button x:Name="btnPrint" Grid.Row="1" Grid.Column="3" Command="Print" Content="Печать" Visibility="{Binding}"/>
     </Grid>

@@ -16,6 +16,8 @@
             </RoutedUICommand.InputGestures>
         </RoutedUICommand>
         <alumni:BooleanToUserTypeConverter x:Key="bln2UserTypeConv"/>
+        <RoutedUICommand x:Key="Calibration" Text="Сменить пользователя">
+        </RoutedUICommand>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
@@ -23,6 +25,7 @@
         <CommandBinding Command="commands:CustomCommands.List" Executed="ListCommand_Executed"/>
         <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="{StaticResource ReloginCmd}" Executed="Relogin_Click"/>
+        <CommandBinding Command="{StaticResource Calibration}" Executed="CalibrationMenuItem_Click"/>
     </Window.CommandBindings>
     <Grid ToolTip="">
         <Grid.RowDefinitions>
@@ -46,10 +49,10 @@
             </MenuItem>
             <MenuItem Header="Настройки" ToolTip="Различные настройки программы…">
                 <MenuItem Header="Калибровки" ToolTip="Настройки калибровок…" Icon="{Binding Source={StaticResource icnCalib}}">
-                    <MenuItem Header="Калий" Click="CalibrationMenuItem_Click" ToolTip="Настройки калибровочных данных для калия"
-                              Icon="{Binding Source={StaticResource icnKalium}}"/>
-                    <MenuItem Header="Натрий" Click="CalibrationMenuItem_Click" ToolTip="Настройки калибровочных данных для натрия"
-                              Icon="{Binding Source={StaticResource icnNatrium}}"/>
+                    <MenuItem Header="Калий" ToolTip="Настройки калибровочных данных для калия" Command="{StaticResource Calibration}"
+                              Icon="{Binding Source={StaticResource icnKalium}}" CommandParameter="Kalium"/>
+                    <MenuItem Header="Натрий" Command="{StaticResource Calibration}" ToolTip="Настройки калибровочных данных для натрия"
+                              Icon="{Binding Source={StaticResource icnNatrium}}" CommandParameter="Natrium"/>
                 </MenuItem>
                 <MenuItem Header="Исходные данные…" ToolTip="Разлиные исходные данные, используемые при расчете анализов"
                           Icon="{Binding Source={StaticResource icnInitData}}">

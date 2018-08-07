@@ -396,12 +396,12 @@ namespace ChemicalAnalyses.Dialogs
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ((ISaltAnalysisCalcResults)((ComboBox)sender).DataContext).IsCalculated = false;
+            ((ISaltAnalysisCalcResults)((ComboBox)sender)?.DataContext).IsCalculated = false;
         }
 
         void dgrdSA_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.EditAction == DataGridEditAction.Commit)
+            if (e?.EditAction == DataGridEditAction.Commit)
             {
                 DataGridRow row = e.Row as DataGridRow;
                 if (row != null) (row.DataContext as ISaltAnalysisCalcResults).IsCalculated = false;
