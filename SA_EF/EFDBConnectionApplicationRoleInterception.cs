@@ -1,5 +1,4 @@
-﻿//https://gist.github.com/crmckenzie/f19df419453bd12adaa1
-//EF6 with Application Roles
+﻿//https://gist.github.com/crmckenzie/f19df419453bd12adaa1 //EF6 with Application Roles
 using System;
 using System.Data.Entity.Infrastructure.Interception;
 using System.Data.Common;
@@ -71,18 +70,22 @@ namespace SA_EF
                     try { cmd.ExecuteNonQuery(); }
                     catch (Exception ex) { }
 
-                    if (cookie.Value != null && BitConverter.ToInt32((byte[])cookie.Value, 0) != -1)
+                    int res = 0;
+
+                    if (cookie.Value != null 
+                        //Check if cookie value is not 0xFFFFFFFF == ERROR
+                        && BitConverter.ToInt32((byte[])cookie.Value, 0) != -1)
                     {
                         _cookie = (byte[])cookie.Value;
                         _isSetApproleExecuted = true;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = "SELECT IS_MEMBER(N'db_accessadmin')";
+                        try { res = (int)cmd.ExecuteScalar(); }
+                        catch { }
                     }
 
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "SELECT IS_MEMBER(N'db_accessadmin')";
-                    int res = 0;
-                    try { res = (int)cmd.ExecuteScalar(); }
-                    catch { }
-                    OnAppRoleTreatment(new AppRoleTreatmentEventArgs(_isSetApproleExecuted, res == 1));
+                    OnAppRoleTreatment(new AppRoleTreatmentEventArgs(_isSetApproleExecuted, res == 1 &&
+                        _isSetApproleExecuted));
                 }
             }
         }

@@ -38,7 +38,7 @@ namespace ChemicalAnalyses
             wndThis = this;
         }
 
-        private bool Authorize()
+        private bool Authorize(bool relogin = false)
         {
             while (true)
             {
@@ -58,7 +58,7 @@ namespace ChemicalAnalyses
                 }
                 try
                 {
-                    using (var context = new ChemicalAnalysesEntities())
+                    using (var context = new ChemicalAnalysesEntities(relogin))
                     {
                         var sql = @"SELECT 1 FROM sys.tables AS T
                             INNER JOIN sys.schemas AS S ON T.schema_id = S.schema_id
@@ -243,11 +243,7 @@ namespace ChemicalAnalyses
             //get handle of the current window
             HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
             //and add an hook to process WM_SHOWME messages
-            try
-            {
-                source.AddHook(new HwndSourceHook(WndProc));
-            }
-            catch { }
+            source?.AddHook(new HwndSourceHook(WndProc));
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
@@ -272,6 +268,11 @@ namespace ChemicalAnalyses
                 MessageBox.Show("Без авторизации работа невозможна!");
                 Close();
             }
+        }
+
+        private void Relogin_Click(object sender, RoutedEventArgs e)
+        {
+            Authorize(true);
         }
     }
 }

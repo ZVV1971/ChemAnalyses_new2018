@@ -4,15 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
+        xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
         Title="Химический анализ" Height="250" Width="425"
         PreviewMouseMove="Window_PreviewMouseMove"
         SourceInitialized="Window_SourceInitialized">
+    <Window.Resources>
+        <RoutedUICommand x:Key="ReloginCmd" Text="Сменить пользователя">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>ALT+R</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
+        <alumni:BooleanToUserTypeConverter x:Key="bln2UserTypeConv"/>
+    </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="Help" Executed="HelpCommand_Executed"/>
         <CommandBinding Command="commands:CustomCommands.List" Executed="ListCommand_Executed"/>
         <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
+        <CommandBinding Command="{StaticResource ReloginCmd}" Executed="Relogin_Click"/>
     </Window.CommandBindings>
     <Grid ToolTip="">
         <Grid.RowDefinitions>
@@ -23,9 +33,11 @@
         <!--*********************  Menu **************************-->
         <Menu x:Name="mnMainMenu" Grid.Row="0" ToolTip="Главное меню программы">
             <MenuItem Header="Файл" ToolTip="Работа с файлами…">
+                <MenuItem Command="{StaticResource ReloginCmd}" ToolTip="Войти в систему под другими логином и паролем"
+                          Icon="{Binding Source={StaticResource icnExitApplication}}"/>
                 <Separator/>
                 <MenuItem Command="commands:CustomCommands.Exit" ToolTip="Выход из программы"
-                          Icon="{Binding Source={StaticResource icnExitApplication}}"/>
+                          Icon="{Binding Source={StaticResource icExit2}}"/>
             </MenuItem>
             <MenuItem Header="Образец" ToolTip="Выбор образцов для просмотра и изменения">
                 <MenuItem Header="Список…" Command ="commands:CustomCommands.List"
@@ -58,7 +70,7 @@
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"></ColumnDefinition>
+                            <ColumnDefinition Width="5*"></ColumnDefinition>
                             <ColumnDefinition Width="2*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                     </Grid>
@@ -70,7 +82,9 @@
             </StatusBarItem>
             <StatusBarItem Grid.Column="1">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="stbSecondSection"/>
+                    <TextBlock x:Name="stbSecondSection" Text="{Binding Path=IsAdmin, 
+                        RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource bln2UserTypeConv}}"
+                               ToolTip="Отображает статус текущего пользователя в системе"/>
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>

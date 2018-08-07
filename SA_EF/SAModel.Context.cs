@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Infrastructure.Interception;
 
@@ -17,12 +16,15 @@ namespace SA_EF
         private static bool _isAdmin = false;
         public static bool IsAdmin { get { return _isAdmin; } }
         public static string connectionString { get; set; } = "name=CAEntities";
+        private static DbConnectionApplicationRoleInterceptor dbConnInterceptor;
 
-        public ChemicalAnalysesEntities() :base(connectionString)
+        public ChemicalAnalysesEntities(bool relogin = false) :base(connectionString)
         {
-            if (!_areUserNameAndPwdSet)
+            if (relogin || !_areUserNameAndPwdSet)
             {
-                DbInterception.Add(new DbConnectionApplicationRoleInterceptor(_userName, _password));
+                if (dbConnInterceptor != null) DbInterception.Remove(dbConnInterceptor);
+                dbConnInterceptor = new DbConnectionApplicationRoleInterceptor(_userName, _password);
+                DbInterception.Add(dbConnInterceptor);
                 DbConnectionApplicationRoleInterceptor.AppRoleTreatment += OnAppRoleTreatment;
             }
         }
@@ -40,7 +42,7 @@ namespace SA_EF
         {
             throw new UnintentionalCodeFirstException();
         }
-    
+   
         public virtual DbSet<LinearCalibration> LineaCalibrations { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
         public virtual DbSet<SaltAnalysisData> SaltAnalysisDatas { get; set; }
