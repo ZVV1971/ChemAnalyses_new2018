@@ -115,6 +115,7 @@
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SampleExt.cs" />
+    <Compile Include="SchemeResultsTolerance.cs" />
     <Compile Include="SchemesHelper.cs" />
   </ItemGroup>
   <ItemGroup>

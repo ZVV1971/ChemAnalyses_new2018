@@ -453,10 +453,29 @@
                 </DataGrid.RowDetailsTemplate>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
+                        <ContextMenu.Resources>
+                            <RoutedUICommand x:Key="cmdCompare" Text="Сравнить">
+                                <RoutedUICommand.InputGestures>
+                                    <KeyGesture>SHIFT+ALT+C</KeyGesture>
+                                </RoutedUICommand.InputGestures>
+                            </RoutedUICommand>
+                        </ContextMenu.Resources>
                         <MenuItem Header="Рассчитать результаты" Command="commands:CustomCommands.Calculate"/>
                         <MenuItem Header="Удалить выбранные" Command="Delete"/>
+                        <MenuItem Command="{StaticResource cmdCompare}">
+                            <MenuItem.ToolTip>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Сравнить результаты расчета двух образцов."/>
+                                    <TextBlock Text="Сравнение возможно только если:"/>
+                                    <TextBlock Text="1) выбрано 2 образа;"/>
+                                    <TextBlock Text="2) у выбранных образцов совпадают схемы расчета;"/>
+                                    <TextBlock Text="3) для выбранных образцов произведен расчет."/>
+                                </StackPanel>
+                            </MenuItem.ToolTip>
+                        </MenuItem>
                         <ContextMenu.CommandBindings>
                             <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed"/>
+                            <CommandBinding Command="{StaticResource cmdCompare}" CanExecute="CompareCommand_CanExecute" Executed="CompareCommand_Executed"/>
                         </ContextMenu.CommandBindings>
                     </ContextMenu>
                 </DataGrid.ContextMenu>

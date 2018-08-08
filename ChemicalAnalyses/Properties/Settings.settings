@@ -74,5 +74,14 @@
     <Setting Name="SumTolerance" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">0.005</Value>
     </Setting>
+    <Setting Name="Chloride_SchemeResultTolerance" Type="SA_EF.SchemeResultsTolerance" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SulfateSodiumI_SchemeResultTolerance" Type="SA_EF.SchemeResultsTolerance" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SulfateMagnesiumI_SchemeResultTolerance" Type="SA_EF.SchemeResultsTolerance" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

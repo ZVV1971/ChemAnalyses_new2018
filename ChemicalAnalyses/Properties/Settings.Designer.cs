@@ -276,5 +276,38 @@ namespace ChemicalAnalyses.Properties {
                 this["SumTolerance"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::SA_EF.SchemeResultsTolerance Chloride_SchemeResultTolerance {
+            get {
+                return ((global::SA_EF.SchemeResultsTolerance)(this["Chloride_SchemeResultTolerance"]));
+            }
+            set {
+                this["Chloride_SchemeResultTolerance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::SA_EF.SchemeResultsTolerance SulfateSodiumI_SchemeResultTolerance {
+            get {
+                return ((global::SA_EF.SchemeResultsTolerance)(this["SulfateSodiumI_SchemeResultTolerance"]));
+            }
+            set {
+                this["SulfateSodiumI_SchemeResultTolerance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::SA_EF.SchemeResultsTolerance SulfateMagnesiumI_SchemeResultTolerance {
+            get {
+                return ((global::SA_EF.SchemeResultsTolerance)(this["SulfateMagnesiumI_SchemeResultTolerance"]));
+            }
+            set {
+                this["SulfateMagnesiumI_SchemeResultTolerance"] = value;
+            }
+        }
     }
 }

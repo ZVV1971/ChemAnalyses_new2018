@@ -434,5 +434,56 @@ namespace ChemicalAnalyses.Dialogs
             if((dgrdSA?.CurrentItem as ISaltAnalysisCalcResults)!=null)
                 (dgrdSA?.CurrentItem as ISaltAnalysisCalcResults).IsCalculated = false;
         }
+
+        private void CompareCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = dgrdSA.SelectedItems.Count == 2 &&
+                dgrdSA.SelectedItems.Cast<ISaltAnalysisCalcResults>().All(p => p.IsCalculated) &&
+                dgrdSA.SelectedItems.Cast<SaltAnalysisData>().Select(p=>p.DefaultCalculationScheme).Distinct().Count() == 1;
+        }
+
+        private void CompareCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            decimal tolerance = 1;
+            string delimiter = "";
+            SaltAnalysisData res1 = dgrdSA.SelectedItems[0] as SaltAnalysisData;
+            SaltAnalysisData res2 = dgrdSA.SelectedItems[1] as SaltAnalysisData;
+            StringBuilder stringBuilder = new StringBuilder();
+            SchemeResultsTolerance schemeResultsTolerance;
+            try
+            {
+                schemeResultsTolerance = (SchemeResultsTolerance)Properties.Settings
+                    .Default[res1.DefaultCalculationScheme + "_SchemeResultTolerance"];
+            }
+            catch
+            {
+                MessageBox.Show($"Не найдены пользовательские параметры для проверки схемы {res1.DefaultCalculationScheme}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            foreach (string prpName in SchemesHelper.GetPropertiesToCheck(res1.DefaultCalculationScheme))
+            {
+                decimal? v1 = (decimal?)res1.GetType().GetProperty(prpName).GetValue(res1);
+                decimal? v2 = (decimal?)res1.GetType().GetProperty(prpName).GetValue(res2);
+                if (v1.HasValue && v2.HasValue)
+                {
+                    if(!(v1.Value == 0 && v2.Value == 0))
+                    {
+                        if(Math.Abs((v1.Value - v2.Value) / Math.Max(v1.Value, v2.Value)) > tolerance)
+                        {
+                            stringBuilder.Append(delimiter);
+                            stringBuilder.Append($"Разница значений по параметру {prpName} превышает толеранс.");
+                            delimiter = ";" + string.Empty;
+                        }
+                    }
+                }
+                else if (v1.HasValue || v2.HasValue)
+                {
+                    stringBuilder.Append(delimiter);
+                    stringBuilder.Append($"Для параметра {prpName} одно из значений пусто.");
+                    delimiter = ";" + string.Empty;
+                }
+            }
+        }
     }
 }

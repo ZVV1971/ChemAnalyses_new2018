@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -213,6 +215,17 @@ namespace ChemicalAnalyses
                 CALogger.WriteToLogFile("Properties.Settings.Default.SulfatesBlank:" + sa.BromumBlank);
                 Properties.Settings.Default.SumTolerance = saDlg.SumTolerance;
                 CALogger.WriteToLogFile("Properties.Settings.Default.SumTolerance:" + saDlg.SumTolerance);
+
+                Properties.Settings.Default.Chloride_SchemeResultTolerance = new SchemeResultsTolerance()
+                {
+                    IsUniversalTolerance = true,
+                    UniversalTolerance = 0.1M,
+                    SchemeTolerances = new ObservableCollection<KeyValuePair<string, decimal?>>()
+                    {
+                        new KeyValuePair<string, decimal?>("CaSO4",0.01M),
+                        new KeyValuePair<string, decimal?>("Test", 2M)
+                    }
+                };
             }
         }
         protected override void OnClosed(EventArgs e)
