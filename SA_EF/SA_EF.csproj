@@ -77,6 +77,7 @@
     <Compile Include="CalibrationType.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CustomSAAttibute.cs" />
     <Compile Include="EFCommandInterceptor.cs" />
     <Compile Include="EFDBConnectionApplicationRoleInterception.cs" />
     <Compile Include="DataPointExt.cs" />
@@ -114,6 +115,7 @@
       <DependentUpon>SAModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SampleExt.cs" />
+    <Compile Include="SchemesHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

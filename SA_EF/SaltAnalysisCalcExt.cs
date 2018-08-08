@@ -557,37 +557,38 @@ namespace SA_EF
     /// <summary>
     /// Enumerates possible calculation schemes
     /// </summary>
+    [Flags()]
     public enum SaltCalculationSchemes
     {
         /// <summary>
         /// Carbonate calculation scheme
         /// </summary>
         [Description("Карбонатная")]
-        Carbonate,
+        Carbonate = 1,
         /// <summary>
         /// The first variant of Sulfate-Sodium calculation scheme
         /// </summary>
         [Description("Сульфатно-натриевая (I тип)")]
-        SulfateSodiumI,
+        SulfateSodiumI = 2,
         /// <summary>
         /// The second variant of Sulfate-Sodium calculation scheme
         /// </summary>
         [Description("Сульфатно-натриевая (II тип)")]
-        SulfateSodiumII,
+        SulfateSodiumII = 4,
         /// <summary>
         /// The first variant of Sulfate-Magnesium calculation scheme
         /// </summary>
         [Description("Сульфатно-магниевая (I тип)")]
-        SulfateMagnesiumI,
+        SulfateMagnesiumI = 8,
         /// <summary>
         /// The second variant of Sulfate-Magnesium calculation scheme
         /// </summary>
         [Description("Сульфатно-магниевая (II тип)")]
-        SulfateMagnesiumII,
+        SulfateMagnesiumII = 16,
         /// <summary>
         /// Chloride calculation scheme
         /// </summary>
         [Description("Хлоридная")]
-        Chloride
+        Chloride = 32
     };
 }

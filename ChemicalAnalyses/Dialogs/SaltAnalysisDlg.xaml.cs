@@ -269,6 +269,7 @@ namespace ChemicalAnalyses.Dialogs
                 p.SaltSumColor = p.CalcSchemeTolerance(p).SaltSumColor;
             });
             MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны");
+            dgrdSA.SelectedItems.Clear();
             btnPrint.Visibility = Visibility.Visible;
         }
 

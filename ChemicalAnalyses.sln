@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SATest", "SATest\SATest.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SA_EF", "SA_EF\SA_EF.csproj", "{937C4B50-47C0-471C-8D18-A404FB283877}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{18FF7939-A315-4785-BA9E-D62A43D2AC77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,17 +35,21 @@ Global
 		{937C4B50-47C0-471C-8D18-A404FB283877}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{937C4B50-47C0-471C-8D18-A404FB283877}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{937C4B50-47C0-471C-8D18-A404FB283877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18FF7939-A315-4785-BA9E-D62A43D2AC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18FF7939-A315-4785-BA9E-D62A43D2AC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18FF7939-A315-4785-BA9E-D62A43D2AC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18FF7939-A315-4785-BA9E-D62A43D2AC77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UseGlobalSettings = True
-		BuildVersion_UseUniversalClock = True
-		BuildVersion_UpdateFileVersion = True
-		BuildVersion_UpdateAssemblyVersion = True
-		BuildVersion_BuildVersioningStyle = None.None.None.Increment
-		BuildVersion_StartDate = 2000/1/1
 		SolutionGuid = {0DA693B6-0DB4-423E-88D5-4CC8CC24AEFD}
+		BuildVersion_StartDate = 2000/1/1
+		BuildVersion_BuildVersioningStyle = None.None.None.Increment
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_UpdateFileVersion = True
+		BuildVersion_UseUniversalClock = True
+		BuildVersion_UseGlobalSettings = True
 	EndGlobalSection
 EndGlobal
