@@ -569,6 +569,7 @@ namespace SA_EF
         /// The first variant of Sulfate-Sodium calculation scheme
         /// </summary>
         [Description("Сульфатно-натриевая (I тип)")]
+        [SchemeRealized]
         SulfateSodiumI = 2,
         /// <summary>
         /// The second variant of Sulfate-Sodium calculation scheme
@@ -579,6 +580,7 @@ namespace SA_EF
         /// The first variant of Sulfate-Magnesium calculation scheme
         /// </summary>
         [Description("Сульфатно-магниевая (I тип)")]
+        [SchemeRealized]
         SulfateMagnesiumI = 8,
         /// <summary>
         /// The second variant of Sulfate-Magnesium calculation scheme
@@ -589,6 +591,7 @@ namespace SA_EF
         /// Chloride calculation scheme
         /// </summary>
         [Description("Хлоридная")]
+        [SchemeRealized]
         Chloride = 32
     };
 }

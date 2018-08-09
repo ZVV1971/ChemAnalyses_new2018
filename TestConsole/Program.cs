@@ -2,6 +2,7 @@
 using System.Reflection;
 using System;
 using SA_EF;
+using ChemicalAnalyses.Alumni;
 
 namespace TestConsole
 {
@@ -9,17 +10,12 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            SaltCalculationSchemes SchemeToCheck = SaltCalculationSchemes.Chloride;
-
-            foreach(string s in SchemesHelper.GetPropertiesToCheck())
+            foreach (var p in Enum.GetValues(typeof(SaltCalculationSchemes))
+                .OfType<SaltCalculationSchemes>().Where(p=> p.GetAttribute<SchemeRealizedAttribute>() != null))
             {
-                Console.WriteLine(s + " has to be checked for " + SchemeToCheck + " scheme");
+                
+                Console.WriteLine(p.ToString());
             }
-
-            //SaltAnalysisData sa = new SaltAnalysisData();
-            //Type type = sa.GetType();
-            //PropertyInfo pi = type.GetProperty("CaSO4");
-            //pi.SetValue(sa, 12);
         }
     }
 }

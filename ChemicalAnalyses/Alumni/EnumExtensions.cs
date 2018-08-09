@@ -13,7 +13,8 @@ namespace ChemicalAnalyses.Alumni
             var type = value.GetType();
             var memberInfo = type.GetMember(value.ToString());
             var attributes = memberInfo[0].GetCustomAttributes(typeof(T), false);
-            return (T)attributes[0];
+            if(attributes.Length!=0) return (T)attributes[0];
+            return null;
         }
 
         // This method creates a specific call to the above method, requesting the

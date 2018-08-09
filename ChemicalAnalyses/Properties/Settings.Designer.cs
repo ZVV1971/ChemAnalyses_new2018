@@ -279,34 +279,46 @@ namespace ChemicalAnalyses.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::SA_EF.SchemeResultsTolerance Chloride_SchemeResultTolerance {
+        [global::System.Configuration.DefaultSettingValueAttribute("True\r\n0,005\r\nCaSO4;0,005;Na;0,005;CrystWater;0,005;NaCl;0,005;KCl;0,005;CaCl2;0,0" +
+            "05;MgCl2;0,005;KBr;0,005;HygroWater;0,005;IonSum;0,005;SaltSum;0,005;MgDry;0,005" +
+            ";CaDry;0,005;ClDry;0,005;BrDry;0,005;ResiduumDry;0,005;SulfatesDry;0,005;KDry;0," +
+            "005")]
+        public string Chloride_SchemeToleranceValues {
             get {
-                return ((global::SA_EF.SchemeResultsTolerance)(this["Chloride_SchemeResultTolerance"]));
+                return ((string)(this["Chloride_SchemeToleranceValues"]));
             }
             set {
-                this["Chloride_SchemeResultTolerance"] = value;
+                this["Chloride_SchemeToleranceValues"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::SA_EF.SchemeResultsTolerance SulfateSodiumI_SchemeResultTolerance {
+        [global::System.Configuration.DefaultSettingValueAttribute("True\r\n0,005\r\nCaSO4;0,005;Na;0,005;CrystWater;0,005;NaCl;0,005;KCl;0,005;HygroWate" +
+            "r;0,005;MgSO4;0,005;Na2SO4;0,005;NaBr;0,005;IonSum;0,005;SaltSum;0,005;MgDry;0,0" +
+            "05;CaDry;0,005;ClDry;0,005;BrDry;0,005;ResiduumDry;0,005;SulfatesDry;0,005;KDry;" +
+            "0,005")]
+        public string SulfateSodiumI_SchemeToleranceValues {
             get {
-                return ((global::SA_EF.SchemeResultsTolerance)(this["SulfateSodiumI_SchemeResultTolerance"]));
+                return ((string)(this["SulfateSodiumI_SchemeToleranceValues"]));
             }
             set {
-                this["SulfateSodiumI_SchemeResultTolerance"] = value;
+                this["SulfateSodiumI_SchemeToleranceValues"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::SA_EF.SchemeResultsTolerance SulfateMagnesiumI_SchemeResultTolerance {
+        [global::System.Configuration.DefaultSettingValueAttribute("True\r\n0,005\r\nCaSO4;0,005;Na;0,005;CrystWater;0,005;NaCl;0,005;KCl;0,005;MgCl2;0,0" +
+            "05;HygroWater;0,005;MgSO4;0,005;NaBr;0,005;IonSum;0,005;SaltSum;0,005;MgDry;0,00" +
+            "5;CaDry;0,005;ClDry;0,005;BrDry;0,005;ResiduumDry;0,005;SulfatesDry;0,005;KDry;0" +
+            ",005")]
+        public string SulfateMagnesiumI_SchemeToleranceValues {
             get {
-                return ((global::SA_EF.SchemeResultsTolerance)(this["SulfateMagnesiumI_SchemeResultTolerance"]));
+                return ((string)(this["SulfateMagnesiumI_SchemeToleranceValues"]));
             }
             set {
-                this["SulfateMagnesiumI_SchemeResultTolerance"] = value;
+                this["SulfateMagnesiumI_SchemeToleranceValues"] = value;
             }
         }
     }

@@ -59,7 +59,11 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                    <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
                         <StackPanel.ToolTip>
                             <ToolTip>
                                 <ToolTip.Content>
@@ -72,10 +76,23 @@
                         </StackPanel.ToolTip>
                         <Label Content="_Толеранс сумм:" Target="{Binding ElementName=tbSumTolerance}"/>
                         <TextBox x:Name="tbSumTolerance" Grid.Column="0" Text="{Binding Path=SumTolerance, 
-                            ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}">
-                        </TextBox>
+                            ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" 
+                                     MinWidth="60"/>
                     </StackPanel>
-                </Grid>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                            <StackPanel Orientation="Horizontal" x:Name="spSchemeTolerances">
+                                <!--<StackPanel Orientation="Vertical" Width="120" Height="120">
+                                    <TextBlock Text="fff"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox/>
+                                        <TextBox/>
+                                    </StackPanel>
+                                    <DataGrid/>
+                                </StackPanel>
+                                <StackPanel/>-->
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
                 </AdornerDecorator>
             </TabItem>
         </TabControl>

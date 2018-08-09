@@ -88,6 +88,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ChemicalAnalyses\ChemicalAnalyses.csproj">
+      <Project>{8b3a8a2f-0d64-4af4-acf9-e1b4fee1f717}</Project>
+      <Name>ChemicalAnalyses</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SA_EF\SA_EF.csproj">
       <Project>{937c4b50-47c0-471c-8d18-a404fb283877}</Project>
       <Name>SA_EF</Name>

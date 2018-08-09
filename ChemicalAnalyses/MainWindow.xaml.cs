@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Configuration;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Reflection;
 using ChemicalAnalyses.Dialogs;
+using ChemicalAnalyses.Alumni;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.Common;
@@ -197,8 +200,65 @@ namespace ChemicalAnalyses
                 return;
             }
 
+            SchemeResultsTolerance sc;
+            Dictionary<SaltCalculationSchemes, SchemeResultsTolerance> schemeDict = new Dictionary<SaltCalculationSchemes, SchemeResultsTolerance>();
+            foreach (var p in Enum.GetValues(typeof(SaltCalculationSchemes))
+                .OfType<SaltCalculationSchemes>().Where(p => p.GetAttribute<SchemeRealizedAttribute>() != null))
+            {
+                try
+                {
+                    sc =  new SchemeResultsTolerance( Properties.Settings.Default[p.ToName() + "_SchemeToleranceValues"].ToString());
+                    schemeDict.Add(p, sc);
+                }
+                catch (Exception ex)
+                {
+                    //No setting is present create new one
+                    sc = new SchemeResultsTolerance()
+                    {
+                        IsUniversalTolerance = true,
+                        UniversalTolerance = 0.005M,
+                        SchemeTolerances = new ObservableCollection<KeyValuePair<string, decimal?>>(
+                        SchemesHelper.GetPropertiesToCheck(p)
+                        .Select(r => new KeyValuePair<string, decimal?>(r, 0.005M)))
+                    };
+                    schemeDict.Add(p, sc);
+                    SettingsProperty property = new SettingsProperty(p.ToName() + "_SchemeToleranceValues");
+                    property.DefaultValue = sc.ToString();
+                    property.IsReadOnly = false;
+                    property.PropertyType = typeof(string);
+                    property.Provider = Properties.Settings.Default.Providers["LocalFileSettingsProvider"];
+                    property.Attributes.Add(typeof(UserScopedSettingAttribute), new UserScopedSettingAttribute());
+                    property.SerializeAs = SettingsSerializeAs.Xml;
+                    Properties.Settings.Default.Properties.Add(property);
+                    Properties.Settings.Default.Reload();
+                }
+            }
+
             SaltAnalysisOptionsDlg saDlg = new SaltAnalysisOptionsDlg(sa as SaltAnalysisData);
             saDlg.SumTolerance = Properties.Settings.Default.SumTolerance;
+            saDlg.SchemesDictionary = schemeDict;
+
+            foreach (KeyValuePair<SaltCalculationSchemes, SchemeResultsTolerance> item in saDlg.SchemesDictionary)
+            {
+                StackPanel sp = new StackPanel()
+                {
+                    Name = "sp_" + item.Key.ToName(),
+                    Orientation = Orientation.Vertical,
+                    Width = 150,
+                    Height = 120
+                };
+                sp.Children.Add(new TextBlock { Text = item.Key.ToString() });
+                StackPanel sp1 = new StackPanel()
+                {
+                    Orientation = Orientation.Horizontal
+                };
+                sp1.Children.Add(new CheckBox());
+                sp1.Children.Add(new TextBox());
+                sp.Children.Add(sp1);
+                sp.Children.Add(new DataGrid());
+                saDlg.spSchemeTolerances.Children.Add(sp);
+            }
+
             if (saDlg.ShowDialog() == true)
             {//if OK save settings back to user.config
                 Properties.Settings.Default.HgCoefficient = sa.HgCoefficient;
@@ -216,16 +276,16 @@ namespace ChemicalAnalyses
                 Properties.Settings.Default.SumTolerance = saDlg.SumTolerance;
                 CALogger.WriteToLogFile("Properties.Settings.Default.SumTolerance:" + saDlg.SumTolerance);
 
-                Properties.Settings.Default.Chloride_SchemeResultTolerance = new SchemeResultsTolerance()
+                foreach(KeyValuePair<SaltCalculationSchemes, SchemeResultsTolerance> kvp in schemeDict)
                 {
-                    IsUniversalTolerance = true,
-                    UniversalTolerance = 0.1M,
-                    SchemeTolerances = new ObservableCollection<KeyValuePair<string, decimal?>>()
+                    try
                     {
-                        new KeyValuePair<string, decimal?>("CaSO4",0.01M),
-                        new KeyValuePair<string, decimal?>("Test", 2M)
+                        Properties.Settings.Default[kvp.Key + "_SchemeToleranceValues"] = kvp.Value.ToString();
                     }
-                };
+                    catch (Exception ex)
+                    {
+                    }
+                }
             }
         }
         protected override void OnClosed(EventArgs e)
