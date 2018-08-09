@@ -28,12 +28,13 @@
                     </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical" Margin="5" Grid.Column="0" Grid.Row="0">
                             <Label Content="_ТрилонБ (Ca) мг-экв/л:"  Target="{Binding ElementName=tbCaTrilonB}"/>
-                        <TextBox x:Name="tbCaTrilonB" Text="{Binding Path=sa_local.CalciumTrilonTitre, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="tbCaTrilonB" Text="{Binding Path=sa_local.CalciumTrilonTitre, ValidatesOnExceptions=True,
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="ТрилонБ (_Mg) мг-экв/л:" Target="{Binding ElementName=tbMgTrilonB}"/>
-                        <TextBox x:Name="tbMgTrilonB" Text="{Binding Path=sa_local.MagnesiumTrilonTitre,
+                            <TextBox x:Name="tbMgTrilonB" Text="{Binding Path=sa_local.MagnesiumTrilonTitre,
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="_Холостой Br мл:" Target="{Binding ElementName=tbBrBlank}"/>
-                        <TextBox x:Name="tbBrBlank" Text="{Binding Path=sa_local.BromumBlank, 
+                            <TextBox x:Name="tbBrBlank" Text="{Binding Path=sa_local.BromumBlank, 
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Margin="5" Grid.Column="1" Grid.Row="0">
@@ -79,18 +80,9 @@
                             ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" 
                                      MinWidth="60"/>
                     </StackPanel>
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                            <StackPanel Orientation="Horizontal" x:Name="spSchemeTolerances">
-                                <!--<StackPanel Orientation="Vertical" Width="120" Height="120">
-                                    <TextBlock Text="fff"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <CheckBox/>
-                                        <TextBox/>
-                                    </StackPanel>
-                                    <DataGrid/>
-                                </StackPanel>
-                                <StackPanel/>-->
-                            </StackPanel>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.Row="1" 
+                                      Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Orientation="Horizontal" x:Name="spSchemeTolerances"/>
                         </ScrollViewer>
                     </Grid>
                 </AdornerDecorator>

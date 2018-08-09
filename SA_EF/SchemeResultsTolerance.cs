@@ -29,6 +29,8 @@ namespace SA_EF
             {
                 if (value != null && value.HasValue)
                 {
+                    if (value > 0.1M || value <= 0) throw new ArgumentOutOfRangeException(nameof(UniversalTolerance),
+                          "Значение толеранса должно быть больше 0 и меньше 10%");
                     _universalTolerance = value;
                     OnPropertyChanged(nameof(UniversalTolerance));
                 }

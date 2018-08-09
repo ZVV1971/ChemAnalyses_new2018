@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Data;
 using System.Reflection;
 using ChemicalAnalyses.Dialogs;
 using ChemicalAnalyses.Alumni;
@@ -207,7 +208,7 @@ namespace ChemicalAnalyses
             {
                 try
                 {
-                    sc =  new SchemeResultsTolerance( Properties.Settings.Default[p.ToName() + "_SchemeToleranceValues"].ToString());
+                    sc =  new SchemeResultsTolerance( Properties.Settings.Default[p.ToString() + "_SchemeToleranceValues"].ToString());
                     schemeDict.Add(p, sc);
                 }
                 catch (Exception ex)
@@ -242,20 +243,64 @@ namespace ChemicalAnalyses
             {
                 StackPanel sp = new StackPanel()
                 {
-                    Name = "sp_" + item.Key.ToName(),
+                    Name = "sp_" + item.Key,
                     Orientation = Orientation.Vertical,
                     Width = 150,
                     Height = 120
                 };
-                sp.Children.Add(new TextBlock { Text = item.Key.ToString() });
+                sp.Children.Add(new TextBlock { Text = item.Key.ToName() });
                 StackPanel sp1 = new StackPanel()
                 {
                     Orientation = Orientation.Horizontal
                 };
-                sp1.Children.Add(new CheckBox());
-                sp1.Children.Add(new TextBox());
+                CheckBox cb = new CheckBox() { Name = "cb_" + item.Key };
+                Binding bindcb = new Binding();
+                bindcb.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].IsUniversalTolerance");
+                bindcb.Mode = BindingMode.TwoWay;
+                bindcb.NotifyOnSourceUpdated = true;
+                bindcb.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(cb, CheckBox.IsCheckedProperty, bindcb);
+                sp1.Children.Add(cb);
+
+                TextBox tb = new TextBox() { Name = "tb_" + item.Key };
+                Binding bindtb = new Binding();
+                bindtb.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].UniversalTolerance");
+                bindtb.Mode = BindingMode.TwoWay;
+                bindtb.NotifyOnSourceUpdated = true;
+                bindtb.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                bindtb.ValidatesOnExceptions = true;
+                BindingOperations.SetBinding(tb, TextBox.TextProperty, bindtb);
+                sp1.Children.Add(tb);
+
                 sp.Children.Add(sp1);
-                sp.Children.Add(new DataGrid());
+
+                DataGrid dgr = new DataGrid()
+                {
+                    Name = "dgrd_" + item.Key,
+                    CanUserAddRows = false,
+                    AutoGenerateColumns = false
+                };
+                Binding binddgr = new Binding();
+                binddgr.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].SchemeTolerances");
+                binddgr.Mode = BindingMode.TwoWay;
+                binddgr.NotifyOnSourceUpdated = true;
+                binddgr.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                binddgr.ValidatesOnExceptions = true;
+                BindingOperations.SetBinding(dgr, DataGrid.ItemsSourceProperty, binddgr);
+
+                DataGridTextColumn textColumn = new DataGridTextColumn() { IsReadOnly = true, Header = "Свойство" };
+                textColumn.Binding = new Binding("Key");
+                dgr.Columns.Add(textColumn);
+
+                TextBlock tbl = new TextBlock() { };
+                Binding bindtbl = new Binding("Value");
+                DataGridTemplateColumn column = new DataGridTemplateColumn()
+                {
+                    Header = "Толеранс",
+                    CellTemplate = new DataTemplate() {  }
+                };
+                dgr.Columns.Add(column);
+                sp.Children.Add(dgr);
                 saDlg.spSchemeTolerances.Children.Add(sp);
             }
 
@@ -288,6 +333,7 @@ namespace ChemicalAnalyses
                 }
             }
         }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
