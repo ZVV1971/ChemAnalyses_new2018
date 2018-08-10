@@ -201,59 +201,41 @@ namespace ChemicalAnalyses
                 return;
             }
 
-            SchemeResultsTolerance sc;
-            Dictionary<SaltCalculationSchemes, SchemeResultsTolerance> schemeDict = new Dictionary<SaltCalculationSchemes, SchemeResultsTolerance>();
-            foreach (var p in Enum.GetValues(typeof(SaltCalculationSchemes))
-                .OfType<SaltCalculationSchemes>().Where(p => p.GetAttribute<SchemeRealizedAttribute>() != null))
-            {
-                try
-                {
-                    sc =  new SchemeResultsTolerance( Properties.Settings.Default[p.ToString() + "_SchemeToleranceValues"].ToString());
-                    schemeDict.Add(p, sc);
-                }
-                catch (Exception ex)
-                {
-                    //No setting is present create new one
-                    sc = new SchemeResultsTolerance()
-                    {
-                        IsUniversalTolerance = true,
-                        UniversalTolerance = 0.005M,
-                        SchemeTolerances = new ObservableCollection<ParameterValuePair>(
-                        SchemesHelper.GetPropertiesToCheck(p)
-                        .Select(r => new ParameterValuePair() { Item1 = r, Item2 = 0.005M }))
-                    };
-                    schemeDict.Add(p, sc);
-                    SettingsProperty property = new SettingsProperty(p.ToString() + "_SchemeToleranceValues");
-                    property.DefaultValue = sc.ToString();
-                    property.IsReadOnly = false;
-                    property.PropertyType = typeof(string);
-                    property.Provider = Properties.Settings.Default.Providers["LocalFileSettingsProvider"];
-                    property.Attributes.Add(typeof(UserScopedSettingAttribute), new UserScopedSettingAttribute());
-                    property.SerializeAs = SettingsSerializeAs.Xml;
-                    Properties.Settings.Default.Properties.Add(property);
-                    Properties.Settings.Default.Reload();
-                }
-            }
+            Dictionary<SaltCalculationSchemes, SchemeResultsTolerance> schemeDict = 
+                new Dictionary<SaltCalculationSchemes, SchemeResultsTolerance>(SchemeCompareOptionsHelper.GetSchemeCompareOptions());
 
             SaltAnalysisOptionsDlg saDlg = new SaltAnalysisOptionsDlg(sa as SaltAnalysisData);
             saDlg.SumTolerance = Properties.Settings.Default.SumTolerance;
             saDlg.SchemesDictionary = schemeDict;
+            for (int j = 0; j < saDlg.SchemesDictionary.Count; j++)
+            {
+                ColumnDefinition cd = new ColumnDefinition() { };
+                saDlg.spSchemeTolerances.ColumnDefinitions.Add(cd);
+            }
 
+            //For each scheme put options into Dialog window
+            int i = 0;
             foreach (KeyValuePair<SaltCalculationSchemes, SchemeResultsTolerance> item in saDlg.SchemesDictionary)
             {
                 StackPanel sp = new StackPanel()
                 {
                     Name = "sp_" + item.Key,
                     Orientation = Orientation.Vertical,
-                    Width = 150,
-                    Height = 120
+                    Width = 170,
+                    Height = 430,
+                    VerticalAlignment = VerticalAlignment.Top
                 };
                 sp.Children.Add(new TextBlock { Text = item.Key.ToName() });
                 StackPanel sp1 = new StackPanel()
                 {
                     Orientation = Orientation.Horizontal
                 };
-                CheckBox cb = new CheckBox() { Name = "cb_" + item.Key };
+                CheckBox cb = new CheckBox()
+                {
+                    Name = "cb_" + item.Key,
+                    ToolTip ="Использовать одно значение "+ Environment.NewLine +
+                        "для проверки сходимости в данной схеме?"
+                };
                 Binding bindcb = new Binding();
                 bindcb.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].IsUniversalTolerance");
                 bindcb.Mode = BindingMode.TwoWay;
@@ -262,7 +244,11 @@ namespace ChemicalAnalyses
                 BindingOperations.SetBinding(cb, CheckBox.IsCheckedProperty, bindcb);
                 sp1.Children.Add(cb);
 
-                TextBox tb = new TextBox() { Name = "tb_" + item.Key };
+                TextBox tb = new TextBox()
+                {
+                    Name = "tb_" + item.Key,
+                    ToolTip = "Единое значение толеранса для данной схемы"
+                };
                 Binding bindtb = new Binding();
                 bindtb.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].UniversalTolerance");
                 bindtb.Mode = BindingMode.TwoWay;
@@ -274,7 +260,6 @@ namespace ChemicalAnalyses
                 Binding tbvisibility = new Binding();
                 tbvisibility.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].IsUniversalTolerance");
                 tbvisibility.NotifyOnSourceUpdated = true;
-                tbvisibility.Converter = new BooleanToNegatedBooleanConverter();
                 tbvisibility.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
                 BindingOperations.SetBinding(tb, TextBox.IsEnabledProperty, tbvisibility);
                 sp1.Children.Add(tb);
@@ -298,6 +283,7 @@ namespace ChemicalAnalyses
                 Binding dgrdvisibility = new Binding();
                 dgrdvisibility.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].IsUniversalTolerance");
                 dgrdvisibility.NotifyOnSourceUpdated = true;
+                dgrdvisibility.Converter = new BooleanToNegatedBooleanConverter();
                 dgrdvisibility.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
                 BindingOperations.SetBinding(dgr, DataGrid.IsEnabledProperty, dgrdvisibility);
 
@@ -316,6 +302,8 @@ namespace ChemicalAnalyses
                 };
                 dgr.Columns.Add(column);
                 sp.Children.Add(dgr);
+                Grid.SetColumn(sp, i++);
+
                 saDlg.spSchemeTolerances.Children.Add(sp);
             }
 

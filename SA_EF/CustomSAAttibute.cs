@@ -14,4 +14,11 @@ namespace SA_EF
     {
         public SchemeRealizedAttribute() { }
     }
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    public sealed class CustomDescriptionAttribute : Attribute
+    {
+        public string Description;
+        public CustomDescriptionAttribute(string description) { Description = description; }
+        public override string ToString() { return Description; }
+    }
 }

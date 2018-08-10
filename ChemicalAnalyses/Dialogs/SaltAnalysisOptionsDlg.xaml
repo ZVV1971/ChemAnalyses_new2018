@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Исходные настройки для анализа солей:" Height="250" Width="400" MaxHeight="250" MaxWidth="400"
+        Title="Исходные настройки для анализа солей:" Height="250" Width="550" MaxHeight="250" MaxWidth="550"
         Validation.Error="Window_ValidationError">
     <Window.CommandBindings>
         <CommandBinding Command="Save" Executed="SaveCommand_Executed" CanExecute="SaveCommand_CanExecute"/>
@@ -35,6 +35,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical" Margin="5" Grid.Column="0" Grid.Row="0">
                             <Label Content="_ТрилонБ (Ca) мг-экв/л:"  Target="{Binding ElementName=tbCaTrilonB}"/>
@@ -60,41 +61,30 @@
                         <TextBox x:Name="tbBrTitre" Text="{Binding Path=sa_local.BromumStandardTitre,
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
-                </Grid>
+                        <StackPanel Grid.Column="2" Orientation="Vertical" Margin="5" >
+                            <StackPanel.ToolTip>
+                                <ToolTip>
+                                    <ToolTip.Content>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="Значение толеранса, с которым оцениваются суммы."/>
+                                            <TextBlock Text="Должно находиться в интервале от 0.1% до 10%"/>
+                                        </StackPanel>
+                                    </ToolTip.Content>
+                                </ToolTip>
+                            </StackPanel.ToolTip>
+                            <Label Content="_Толеранс сумм:" Target="{Binding ElementName=tbSumTolerance}"/>
+                            <TextBox x:Name="tbSumTolerance" Grid.Column="0" Text="{Binding Path=SumTolerance,
+                            ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" 
+                                     MinWidth="60"/>
+                        </StackPanel>
+                    </Grid>
                 </AdornerDecorator>
             </TabItem>
             <TabItem Header="Проверка">
                 <AdornerDecorator>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                    <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-                        <StackPanel.ToolTip>
-                            <ToolTip>
-                                <ToolTip.Content>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Значение толеранса, с которым оцениваются суммы."/>
-                                        <TextBlock Text="Должно находиться в интервале от 0.1% до 10%"/>
-                                    </StackPanel>
-                                </ToolTip.Content>
-                            </ToolTip>
-                        </StackPanel.ToolTip>
-                        <Label Content="_Толеранс сумм:" Target="{Binding ElementName=tbSumTolerance}"/>
-                        <TextBox x:Name="tbSumTolerance" Grid.Column="0" Text="{Binding Path=SumTolerance, 
-                            ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" 
-                                     MinWidth="60"/>
-                    </StackPanel>
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.Row="1" 
-                                      Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto">
-                            <StackPanel Orientation="Horizontal" x:Name="spSchemeTolerances"/>
-                        </ScrollViewer>
-                    </Grid>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid x:Name="spSchemeTolerances" Height="450"/>
+                    </ScrollViewer>
                 </AdornerDecorator>
             </TabItem>
         </TabControl>

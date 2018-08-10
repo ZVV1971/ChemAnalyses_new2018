@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -445,45 +446,51 @@ namespace ChemicalAnalyses.Dialogs
         private void CompareCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             decimal tolerance = 1;
+            SchemeResultsTolerance res = SchemeCompareOptionsHelper
+                .GetSchemeCompareOptions()[(dgrdSA.SelectedItem as ISaltAnalysisCalcResults).DefaultCalculationScheme];
             string delimiter = "";
             SaltAnalysisData res1 = dgrdSA.SelectedItems[0] as SaltAnalysisData;
             SaltAnalysisData res2 = dgrdSA.SelectedItems[1] as SaltAnalysisData;
             StringBuilder stringBuilder = new StringBuilder();
-            SchemeResultsTolerance schemeResultsTolerance;
-            try
-            {
-                schemeResultsTolerance = (SchemeResultsTolerance)Properties.Settings
-                    .Default[res1.DefaultCalculationScheme + "_SchemeResultTolerance"];
-            }
-            catch
-            {
-                MessageBox.Show($"Не найдены пользовательские параметры для проверки схемы {res1.DefaultCalculationScheme}",
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+            
             foreach (string prpName in SchemesHelper.GetPropertiesToCheck(res1.DefaultCalculationScheme))
             {
+                if (res.IsUniversalTolerance && res.UniversalTolerance.HasValue) tolerance = res.UniversalTolerance.Value;
+                else
+                {
+                    try { tolerance = res.SchemeTolerances.Where(p => p.Item1 == prpName).FirstOrDefault().Item2.Value; }
+                    catch { tolerance = 0.005M; }
+                }
                 decimal? v1 = (decimal?)res1.GetType().GetProperty(prpName).GetValue(res1);
                 decimal? v2 = (decimal?)res1.GetType().GetProperty(prpName).GetValue(res2);
                 if (v1.HasValue && v2.HasValue)
                 {
-                    if(!(v1.Value == 0 && v2.Value == 0))
+                    //string str = res1.GetType().GetProperty(prpName).GetCustomAttributes(true).ToList().OfType<CustomDescriptionAttribute>().FirstOrDefault().ToString();
+                    if (!(v1.Value == 0 && v2.Value == 0))
                     {
                         if(Math.Abs((v1.Value - v2.Value) / Math.Max(v1.Value, v2.Value)) > tolerance)
                         {
                             stringBuilder.Append(delimiter);
+                            
                             stringBuilder.Append($"Разница значений по параметру {prpName} превышает толеранс.");
-                            delimiter = ";" + string.Empty;
+                            delimiter = ";" + Environment.NewLine;
+                        }
+                        else
+                        {
+                            stringBuilder.Append(delimiter);
+                            stringBuilder.Append($"Параметр {prpName} OK.");
+                            delimiter = ";" + Environment.NewLine;
                         }
                     }
                 }
                 else if (v1.HasValue || v2.HasValue)
                 {
                     stringBuilder.Append(delimiter);
-                    stringBuilder.Append($"Для параметра {prpName} одно из значений пусто.");
-                    delimiter = ";" + string.Empty;
+                    stringBuilder.Append($"Для параметра {prpName} одно из значений NULL.");
+                    delimiter = ";" + Environment.NewLine;
                 }
             }
+            MessageBox.Show(stringBuilder.ToString(), "Результаты сравнения");
         }
     }
 }

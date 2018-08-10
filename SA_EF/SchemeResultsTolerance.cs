@@ -108,10 +108,7 @@ namespace SA_EF
         private string _item1;
         public string Item1
         {
-            get
-            {
-                return _item1;
-            }
+            get { return _item1;}
             set
             {
                 _item1 = value;
@@ -121,8 +118,7 @@ namespace SA_EF
         private decimal? _item2 = 0;
         public decimal? Item2
         {
-            get
-            { return _item2; }
+            get { return _item2; }
             set
             {
                 if (value.HasValue && (value < 0.001M || value > 0.1M))
