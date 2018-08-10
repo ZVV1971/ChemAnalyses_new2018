@@ -9,6 +9,16 @@
     <Window.CommandBindings>
         <CommandBinding Command="Save" Executed="SaveCommand_Executed" CanExecute="SaveCommand_CanExecute"/>
     </Window.CommandBindings>
+    <Window.Resources>
+        <DataTemplate x:Key="tmpCellViewTemplate">
+            <TextBlock Text="{Binding Path=Item2, StringFormat={}{0:0.000 %}}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="tmpCellEditingTemplate">
+            <TextBox Text="{Binding Path=Item2, 
+                    UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:0.000}, ValidatesOnExceptions=True, 
+                    NotifyOnValidationError=True}"/>
+        </DataTemplate>
+    </Window.Resources>
     <Grid x:Name="grdMain">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

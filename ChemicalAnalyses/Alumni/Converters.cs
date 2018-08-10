@@ -149,6 +149,18 @@ namespace ChemicalAnalyses.Alumni
         }
     }
 
+    [ValueConversion(typeof(bool), typeof(bool))]
+    public class BooleanToNegatedBooleanConverter : IValueConverter
+    {
+        public object ConvertBack(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        { return !(bool)value; }
+
+        public object Convert(object value, Type targetType,
+            object parameter, CultureInfo culture)
+        { return !(bool)value; }
+    }
+
     [ValueConversion(typeof(bool), typeof(string))]
     public class BooleanToUserTypeConverter : IValueConverter
     {

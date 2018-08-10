@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
-using System.Configuration;
 
 namespace SA_EF
 {
@@ -36,9 +35,9 @@ namespace SA_EF
                 }
             }
         }
-        private ObservableCollection<KeyValuePair<string, decimal?>> _schemeTolerances;
-        [SettingsSerializeAs(SettingsSerializeAs.Xml)]
-        public ObservableCollection<KeyValuePair<string, decimal?>> SchemeTolerances
+        private ObservableCollection<ParameterValuePair> _schemeTolerances;
+
+        public ObservableCollection<ParameterValuePair> SchemeTolerances
         {
             get { return _schemeTolerances; }
             set
@@ -51,11 +50,11 @@ namespace SA_EF
             }
         }
 
-        public SchemeResultsTolerance(IEnumerable<KeyValuePair<string,decimal?>> collection)
+        public SchemeResultsTolerance(IEnumerable<ParameterValuePair> collection)
         {
             if (collection != null) SchemeTolerances =
-                     new ObservableCollection<KeyValuePair<string, decimal?>>(collection);
-            else SchemeTolerances = new ObservableCollection<KeyValuePair<string, decimal?>>();
+                     new ObservableCollection<ParameterValuePair>(collection);
+            else SchemeTolerances = new ObservableCollection<ParameterValuePair>();
         }
 
         public SchemeResultsTolerance() { }
@@ -75,10 +74,10 @@ namespace SA_EF
                     if (vals.Length % 2 == 0)
                     {
                         decimal d;
-                        SchemeTolerances = new ObservableCollection<KeyValuePair<string, decimal?>>();
+                        SchemeTolerances = new ObservableCollection<ParameterValuePair>();
                         for (int i = 0; i < vals.Length;)
                         {
-                            if (decimal.TryParse(vals[i + 1], out d)) SchemeTolerances.Add(new KeyValuePair<string, decimal?>(vals[i], d));
+                            if (decimal.TryParse(vals[i + 1], out d)) SchemeTolerances.Add(new ParameterValuePair() { Item1=vals[i], Item2=d });
                             i += 2;
                         }
                     }
@@ -95,12 +94,46 @@ namespace SA_EF
             StringBuilder stringBuilder = new StringBuilder();
             string delimiter = string.Empty;
             stringBuilder.Append(IsUniversalTolerance + Environment.NewLine + UniversalTolerance + Environment.NewLine);
-            foreach (KeyValuePair<string, decimal?> kvp in SchemeTolerances)
+            foreach (ParameterValuePair kvp in SchemeTolerances)
             {
-                stringBuilder.Append(delimiter + kvp.Key + ";" + kvp.Value.ToString());
+                stringBuilder.Append(delimiter + kvp.Item1 + ";" + kvp.Item2.ToString());
                 delimiter = ";";
             }
             return stringBuilder.ToString();
         }
+    }
+
+    public class ParameterValuePair: INotifyPropertyChanged
+    {
+        private string _item1;
+        public string Item1
+        {
+            get
+            {
+                return _item1;
+            }
+            set
+            {
+                _item1 = value;
+                OnPropertyChanged(nameof(Item1));
+            }
+        }
+        private decimal? _item2 = 0;
+        public decimal? Item2
+        {
+            get
+            { return _item2; }
+            set
+            {
+                if (value.HasValue && (value < 0.001M || value > 0.1M))
+                    throw new ArgumentOutOfRangeException(nameof(Item2),"Значение должно находиться в пределах 0.1%—10%");
+                _item2 = value;
+                OnPropertyChanged(nameof(Item2));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop)); }
     }
 }

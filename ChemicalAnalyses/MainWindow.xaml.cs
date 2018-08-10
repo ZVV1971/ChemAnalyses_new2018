@@ -218,12 +218,12 @@ namespace ChemicalAnalyses
                     {
                         IsUniversalTolerance = true,
                         UniversalTolerance = 0.005M,
-                        SchemeTolerances = new ObservableCollection<KeyValuePair<string, decimal?>>(
+                        SchemeTolerances = new ObservableCollection<ParameterValuePair>(
                         SchemesHelper.GetPropertiesToCheck(p)
-                        .Select(r => new KeyValuePair<string, decimal?>(r, 0.005M)))
+                        .Select(r => new ParameterValuePair() { Item1 = r, Item2 = 0.005M }))
                     };
                     schemeDict.Add(p, sc);
-                    SettingsProperty property = new SettingsProperty(p.ToName() + "_SchemeToleranceValues");
+                    SettingsProperty property = new SettingsProperty(p.ToString() + "_SchemeToleranceValues");
                     property.DefaultValue = sc.ToString();
                     property.IsReadOnly = false;
                     property.PropertyType = typeof(string);
@@ -270,6 +270,13 @@ namespace ChemicalAnalyses
                 bindtb.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
                 bindtb.ValidatesOnExceptions = true;
                 BindingOperations.SetBinding(tb, TextBox.TextProperty, bindtb);
+
+                Binding tbvisibility = new Binding();
+                tbvisibility.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].IsUniversalTolerance");
+                tbvisibility.NotifyOnSourceUpdated = true;
+                tbvisibility.Converter = new BooleanToNegatedBooleanConverter();
+                tbvisibility.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(tb, TextBox.IsEnabledProperty, tbvisibility);
                 sp1.Children.Add(tb);
 
                 sp.Children.Add(sp1);
@@ -288,16 +295,24 @@ namespace ChemicalAnalyses
                 binddgr.ValidatesOnExceptions = true;
                 BindingOperations.SetBinding(dgr, DataGrid.ItemsSourceProperty, binddgr);
 
+                Binding dgrdvisibility = new Binding();
+                dgrdvisibility.Path = new PropertyPath("SchemesDictionary[" + item.Key + "].IsUniversalTolerance");
+                dgrdvisibility.NotifyOnSourceUpdated = true;
+                dgrdvisibility.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(dgr, DataGrid.IsEnabledProperty, dgrdvisibility);
+
                 DataGridTextColumn textColumn = new DataGridTextColumn() { IsReadOnly = true, Header = "Свойство" };
-                textColumn.Binding = new Binding("Key");
+                textColumn.Binding = new Binding("Item1");
                 dgr.Columns.Add(textColumn);
 
                 TextBlock tbl = new TextBlock() { };
-                Binding bindtbl = new Binding("Value");
+                Binding bindtbl = new Binding("Item2");
                 DataGridTemplateColumn column = new DataGridTemplateColumn()
                 {
                     Header = "Толеранс",
-                    CellTemplate = new DataTemplate() {  }
+                    IsReadOnly = false,
+                    CellTemplate = (DataTemplate)saDlg.Resources["tmpCellViewTemplate"],
+                    CellEditingTemplate = (DataTemplate)saDlg.Resources["tmpCellEditingTemplate"]
                 };
                 dgr.Columns.Add(column);
                 sp.Children.Add(dgr);
