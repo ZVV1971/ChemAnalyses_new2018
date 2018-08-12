@@ -2,6 +2,7 @@
 using System.Reflection;
 using System;
 using SA_EF;
+using SA_EF.Interfaces;
 using ChemicalAnalyses.Alumni;
 
 namespace TestConsole
@@ -10,12 +11,18 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            foreach (var p in Enum.GetValues(typeof(SaltCalculationSchemes))
-                .OfType<SaltCalculationSchemes>().Where(p=> p.GetAttribute<SchemeRealizedAttribute>() != null))
-            {
-                
-                Console.WriteLine(p.ToString());
-            }
+            //foreach (PropertyInfo pi in typeof(ISaltAnalysisCalcResults).GetRuntimeProperties())
+            //{
+            //    CustomDescriptionAttribute customSA = pi.GetCustomAttributes(true).ToList().OfType<CustomDescriptionAttribute>().FirstOrDefault();
+            //    string r = customSA?.Description;
+            //    if (r?.Length > 0)
+            //        Console.WriteLine("{0}  --  {1}", pi.Name, r);
+            //    else;
+            //}
+            CustomDescriptionAttribute ca = (CustomDescriptionAttribute)typeof(ISaltAnalysisCalcResults).GetRuntimeProperty("CaSO4").GetCustomAttribute(typeof(CustomDescriptionAttribute));
+            
+            Console.WriteLine(ca.Description);
+            //?.GetCustomAttribute(true);
         }
     }
 }

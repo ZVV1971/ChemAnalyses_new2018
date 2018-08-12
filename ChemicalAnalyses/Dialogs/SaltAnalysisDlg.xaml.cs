@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.ComponentModel;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -455,6 +456,7 @@ namespace ChemicalAnalyses.Dialogs
             
             foreach (string prpName in SchemesHelper.GetPropertiesToCheck(res1.DefaultCalculationScheme))
             {
+                string desc = string.Empty;
                 if (res.IsUniversalTolerance && res.UniversalTolerance.HasValue) tolerance = res.UniversalTolerance.Value;
                 else
                 {
@@ -465,20 +467,28 @@ namespace ChemicalAnalyses.Dialogs
                 decimal? v2 = (decimal?)res1.GetType().GetProperty(prpName).GetValue(res2);
                 if (v1.HasValue && v2.HasValue)
                 {
-                    //string str = res1.GetType().GetProperty(prpName).GetCustomAttributes(true).ToList().OfType<CustomDescriptionAttribute>().FirstOrDefault().ToString();
+                    try
+                    {
+                        PropertyInfo pi = typeof(ISaltAnalysisCalcResults).GetRuntimeProperty(prpName);
+                        if (pi == null) pi = typeof(ISaltAnalysisDryData).GetRuntimeProperty(prpName);
+                        desc = ((CustomDescriptionAttribute)pi.GetCustomAttribute(typeof(CustomDescriptionAttribute)))
+                            .Description;
+                    }
+                    catch (Exception)
+                    { desc = prpName; }
                     if (!(v1.Value == 0 && v2.Value == 0))
                     {
                         if(Math.Abs((v1.Value - v2.Value) / Math.Max(v1.Value, v2.Value)) > tolerance)
                         {
                             stringBuilder.Append(delimiter);
                             
-                            stringBuilder.Append($"Разница значений по параметру {prpName} превышает толеранс.");
+                            stringBuilder.Append($"Разница значений по параметру {desc} превышает толеранс.");
                             delimiter = ";" + Environment.NewLine;
                         }
                         else
                         {
                             stringBuilder.Append(delimiter);
-                            stringBuilder.Append($"Параметр {prpName} OK.");
+                            stringBuilder.Append($"Параметр {desc} OK.");
                             delimiter = ";" + Environment.NewLine;
                         }
                     }
@@ -486,7 +496,7 @@ namespace ChemicalAnalyses.Dialogs
                 else if (v1.HasValue || v2.HasValue)
                 {
                     stringBuilder.Append(delimiter);
-                    stringBuilder.Append($"Для параметра {prpName} одно из значений NULL.");
+                    stringBuilder.Append($"Для параметра {desc} одно из значений NULL.");
                     delimiter = ";" + Environment.NewLine;
                 }
             }
