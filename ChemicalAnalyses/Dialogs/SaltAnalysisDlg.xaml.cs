@@ -1,21 +1,21 @@
-﻿using System;
-using System.Text;
-using System.ComponentModel;
-using System.Reflection;
+﻿using ChemicalAnalyses.Alumni;
+using SA_EF;
+using SA_EF.Interfaces;
+using SettingsHelper;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Documents;
-using ChemicalAnalyses.Alumni;
 using System.Windows.Data;
-using SettingsHelper;
-using SA_EF;
-using System.Diagnostics;
-using System.Data.Entity;
-using SA_EF.Interfaces;
+using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace ChemicalAnalyses.Dialogs
 {
