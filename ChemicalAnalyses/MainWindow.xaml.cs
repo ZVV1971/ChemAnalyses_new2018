@@ -1,31 +1,32 @@
-﻿using System;
-using System.Configuration;
+﻿using ChemicalAnalyses.Alumni;
+using ChemicalAnalyses.Dialogs;
+using SA_EF;
+using SettingsHelper;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Data;
+using System.Data.Common;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Data;
-using System.Reflection;
-using ChemicalAnalyses.Dialogs;
-using ChemicalAnalyses.Alumni;
-using System.Data;
-using System.Data.SqlClient;
-using System.Data.Common;
-using SettingsHelper;
-using SA_EF;
-using System.Data.Entity.Infrastructure;
+using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace ChemicalAnalyses
 {
     public partial class MainWindow : Window
     {
         private Window wndThis = null;
+        private const int MaxAttempts = 3;
 
         public bool IsAdmin
         {
@@ -44,7 +45,8 @@ namespace ChemicalAnalyses
 
         private bool Authorize(bool relogin = false)
         {
-            while (true)
+            int attemptsCounter = 0;
+            while (attemptsCounter++ < MaxAttempts)
             {
                 UserNamePwdDlg userDlg = new UserNamePwdDlg();
                 if (userDlg.ShowDialog() == true)
@@ -86,6 +88,7 @@ namespace ChemicalAnalyses
                 IsAdmin = ChemicalAnalysesEntities.IsAdmin;
                 return true;
             }
+            return false;
         }
 
         #region HoverToolTip Property
@@ -326,13 +329,8 @@ namespace ChemicalAnalyses
 
                 foreach(KeyValuePair<SaltCalculationSchemes, SchemeResultsTolerance> kvp in schemeDict)
                 {
-                    try
-                    {
-                        Properties.Settings.Default[kvp.Key + "_SchemeToleranceValues"] = kvp.Value.ToString();
-                    }
-                    catch (Exception ex)
-                    {
-                    }
+                    try {Properties.Settings.Default[kvp.Key + "_SchemeToleranceValues"] = kvp.Value.ToString();}
+                    catch (Exception ex){}
                 }
             }
         }

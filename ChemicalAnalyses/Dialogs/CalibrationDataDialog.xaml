@@ -44,13 +44,13 @@
                 <DataGridTemplateColumn Header="Концентрация" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Concentration, StringFormat={}{0:0.000 мг/л}}"/>
+                            <TextBlock Text="{Binding Path=Concentration, StringFormat={}{0:0.0000 мг/л}}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Path=Concentration, UpdateSourceTrigger=PropertyChanged,
-                    StringFormat={}{0:0.000}, ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
+                    StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnValidationError=True}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
