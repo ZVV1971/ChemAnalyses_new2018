@@ -25,15 +25,19 @@ namespace SA_EF
 
         public void Opened(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
         {
-            Debug.WriteLine("Connection Opened.");
             if (connection.State != ConnectionState.Open) return;
+#if DEBUG
+            Debug.WriteLine("Connection Opened.");
+#endif
             ActivateApplicationRole(connection, _appRole, _password);
         }
 
         public void Closing(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
         {
-            Debug.WriteLine("Connection Closing.");
             if (connection.State != ConnectionState.Open) return;
+#if DEBUG
+            Debug.WriteLine("Connection Closing.");
+#endif
             DeActivateApplicationRole(connection, _cookie);
         }
 

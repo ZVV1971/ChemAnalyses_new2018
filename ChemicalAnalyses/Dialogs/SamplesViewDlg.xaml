@@ -52,10 +52,10 @@
                    HorizontalAlignment="Center" TextWrapping="Wrap" ToolTip="Образцы в списке отобраны в соответствии с указанными параметрами&#x0a;Для сброса перейдите в контекстное меню">
             <TextBlock.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Clear filter" Click="ClearFilterMenuItem_Click" 
+                    <MenuItem Header="Сбросить фильтр" Click="ClearFilterMenuItem_Click" 
                               IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor},
                         Path=PlacementTarget.Text, Converter={StaticResource str2bool}, NotifyOnSourceUpdated=True}" 
-                              ToolTip="Устанавливает фильтр по-умолчанию: интервал дат 1 — год с текущего момента&#x0a;Фильтрация по номеру образца отсутствует"/>
+                              ToolTip="Устанавливает фильтр по-умолчанию: интервал дат 1 — год с текущего момента&#x0a;без фильтрации по номеру образца"/>
                 </ContextMenu>
             </TextBlock.ContextMenu>
         </TextBlock>

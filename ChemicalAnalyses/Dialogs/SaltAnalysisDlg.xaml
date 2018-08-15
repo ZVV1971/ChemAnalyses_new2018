@@ -19,6 +19,9 @@
         <alumni:SchemeToSchemeDescriptionConverter x:Key="sch2descConv"/>
         <alumni:SchemeToSchemeDescriptionKVPairConverter x:Key="sch2descKVPairConv"/>
         <alumni:BooleanToVisibilityConverter x:Key="bln2VisibilityConv"/>
+        <Style TargetType="{x:Type ToolTip}">
+            <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
+        </Style>
     </Window.Resources>
     <Grid x:Name="grdMain">
         <Grid.RowDefinitions>
@@ -460,7 +463,8 @@
                                 </RoutedUICommand.InputGestures>
                             </RoutedUICommand>
                         </ContextMenu.Resources>
-                        <MenuItem Header="Рассчитать результаты" Command="commands:CustomCommands.Calculate"/>
+                        <MenuItem Header="Рассчитать результаты" Command="commands:CustomCommands.Calculate" 
+                                  ToolTip="Производит расчет по схеме, выбранной из выпадающего списка"/>
                         <MenuItem Header="Удалить выбранные" Command="Delete"/>
                         <MenuItem Command="{StaticResource cmdCompare}">
                             <MenuItem.ToolTip>

@@ -75,6 +75,15 @@ namespace ChemicalAnalyses
                 }
                 catch (Exception ex)
                 {
+                    if (ex.InnerException?.GetType() == typeof(SqlException) 
+                        && ((string)(ex.InnerException?.Data["HelpLink.EvtID"])).Equals("53"))
+                    {
+                        MessageBoxResult res = MessageBox.Show("Невозможно подключиться к серверу БД!",
+                            "Ошибка!!!", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        CALogger.WriteToLogFile("Невозможно подключиться к серверу БД!" + Environment.NewLine
+                            + ex.InnerException?.Message);
+                        return false;
+                    }
                     CALogger.WriteToLogFile("Не найдена БД" + ex.Message);
                 }
                 if (!ChemicalAnalysesEntities.AreUserNameAndPwdSet)
