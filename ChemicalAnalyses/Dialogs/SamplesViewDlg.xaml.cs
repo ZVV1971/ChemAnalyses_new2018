@@ -75,13 +75,14 @@ namespace ChemicalAnalyses.Dialogs
                             if (fFields.LabNumber.Contains(';'))
                             {//a list of samples semicolon-separated
                                 lnArray = Regex.Split(fFields.LabNumber, ";");
-                                context.Samples.Join(
-                                    inner: lnArray.ToList(),
+                                // JOIN Samples with a list of filtering labnumbers on Sample.Labnumber
+                                // after WHERE clause enforced
+                                context.Samples.Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
+                                    .Join(inner: lnArray.ToList(),
                                     outerKeySelector: e => e.LabNumber,
                                     innerKeySelector: o => o.Trim(),
                                     resultSelector: (e, o) => e)
                                  .ToList().ForEach(d => SamplesCollection.Add(d));
-
                             }
                             else context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber))
                                     .Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
@@ -207,7 +208,10 @@ namespace ChemicalAnalyses.Dialogs
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Ошибка при добавлении записи", MessageBoxButton.OK);
+                    if (ex.InnerException?.InnerException?.Data["HelpLink.EvtID"] != null
+                        && (string)ex.InnerException?.InnerException?.Data["HelpLink.EvtID"] == "2601")
+                        MessageBox.Show("Лабораторный номер должен быть уникален в пределах календарного года!", "Ошибка!", MessageBoxButton.OK);
+                    else MessageBox.Show(ex.Message, "Ошибка при добавлении записи", MessageBoxButton.OK);
                 }
             }
         }
