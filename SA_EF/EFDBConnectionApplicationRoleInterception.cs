@@ -124,11 +124,15 @@ namespace SA_EF
 
         public void ConnectionStringGetting(DbConnection connection,
             DbConnectionInterceptionContext<string> interceptionContext)
-        { }
+        {
+            ;
+        }
 
         public void ConnectionStringGot(DbConnection connection,
             DbConnectionInterceptionContext<string> interceptionContext)
-        { }
+        {
+            ;
+        }
 
         public void ConnectionStringSet(DbConnection connection,
             DbConnectionPropertyInterceptionContext<string> interceptionContext)
