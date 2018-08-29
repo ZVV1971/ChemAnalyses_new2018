@@ -65,7 +65,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private void EditCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = cbLCSelection.SelectedItem != null;
+            e.CanExecute = cbLCSelection?.SelectedItem != null;
         }
 
         private void EditCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -107,7 +107,6 @@ namespace ChemicalAnalyses.Dialogs
                         context.Database.CurrentTransaction.Commit();
                         CALogger.WriteToLogFile(string.Format("Изменена калибровка ID{0};{1} - {2}",
                         lc.CalibrationID, lc.Description, lc.CalibrationType.ToString()));
-                        FillData();
                     }
                     catch (Exception ex)
                     {
@@ -116,6 +115,7 @@ namespace ChemicalAnalyses.Dialogs
                     }
                 }
             }
+            FillData();
         }
 
         private void ViewCommand_CanExecute (object sender, CanExecuteRoutedEventArgs e)
@@ -175,7 +175,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private void SetDefaultCommand_CanExecute (object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = cbLCSelection.SelectedItem != null;
+            e.CanExecute = cbLCSelection?.SelectedItem != null;
         }
 
         private void SetDefaultCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -194,13 +194,21 @@ namespace ChemicalAnalyses.Dialogs
         {
             using (var context = new ChemicalAnalysesEntities())
             {
-                if (cbLCSelection.SelectedItem != null)
+                try
                 {
-                    e.CanExecute = context.LineaCalibrations
-                        .Find((cbLCSelection.SelectedItem as LinearCalibration).CalibrationID)?
-                        .SaltAnalysis.Count == 0;
+                    if (cbLCSelection?.SelectedItem != null)
+                    {
+                        e.CanExecute = context.LineaCalibrations
+                            .Find((cbLCSelection.SelectedItem as LinearCalibration).CalibrationID)?
+                            .SaltAnalysis.Count == 0;
+                    }
+                    else e.CanExecute = false;
                 }
-                else e.CanExecute = false;
+                catch
+                {
+                    DialogResult = false;
+                    this.Close();
+                }
             }
             btnDelete.ToolTip = (e.CanExecute) ? "Удалить выбранную калибровку" 
                 : "Удаление калибровки невозможно." + Environment.NewLine + "Присутствуют связанные данные.";
