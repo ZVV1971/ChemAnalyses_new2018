@@ -175,22 +175,26 @@ namespace ChemicalAnalyses
             }
             dlg.btnSetDefault.Content = "Установить по умолчанию";
             dlg.btnSetDefault.ToolTip = "Установить выбранную калибровку по умолчанию для всех новых анализов";
-            if (dlg.ShowDialog() == true)
+            try
             {
-                switch ((string)(e?.Parameter))
+                if (dlg.ShowDialog() == true)
                 {
-                    case "Kalium":
-                        Properties.Settings.Default.KaliumCalibrationNumber = dlg.CalibrationNumber;
-                        CALogger.WriteToLogFile("Properties.Settings.Default.KaliumCalibrationNumber set to: " + dlg.CalibrationNumber);
-                        break;
-                    case "Natrium":
-                        Properties.Settings.Default.NatriumCalibrationNumber = dlg.CalibrationNumber;
-                        CALogger.WriteToLogFile("Properties.Settings.Default.NatriumCalibrationNumber set to: " + dlg.CalibrationNumber);
-                        break;
-                    default:
-                        break;
+                    switch ((string)(e?.Parameter))
+                    {
+                        case "Kalium":
+                            Properties.Settings.Default.KaliumCalibrationNumber = dlg.CalibrationNumber;
+                            CALogger.WriteToLogFile("Properties.Settings.Default.KaliumCalibrationNumber set to: " + dlg.CalibrationNumber);
+                            break;
+                        case "Natrium":
+                            Properties.Settings.Default.NatriumCalibrationNumber = dlg.CalibrationNumber;
+                            CALogger.WriteToLogFile("Properties.Settings.Default.NatriumCalibrationNumber set to: " + dlg.CalibrationNumber);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+            catch (Exception ex) { }
         }
 
         private void SAOptionsMenuItem_Click (object sender, RoutedEventArgs e)
