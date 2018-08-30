@@ -91,6 +91,11 @@
     </Compile>
     <Compile Include="LinearCalibrationExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="SaltAnalysisCalcExt.cs" />
     <Compile Include="SaltAnalysisData.cs">
       <DependentUpon>SAModel.tt</DependentUpon>
@@ -117,6 +122,7 @@
     <Compile Include="SampleExt.cs" />
     <Compile Include="SchemeResultsTolerance.cs" />
     <Compile Include="SchemesHelper.cs" />
+    <Compile Include="X509EncDec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -125,6 +131,10 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>SAModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="SAModel.edmx.diagram">
       <DependentUpon>SAModel.edmx</DependentUpon>
     </None>

@@ -1,4 +1,7 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Data.Entity;
+using System.Configuration;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Infrastructure.Interception;
 
@@ -15,10 +18,10 @@ namespace SA_EF
         public static bool AreUserNameAndPwdSet { get {return _areUserNameAndPwdSet; } }
         private static bool _isAdmin = false;
         public static bool IsAdmin { get { return _isAdmin; } }
-        public static string connectionString { get; set; } = "name=CAEntities";
+        public static string connectionString { private get; set; } = "name=CAEntities";
         private static DbConnectionApplicationRoleInterceptor dbConnInterceptor;
 
-        public ChemicalAnalysesEntities(bool relogin = false) :base(connectionString)
+        public ChemicalAnalysesEntities(bool relogin = false) :base(ConnectionStringRebuilder(connectionString))
         {
             if (relogin || !_areUserNameAndPwdSet)
             {
@@ -38,11 +41,42 @@ namespace SA_EF
             }
         }
 
+        protected static string ConnectionStringRebuilder(string connectionString)
+        {
+            string connstr = "";
+            string certName = "";
+            string pattern = @"(.+data source=)(\S+==)(.+user id=)(\S+[^;])(;password=)(\S+==)(.+)";
+            Regex regex = new Regex(pattern);
+            try
+            {
+                connstr = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).
+                    ConnectionStrings.ConnectionStrings["CAEntities"].ToString();
+                certName = Properties.Settings.Default.CertificateName;
+            }
+            catch (Exception ex)
+            { }
+            MatchCollection match = regex.Matches(connstr);
+            if (match.Count == 1 || match[0].Groups.Count == 6)
+            {
+                X509EncDec cert = new X509EncDec(certName);
+                string substitution = @"$1 " + cert.DecryptRsa(match[0].Groups[2].Value) 
+                    + "$3" + cert.DecryptRsa(match[0].Groups[4].Value) + "$5" 
+                    + cert.DecryptRsa(match[0].Groups[6].Value) + "$7";
+                return regex.Replace(connstr, substitution);
+            }
+            return connectionString;
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();
         }
-   
+
+        private static void Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
+        {
+            ;
+        }
+
         public virtual DbSet<LinearCalibration> LineaCalibrations { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
         public virtual DbSet<SaltAnalysisData> SaltAnalysisDatas { get; set; }
