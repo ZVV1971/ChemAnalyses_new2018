@@ -71,12 +71,7 @@ namespace SA_EF
         {
             throw new UnintentionalCodeFirstException();
         }
-
-        private static void Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
-        {
-            ;
-        }
-
+        
         public virtual DbSet<LinearCalibration> LineaCalibrations { get; set; }
         public virtual DbSet<DataPoint> DataPoints { get; set; }
         public virtual DbSet<SaltAnalysisData> SaltAnalysisDatas { get; set; }

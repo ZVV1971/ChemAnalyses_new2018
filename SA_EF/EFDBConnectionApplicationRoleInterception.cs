@@ -68,9 +68,9 @@ namespace SA_EF
                     {Direction = ParameterDirection.InputOutput};
 
                     cmd.Parameters.Add(cookie);
-
+#if DEBUG
                     Debug.WriteLine("ExecutingNonQuery to Set Application Role");
-
+#endif
                     try { cmd.ExecuteNonQuery(); }
                     catch (Exception ex) { }
 
