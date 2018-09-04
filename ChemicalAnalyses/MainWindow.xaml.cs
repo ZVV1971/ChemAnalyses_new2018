@@ -121,19 +121,7 @@ namespace ChemicalAnalyses
 
         #region Commands
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {//extract the path to the DB from the newly created Connection string
-            //string pattern = @"(?:.+attachdbfilename=)([^;]+)";
-            //Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
-            //MatchCollection match = regex.Matches(ChemicalAnalysesEntities.connectionString);
-            //try
-            //{
-            //    if (match.Count == 1 || match[0].Groups.Count == 2)
-            //    {
-            //        //and save it to the user local properties
-            //        Properties.Settings.Default.DBFilePath = match[0].Groups[1].Value;
-            //    }
-            //}
-            //catch { }
+        {
             Properties.Settings.Default.Save();
             CALogger.WriteToLogFile("Закрытие программы");
             Application.Current.Shutdown();
