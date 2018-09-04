@@ -379,6 +379,8 @@ namespace SA_EF
                   (dryData.CaDry * _Eq_Ca + MgDry * _Eq_Mg);
             }
             catch { }
+
+            if (Coeff1 >= 1) return SaltCalculationSchemes.Carbonate;
             try
             {
                 Coeff2 = (dryData.CarbonatesDry * _Eq_CO3 + dryData.HydrocarbonatesDry * _Eq_HCO3 
@@ -390,7 +392,7 @@ namespace SA_EF
             try { Coeff4 = (dryData.CarbonatesDry * _Eq_CO3 + dryData.HydrocarbonatesDry * _Eq_HCO3) 
                     / (dryData.CaDry * _Eq_Ca); }
             catch { }
-            if (Coeff1 >= 1) return SaltCalculationSchemes.Carbonate;
+            
             if (Coeff2 >= 1)
             {
                 if (Coeff4 < 1) return SaltCalculationSchemes.SulfateSodiumI;

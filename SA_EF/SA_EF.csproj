@@ -154,6 +154,12 @@
       <LastGenOutput>SAModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SettingsHelper\SettingsHelper.csproj">
+      <Project>{8cb22be2-951b-406a-b4b7-233d328a0299}</Project>
+      <Name>SettingsHelper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

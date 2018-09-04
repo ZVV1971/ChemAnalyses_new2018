@@ -387,7 +387,6 @@ namespace ChemicalAnalyses
             }
         }
 
-        private void Relogin_Click(object sender, ExecutedRoutedEventArgs e)
-        { Authorize(true); }
+        private void Relogin_Click(object sender, ExecutedRoutedEventArgs e) => Authorize(true);
     }
 }
