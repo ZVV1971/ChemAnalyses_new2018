@@ -6,7 +6,7 @@
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
-        Title="Химический анализ" Height="250" Width="425"
+        Title="{Binding WindowTitle}" Height="250" Width="425"
         PreviewMouseMove="Window_PreviewMouseMove"
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>

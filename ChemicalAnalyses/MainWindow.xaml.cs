@@ -37,10 +37,13 @@ namespace ChemicalAnalyses
         public static readonly DependencyProperty IsAdminProperty =
             DependencyProperty.Register("IsAdmin", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
 
+        public string WindowTitle { get; } = "Расчет химсостава образцов";
+
         public MainWindow()
         {    
             InitializeComponent();
             wndThis = this;
+            DataContext = this;
         }
 
         private bool Authorize(bool relogin = false)
@@ -56,11 +59,15 @@ namespace ChemicalAnalyses
                 }
                 else
                 {
-                    MessageBoxResult res = MessageBox.Show("Неверные логин или пароль!" + Environment.NewLine
-                        + "Продолжить?", "Ошибка!!!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation,
-                        MessageBoxResult.Yes);
-                    if (res == MessageBoxResult.No) return false;
-                    continue;
+                    if (attemptsCounter < MaxAttempts)
+                    {
+                        MessageBoxResult res = MessageBox.Show("Неверные логин или пароль!" + Environment.NewLine
+                            + "Продолжить?", "Ошибка!!!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation,
+                            MessageBoxResult.Yes);
+                        if (res == MessageBoxResult.No) return false;
+                        continue;
+                    }
+                    return false;
                 }
                 try
                 {
@@ -82,11 +89,15 @@ namespace ChemicalAnalyses
                 }
                 if (!ChemicalAnalysesEntities.AreUserNameAndPwdSet)
                 {
-                    MessageBoxResult res = MessageBox.Show("Неверные логин или пароль!" + Environment.NewLine
+                    if (attemptsCounter < MaxAttempts)
+                    {
+                        MessageBoxResult res = MessageBox.Show("Неверные логин или пароль!" + Environment.NewLine
                         + "Продолжить?", "Ошибка!!!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation,
                         MessageBoxResult.Yes);
-                    if (res == MessageBoxResult.No) return false;
-                    continue;
+                        if (res == MessageBoxResult.No) return false;
+                        continue;
+                    }
+                    return false;
                 }
                 IsAdmin = ChemicalAnalysesEntities.IsAdmin;
                 return true;
