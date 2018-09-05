@@ -5,6 +5,7 @@ using SA_EF.Interfaces;
 using ChemicalAnalyses.Alumni;
 using Moq;
 using System.Collections.Generic;
+using PrintHelper;
 
 namespace SATest
 {

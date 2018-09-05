@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ChemicalAnalyses</RootNamespace>
     <AssemblyName>ChemicalAnalyses</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -119,10 +119,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Alumni\SchemesPrintingGrid.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\CalibrationDataDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -176,9 +172,6 @@
     <Compile Include="Alumni\EnumExtensions.cs" />
     <Compile Include="Alumni\IEnumerableExtensions.cs" />
     <Compile Include="Alumni\SchemeCompareOptionsHelper.cs" />
-    <Compile Include="Alumni\SchemesPrintingGrid.xaml.cs">
-      <DependentUpon>SchemesPrintingGrid.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Alumni\Converters.cs" />
     <Compile Include="Alumni\SampleFilterFields.cs" />
     <Compile Include="Alumni\Validations.cs" />
@@ -271,6 +264,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PrintHelper\PrintHelper.csproj">
+      <Project>{0876ec55-deb8-4d90-ab1e-627111f88440}</Project>
+      <Name>PrintHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SA_EF\SA_EF.csproj">
       <Project>{937c4b50-47c0-471c-8d18-a404fb283877}</Project>
       <Name>SA_EF</Name>
@@ -286,7 +283,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_StartDate="2000/1/1" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UseGlobalSettings="True" />
+      <UserProperties BuildVersion_UseGlobalSettings="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_AssemblyInfoFilename="Properties\AssemblyInfo.cs" BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

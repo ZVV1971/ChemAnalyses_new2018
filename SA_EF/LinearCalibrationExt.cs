@@ -128,6 +128,8 @@ namespace SA_EF
                 decimal _sumValues = 0;
                 decimal _sumSquares = 0;
                 decimal _sumProducts = 0;
+                decimal d = 0;
+                decimal valueMean = LinearCalibrationData[i].Average(x => x.Value);
 
                 foreach (DataPoint t in LinearCalibrationData[i])
                 {
@@ -135,6 +137,7 @@ namespace SA_EF
                     _sumValues += t.Value;
                     _sumSquares += t.Concentration * t.Concentration;
                     _sumProducts += t.Concentration * t.Value;
+                    d += (decimal)Math.Pow((double)(t.Value - valueMean), 2.0);
                 }
                 decimal delta = _sumSquares * Count - _sumConcentration * _sumConcentration;
                 if (delta == 0)
@@ -148,8 +151,6 @@ namespace SA_EF
                     Slope[i] = (_sumProducts * Count - _sumConcentration * _sumValues) / delta;
                     Intercept[i] = (_sumValues * _sumSquares - _sumProducts * _sumConcentration) / delta;
 
-                    decimal valueMean = LinearCalibrationData[i].Average(x => x.Value);
-                    decimal d = LinearCalibrationData[i].Sum(p => (decimal)Math.Pow((double)(p.Value - valueMean), 2.0));
                     if (d == 0) RSquared[i] = 0;
                     else RSquared[i] = 1 - LinearCalibrationData[i].Sum(p => (decimal)Math.Pow((double)(p.Value -
                         (Slope[i] * p.Concentration + Intercept[i])), 2.0)) / d;

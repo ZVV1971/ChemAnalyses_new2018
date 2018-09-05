@@ -76,12 +76,13 @@ namespace ChemicalAnalyses.Dialogs
                             {//a list of samples semicolon-separated
                                 lnArray = Regex.Split(fFields.LabNumber, ";");
                                 // JOIN Samples with a list of filtering labnumbers on Sample.Labnumber
-                                // after WHERE clause enforced
-                                context.Samples.Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
+                                // and then apply WHERE clause 
+                                context.Samples
                                     .Join(inner: lnArray.ToList(),
                                     outerKeySelector: e => e.LabNumber,
                                     innerKeySelector: o => o.Trim(),
                                     resultSelector: (e, o) => e)
+                                    .Where(p => p.SamplingDate <= fFields.EndDate && p.SamplingDate >= fFields.StartDate)
                                  .ToList().ForEach(d => SamplesCollection.Add(d));
                             }
                             else context.Samples.Where(p => p.LabNumber.Equals(fFields.LabNumber))
