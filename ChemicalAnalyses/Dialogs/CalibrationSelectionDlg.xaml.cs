@@ -103,7 +103,7 @@ namespace ChemicalAnalyses.Dialogs
                     context.SaveChanges();
                     context.Database.CurrentTransaction.Commit();
                     CALogger.WriteToLogFile(string.Format("Изменена калибровка ID{0};{1} - {2}",
-                    lc.CalibrationID, lc.Description, lc.CalibrationType.ToString()));
+                    lc.CalibrationID, lc.Description, lc.CalibrationType));
                 }
                 catch (Exception ex)
                 {
