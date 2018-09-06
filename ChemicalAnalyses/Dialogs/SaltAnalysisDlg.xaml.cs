@@ -17,10 +17,12 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using PrintHelper;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
 
 namespace ChemicalAnalyses.Dialogs
 {
-    public partial class SaltAnalysisDlg : Window
+    public partial class SaltAnalysisDlg : System.Windows.Window
     {
         private int _validationErrorCount = 0;
         private int _validationRowErrorCount = 0;
@@ -285,6 +287,11 @@ namespace ChemicalAnalyses.Dialogs
                 Title = @"Предварительный просмотр результатов расчета"
             };
 
+            ContextMenu contextMenu = new ContextMenu();
+            System.Windows.Controls.MenuItem menuItem 
+                = new System.Windows.Controls.MenuItem() { Header = "Сохранить как…" };
+            menuItem.Click += new RoutedEventHandler(_setWorkbook);
+
             List<SchemesPrintingGrid> pGrids = new List<SchemesPrintingGrid>();
             IEnumerable<ISaltAnalysisCalcResults> res = dgrdSA.SelectedItems.Cast<ISaltAnalysisCalcResults>();
             foreach (SaltCalculationSchemes schem in Enum.GetValues(typeof(SaltCalculationSchemes))
@@ -295,22 +302,24 @@ namespace ChemicalAnalyses.Dialogs
                 {
                     if (tmp.Count() <= 30)
                     {
-                        pGrids.Add(new SchemesPrintingGrid(tmp)
+                        SchemesPrintingGrid p = new SchemesPrintingGrid(tmp)
                         {
                             Name = "pg" + schem.ToString(),
                             ResultsType = schem
-                        });//of Add
+                        };
+                        pGrids.Add(p);
                     }
                     else
                     {
                         int j = 0;
                         foreach(var item in tmp.Chunk(30))
                         {
-                            pGrids.Add(new SchemesPrintingGrid(item)
+                            SchemesPrintingGrid p = new SchemesPrintingGrid(item)
                             {
                                 Name = "pg" + j++ + schem.ToString(),
-                                ResultsType=schem
-                            });
+                                ResultsType = schem
+                            };
+                            pGrids.Add(p);
                         }
                     }
                 }
@@ -318,7 +327,8 @@ namespace ChemicalAnalyses.Dialogs
            
             foreach (SchemesPrintingGrid pgrd in pGrids)
             {
-                TextBox tbTitle = new TextBox()
+                System.Windows.Controls.TextBox tbTitle 
+                    = new System.Windows.Controls.TextBox()
                 {
                     Text = string.Format( "Химический состав, % (схема: {0})", pgrd.ResultsType.ToName()),
                     FontSize = 24,
@@ -348,23 +358,66 @@ namespace ChemicalAnalyses.Dialogs
 
             StackPanel spHygro = new StackPanel() { Orientation = Orientation.Horizontal };
             sAPrintPreview.grdOptions.Children.Add(spHygro);
+           
+            contextMenu.Items.Add(menuItem);
+            sAPrintPreview.fdSA.ContextMenu = contextMenu;
 
             Grid.SetColumn(spHygro, 0);
             Grid.SetColumnSpan(spHygro, 2);
-            Label lbHygro = new Label() { Content = "Выводить гигроскопическую влагу для всех образцов? " };
+            System.Windows.Controls.Label lbHygro = 
+                new System.Windows.Controls.Label() { Content = "Выводить гигроскопическую влагу для всех образцов? " };
             spHygro.Children.Add(lbHygro);
-            CheckBox cbHygro = new CheckBox();
+            System.Windows.Controls.CheckBox cbHygro = new System.Windows.Controls.CheckBox();
             Binding bdHygro = new Binding("ShowHygroscopicWaterForAll") {
                 Source = pGrids.Where(p=>p.ResultsType == SaltCalculationSchemes.Chloride).FirstOrDefault()};
-            cbHygro.SetBinding(CheckBox.IsCheckedProperty, bdHygro);
+            cbHygro.SetBinding(System.Windows.Controls.CheckBox.IsCheckedProperty, bdHygro);
             spHygro.Children.Add(cbHygro);
 
-            sAPrintPreview.ShowDialog();
+                sAPrintPreview.ShowDialog();
+        }
+
+        private void _setWorkbook(object sender, EventArgs e)
+        {
+            _Application exApp = null;
+            Workbook wb = null;
+            try
+            {
+                exApp = new Microsoft.Office.Interop.Excel.Application();
+                exApp.Visible = true;
+                wb = exApp.Workbooks.Add();
+                //IEnumerable<ISaltAnalysisCalcResults> res = dgrdSA.SelectedItems.Cast<ISaltAnalysisCalcResults>();
+                //foreach (SaltCalculationSchemes schem in Enum.GetValues(typeof(SaltCalculationSchemes))
+                //    .Cast<SaltCalculationSchemes>())
+                //{
+                //    var tmp = res.Where(p => p.DefaultCalculationScheme == schem);
+                //    if (tmp.Count() > 0)
+                //    {
+                //        SchemesPrintingGrid spgrd = new SchemesPrintingGrid(tmp);
+                //        Worksheet ws = wb.Worksheets.Add();
+                //        ws.Name = schem.ToName();
+                //    }
+                //}
+                SaveFileDialog saveDialog = new SaveFileDialog();
+                saveDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+                saveDialog.FilterIndex = 1;
+
+                if (saveDialog.ShowDialog() == true)
+                {
+                    wb.SaveAs(saveDialog.FileName);
+                    MessageBox.Show("Export Successful");
+                }
+            }
+            catch { }
+            finally
+            {
+                exApp?.Quit();
+            }
         }
 
         private void dgrdSA_LoadingRow(object sender, DataGridRowEventArgs e)
         {
-            e.Row.AddHandler(Validation.ErrorEvent, new RoutedEventHandler(OnRowErrorEvent));
+            e.Row.AddHandler(System.Windows.Controls.Validation.ErrorEvent,
+                new RoutedEventHandler(OnRowErrorEvent));
         }
 
         private void PrintCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
