@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
 using SA_EF;
 using SA_EF.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace PrintHelper
 {
@@ -61,5 +63,47 @@ namespace PrintHelper
            DependencyProperty.Register("ResultsType",
                 typeof(SaltCalculationSchemes), typeof(SchemesPrintingGrid),
                 new FrameworkPropertyMetadata(SaltCalculationSchemes.Chloride));
+
+        public void ExportToExcel (ref Workbook workbook)
+        {
+            if (workbook != null)
+            {
+                try
+                {
+                    Worksheet ws = workbook.Worksheets.Add();
+                    ws.Name = Name;
+                    int i = 1;
+                    foreach (DataGridColumn clmn in dgrdMain.Columns)
+                    {
+                        if (clmn.Visibility == Visibility.Visible)
+                        {
+                            if (clmn.Header.GetType().Equals(typeof(TextBlock)))
+                                ws.Cells[1, i] = ((TextBlock)clmn.Header).Text;
+                            else if (clmn.Header.GetType().Equals(typeof(StackPanel)))
+                            {
+                                string s="";
+                                foreach (TextBlock tb in ((StackPanel)clmn.Header).Children)
+                                    s += tb.Text+Environment.NewLine;
+                                ws.Cells[1, i] = s;
+                            }
+
+                            Binding bnd = null;
+                            if (clmn.GetType().Equals(typeof(DataGridTextColumn)))
+                                bnd = (Binding)(((DataGridTextColumn)clmn).Binding);
+                                                        
+                            int j = 2;
+                            foreach (ISaltAnalysisCalcResults dr in dgrdMain.ItemsSource)
+                            {
+                                if (bnd != null)
+                                    ws.Cells[j++, i] = dr.GetType().GetProperty(bnd?.Path.Path.ToString()).GetValue(dr);
+                                else ws.Cells[j++, i] = "—"; //Templated column
+                            }
+                            i++;
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
     }
 }

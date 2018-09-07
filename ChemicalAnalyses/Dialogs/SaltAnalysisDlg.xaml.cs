@@ -30,6 +30,7 @@ namespace ChemicalAnalyses.Dialogs
         public string TypeOfWork { get; set; }
         public List<Sample> Labnumbers { get; set; }
         private bool _all_selected = false;
+        private List<SchemesPrintingGrid> pGrids;
 
         public static ObservableCollection<KeyValuePair<SaltCalculationSchemes, string>> SchemesNames { get; set; }
       
@@ -292,7 +293,7 @@ namespace ChemicalAnalyses.Dialogs
                 = new System.Windows.Controls.MenuItem() { Header = "Сохранить как…" };
             menuItem.Click += new RoutedEventHandler(_setWorkbook);
 
-            List<SchemesPrintingGrid> pGrids = new List<SchemesPrintingGrid>();
+            pGrids = new List<SchemesPrintingGrid>();
             IEnumerable<ISaltAnalysisCalcResults> res = dgrdSA.SelectedItems.Cast<ISaltAnalysisCalcResults>();
             foreach (SaltCalculationSchemes schem in Enum.GetValues(typeof(SaltCalculationSchemes))
                 .Cast<SaltCalculationSchemes>())
@@ -385,24 +386,17 @@ namespace ChemicalAnalyses.Dialogs
                 exApp = new Microsoft.Office.Interop.Excel.Application();
                 exApp.Visible = true;
                 wb = exApp.Workbooks.Add();
-                //IEnumerable<ISaltAnalysisCalcResults> res = dgrdSA.SelectedItems.Cast<ISaltAnalysisCalcResults>();
-                //foreach (SaltCalculationSchemes schem in Enum.GetValues(typeof(SaltCalculationSchemes))
-                //    .Cast<SaltCalculationSchemes>())
-                //{
-                //    var tmp = res.Where(p => p.DefaultCalculationScheme == schem);
-                //    if (tmp.Count() > 0)
-                //    {
-                //        SchemesPrintingGrid spgrd = new SchemesPrintingGrid(tmp);
-                //        Worksheet ws = wb.Worksheets.Add();
-                //        ws.Name = schem.ToName();
-                //    }
-                //}
+                
                 SaveFileDialog saveDialog = new SaveFileDialog();
                 saveDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
                 saveDialog.FilterIndex = 1;
 
                 if (saveDialog.ShowDialog() == true)
                 {
+                    foreach (SchemesPrintingGrid p in pGrids)
+                    {
+                        p.ExportToExcel(ref wb);
+                    }
                     wb.SaveAs(saveDialog.FileName);
                     MessageBox.Show("Export Successful");
                 }
