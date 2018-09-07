@@ -384,7 +384,6 @@ namespace ChemicalAnalyses.Dialogs
             try
             {
                 exApp = new Microsoft.Office.Interop.Excel.Application();
-                exApp.Visible = true;
                 wb = exApp.Workbooks.Add();
                 
                 SaveFileDialog saveDialog = new SaveFileDialog();
@@ -393,17 +392,15 @@ namespace ChemicalAnalyses.Dialogs
 
                 if (saveDialog.ShowDialog() == true)
                 {
-                    foreach (SchemesPrintingGrid p in pGrids)
-                    {
-                        p.ExportToExcel(ref wb);
-                    }
+                    foreach (SchemesPrintingGrid p in pGrids) p.ExportToExcel(ref wb);
                     wb.SaveAs(saveDialog.FileName);
-                    MessageBox.Show("Export Successful");
+                    MessageBox.Show(string.Format($"Эскпорт в файл {0} осуществлен", saveDialog.FileName),"Экспорт");
                 }
             }
             catch { }
             finally
             {
+                wb?.Close(XlSaveAction.xlSaveChanges);
                 exApp?.Quit();
             }
         }
@@ -497,7 +494,7 @@ namespace ChemicalAnalyses.Dialogs
             decimal tolerance = 1;
             SchemeResultsTolerance res = SchemeCompareOptionsHelper
                 .GetSchemeCompareOptions()[(dgrdSA.SelectedItem as ISaltAnalysisCalcResults).DefaultCalculationScheme];
-            string delimiter = "";
+            string delimiter = string.Empty;
             SaltAnalysisData res1 = dgrdSA.SelectedItems[0] as SaltAnalysisData;
             SaltAnalysisData res2 = dgrdSA.SelectedItems[1] as SaltAnalysisData;
             StringBuilder stringBuilder = new StringBuilder();
@@ -522,14 +519,13 @@ namespace ChemicalAnalyses.Dialogs
                         desc = ((CustomDescriptionAttribute)pi.GetCustomAttribute(typeof(CustomDescriptionAttribute)))
                             .Description;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     { desc = prpName; }
                     if (!(v1.Value == 0 && v2.Value == 0))
                     {
                         if(Math.Abs((v1.Value - v2.Value) / Math.Max(v1.Value, v2.Value)) > tolerance)
                         {
-                            stringBuilder.Append(delimiter);
-                            
+                            stringBuilder.Append(delimiter); 
                             stringBuilder.Append($"Разница значений по параметру {desc} превышает толеранс.");
                             delimiter = ";" + Environment.NewLine;
                         }

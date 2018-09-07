@@ -90,13 +90,13 @@ namespace PrintHelper
                             Binding bnd = null;
                             if (clmn.GetType().Equals(typeof(DataGridTextColumn)))
                                 bnd = (Binding)(((DataGridTextColumn)clmn).Binding);
-                                                        
+                                                                                    
                             int j = 2;
                             foreach (ISaltAnalysisCalcResults dr in dgrdMain.ItemsSource)
                             {
                                 if (bnd != null)
-                                    ws.Cells[j++, i] = dr.GetType().GetProperty(bnd?.Path.Path.ToString()).GetValue(dr);
-                                else ws.Cells[j++, i] = "—"; //Templated column
+                                    ws.Cells[j++, i] = dr.GetType().GetProperty(bnd?.Path.Path.ToString()).GetValue(dr)
+                                        ?? "—"; //Null value palceholder
                             }
                             i++;
                         }
