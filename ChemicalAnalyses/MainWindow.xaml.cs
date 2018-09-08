@@ -393,7 +393,7 @@ namespace ChemicalAnalyses
             if (!Authorize())
             {
                 CALogger.WriteToLogFile("Ошибка авторизации!");
-                MessageBox.Show("Без авторизации работа невозможна!");
+                MessageBox.Show("Без авторизации работа невозможна!","Ошибка авторизации");
                 Close();
             }
         }
