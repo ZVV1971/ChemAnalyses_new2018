@@ -41,8 +41,8 @@
             </Label>
         </StackPanel>
         <Button Content="OK" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Command="Save"
-                VerticalAlignment="Center" IsCancel="False" IsDefault="True"/>
+                VerticalAlignment="Center" IsCancel="False" IsDefault="True" x:Name="btnOK"/>
         <Button Content="Cancel" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" 
-                VerticalAlignment="Center" IsCancel="True" IsDefault="False"/>
+                VerticalAlignment="Center" IsCancel="True" IsDefault="False" x:Name="btnCancels"/>
     </Grid>
 </Window>

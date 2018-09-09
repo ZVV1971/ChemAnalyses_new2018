@@ -73,6 +73,9 @@
     <Reference Include="TestStack.White, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2672efbf3e161801, processorArchitecture=MSIL">
       <HintPath>..\packages\TestStack.White.Uia3.0.13.3\lib\net40\TestStack.White.dll</HintPath>
     </Reference>
+    <Reference Include="TestStack.White.Reporting, Version=0.13.0.0, Culture=neutral, PublicKeyToken=2672efbf3e161801, processorArchitecture=MSIL">
+      <HintPath>..\packages\TestStack.White.ScreenObjects.0.13.3\lib\net40\TestStack.White.Reporting.dll</HintPath>
+    </Reference>
     <Reference Include="UIAComWrapper, Version=1.1.0.14, Culture=neutral, PublicKeyToken=78cbcf77433a85e5, processorArchitecture=MSIL">
       <HintPath>..\packages\UIAComWrapper.1.1.0.14\lib\net40\UIAComWrapper.dll</HintPath>
     </Reference>
