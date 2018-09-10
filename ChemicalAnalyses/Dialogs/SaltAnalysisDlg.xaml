@@ -464,8 +464,9 @@
                             </RoutedUICommand>
                         </ContextMenu.Resources>
                         <MenuItem Header="Рассчитать результаты" Command="commands:CustomCommands.Calculate" 
-                                  ToolTip="Производит расчет по схеме, выбранной из выпадающего списка"/>
-                        <MenuItem Header="Удалить выбранные" Command="Delete"/>
+                                  ToolTip="Производит расчет по схеме, выбранной из выпадающего списка"
+                                  x:Name="miCalculateResults"/>
+                        <MenuItem Header="Удалить выбранные" Command="Delete" x:Name="miDeleteAnalyses"/>
                         <MenuItem Command="{StaticResource cmdCompare}">
                             <MenuItem.ToolTip>
                                 <StackPanel Orientation="Vertical">

@@ -1,12 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
+using System.Windows.Automation;
 using TestStack.White;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.ListBoxItems;
 using TestStack.White.UIItems.MenuItems;
 using TestStack.White.UIItems.WindowItems;
+using TestStack.White.UIItems.Custom;
+using TestStack.White.UIItems.Actions;
 using TestStack.White.Factory;
 using TestStack.White.Configuration;
 using TestStack.White.WindowsAPI;
@@ -27,8 +30,8 @@ namespace SATest
         [TestInitialize]
         public void UITestsInit()
         {
-            CoreAppXmlConfiguration.Instance.BusyTimeout = 1000;
-            var appPath = @"e:\Downloads\svpp\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe ";
+            CoreAppXmlConfiguration.Instance.BusyTimeout = 3000;
+            var appPath = @"e:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe";
             app = Application.Launch(appPath);
         }
 
@@ -40,7 +43,7 @@ namespace SATest
 
         protected bool Authorize(string uName, string pwd)
         {
-            if (app == null ) return false;
+            if (app == null) return false;
             else
             {
                 Window window = app.GetWindow("Авторизация");
@@ -130,14 +133,12 @@ namespace SATest
                 if (i != 3)
                 {
                     Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Ошибка")), "Wrong user came in!");
-                    Button btnYes = wnds[0].Get<Button>(SearchCriteria.ByText("Да"));
-                    btnYes.Click();
+                    wnds[0].Get<Button>(SearchCriteria.ByText("Да")).Click();
                 }
                 else
                 {
                     Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Ошибка авторизации")), "Wrong user came in!");
-                    Button btnYes = wnds[0].Get<Button>(SearchCriteria.ByAutomationId("2"));
-                    btnYes.Click();
+                    wnds[0].Get<Button>(SearchCriteria.ByAutomationId("2")).Click();
                 }
             }
         }
@@ -436,7 +437,7 @@ namespace SATest
             PopUpMenu pop = wnds[0].Popup;
             pop.ItemBy(SearchCriteria.ByAutomationId("miAddAnalyses")).Click();
             wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")),"Cannot add analyses");
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")), "Cannot add analyses");
             wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -459,11 +460,284 @@ namespace SATest
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактирование данных")), "Cannot edit analyses");
             wnds[0].Get<Button>(SearchCriteria.ByText("Отмена")).Click();
+            wnds = app.GetWindows();
+            lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
             Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
             li.RightClick();
             pop = wnds[0].Popup;
-            Action ac = () => mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses"));
-            Assert.ThrowsException<UIItemSearchException> (ac);//unable to find disabled menu item
+            mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses"));
+            Assert.IsFalse(mn.Enabled);
+            //Assert.ThrowsException<UIItemSearchException> (ac);//unable to find disabled menu item
+        }
+
+        [TestMethod]
+        [Description("CA-03-010")]
+        public void SamplesListEditSample()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => true), "No Samples");
+            li.Select();
+            wnds[0].Get<Button>(SearchCriteria.ByAutomationId("btnEditSample")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактировать")), "Sample editing is not available!");
+        }
+
+        [TestMethod]
+        [Description("CA-03-011")]
+        public void SamplesListEditSampleContextMenu()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => true), "No Samples");
+            //li.Select();
+            li.RightClick();
+            PopUpMenu pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miEditSample")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактировать")), "Sample editing is not available!");
+        }
+
+        [TestMethod]
+        [Description("CA-03-012")]
+        public void SamplesListAddDeleteSampleContextMenu()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            wnds[0].Get<Button>(SearchCriteria.ByText("Добавить…")).Click();
+            wnds = app.GetWindows();
+            Window wnd;
+            Assert.IsNotNull(wnd = wnds.Find(x => x.Name.StartsWith("Внести новый образец")), "Adding unavailable!");
+            string labNumber = RandomString.GetRandomString();
+            wnd.Get<TextBox>(SearchCriteria.ByAutomationId("tbLabNumber")).SetValue(labNumber);
+            wnd.Get<TextBox>(SearchCriteria.ByAutomationId("tbDescription")).Enter("No description");
+            wnd.Get<Button>(SearchCriteria.ByText("OK")).Click();
+            Thread.Sleep(1000);
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => x.Text.Contains(labNumber)), "Sample wasn't added");
+            lb.Select(li.Text);
+            li.RightClick();
+            PopUpMenu pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miDeleteSample")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Удаление")), "Deletion of samples unavailable!");
+            wnds[0].Get<Button>(SearchCriteria.ByText("Да")).Click();
+            Assert.IsNull(li = lb.Items.Find(x => x.Text.Contains(labNumber)), "Sample wasn't deleted");
+        }
+
+        [TestMethod]
+        [Description("CA-03-013")]
+        public void SamplesListAddDeleteAnalysisToSampleContextMenu()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => true), "No Samples");
+            string litext = li.Text;
+            li.RightClick();
+            PopUpMenu pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miAddAnalyses")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")), "Cannot add analyses");
+            wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
+            li.RightClick();
+            pop = wnds[0].Popup;
+            Menu mn;
+            Assert.IsNotNull(mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses")));
+            Assert.IsTrue(mn.Enabled);
+            mn.Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактирование данных")), "Cannot edit analyses");
+            ListView list;
+            Assert.IsNotNull(list = wnds[0].Get<ListView>(SearchCriteria.ByAutomationId("dgrdSA")), "No datagrid");
+            list.Rows[0].Select();
+            list.Rows[0].RightClick();
+            pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miDeleteAnalyses")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Удаление")), "No deletion warning!");
+            wnds[0].Get<Button>(SearchCriteria.ByText("Да")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактирование данных")), "Cannot edit analyses");
+            wnds[0].Get<Button>(SearchCriteria.ByText("Отмена")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
+            li.RightClick();
+            pop = wnds[0].Popup;
+            mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses"));
+            Assert.IsFalse(mn.Enabled);
+        }
+
+        [TestMethod]
+        [Description("CA-03-014")]
+        public void SamplesListAddAnalysisDescription()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => true), "No Samples");
+            string litext = li.Text;
+            li.RightClick();
+            PopUpMenu pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miAddAnalyses")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")), "Cannot add analyses");
+            ListView list;
+            Assert.IsNotNull(list = wnds[0].Get<ListView>(SearchCriteria.ByAutomationId("dgrdSA")), "No datagrid");
+            list.Rows[0].DoubleClick();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Описание")), "Description of samples unavailable!");
+            wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")), "Cannot add analyses");
+            wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
+            li.RightClick();
+            pop = wnds[0].Popup;
+            Menu mn;
+            Assert.IsNotNull(mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses")));
+            Assert.IsTrue(mn.Enabled);
+            mn.Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактирование данных")), "Cannot edit analyses");
+            Assert.IsNotNull(list = wnds[0].Get<ListView>(SearchCriteria.ByAutomationId("dgrdSA")), "No datagrid");
+            list.Rows[0].Select();
+            list.Rows[0].RightClick();
+            pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miDeleteAnalyses")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Удаление")), "No deletion warning!");
+            wnds[0].Get<Button>(SearchCriteria.ByText("Да")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактирование данных")), "Cannot edit analyses");
+            wnds[0].Get<Button>(SearchCriteria.ByText("Отмена")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
+            li.RightClick();
+            pop = wnds[0].Popup;
+            mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses"));
+            Assert.IsFalse(mn.Enabled);
+        }
+
+        [TestMethod]
+        [Description("CA-03-015")]
+        public void SamplesListSetAnalysisScheme()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => true), "No Samples");
+            string litext = li.Text;
+            li.RightClick();
+            PopUpMenu pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miAddAnalyses")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")), "Cannot add analyses");
+            ListView list;
+            Assert.IsNotNull(list = wnds[0].Get<ListView>(SearchCriteria.ByAutomationId("dgrdSA")), "No datagrid");
+            list.Rows[0].Click();
+            CADataGridDetails details;
+            Assert.IsNotNull(details = wnds[0].Get<CADataGridDetails>(SearchCriteria.ByClassName("DataGridDetailsPresenter")),
+                "Cannot find row details");
+            Assert.AreEqual( details.GetScheme(),"Хлоридная");//defualt scheme
+            details.SetScheme("Карбонатная");       //not yet realized scheme
+            Assert.IsFalse(wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Enabled);
+        }
+
+        [TestMethod]
+        [Description("CA-03-016")]
+        public void SamplesListCalculateAnalysis()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => true), "No Samples");
+            string litext = li.Text;
+            li.RightClick();
+            PopUpMenu pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miAddAnalyses")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")), "Cannot add analyses");
+            ListView list;
+            Assert.IsNotNull(list = wnds[0].Get<ListView>(SearchCriteria.ByAutomationId("dgrdSA")), "No datagrid");
+            wnds[0].Keyboard.HoldKey(KeyboardInput.SpecialKeys.CONTROL);//Select ALL
+            wnds[0].Keyboard.Enter("A");
+            wnds[0].Keyboard.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
+            CADataGridDetails details;
+            Assert.IsNotNull(details = wnds[0].Get<CADataGridDetails>(SearchCriteria.ByClassName("DataGridDetailsPresenter")),
+                "Cannot find row details");
+            Assert.AreEqual(details.GetCheckBoxState(), ToggleState.Off);
+            wnds[0].Keyboard.HoldKey(KeyboardInput.SpecialKeys.ALT);//Calculate
+            wnds[0].Keyboard.Enter("C");
+            wnds[0].Keyboard.LeaveKey(KeyboardInput.SpecialKeys.ALT);
+            wnds = app.GetWindows();
+            wnds[0].Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
+            Assert.AreEqual(details.GetCheckBoxState(), ToggleState.On);
         }
     }
 
@@ -477,6 +751,25 @@ namespace SATest
             for (int i = 0; i < stringChars.Length; i++)
                 stringChars[i] = chars[random.Next(chars.Length)];
             return new String(stringChars);
+        }
+    }
+    [ControlTypeMapping(CustomUIItemType.Custom)]
+    public class CADataGridDetails : CustomUIItem
+    {
+        public CADataGridDetails(AutomationElement automationElement, IActionListener actionListener)
+            : base(automationElement, actionListener) {}
+        protected CADataGridDetails() { }
+        public string GetScheme()
+        {
+            return Container.Get<ComboBox>().SelectedItemText;
+        }
+        public void SetScheme(string schemeName)
+        {
+            Container.Get<ComboBox>().Select(schemeName);
+        }
+        public ToggleState GetCheckBoxState()
+        {
+            return Container.Get<CheckBox>().State;
         }
     }
 }
