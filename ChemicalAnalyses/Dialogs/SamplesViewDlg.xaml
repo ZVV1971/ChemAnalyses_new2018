@@ -63,18 +63,19 @@
                  SelectionMode="Extended">
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="commands:CustomCommands.AddNewAnalysis"
+                    <MenuItem Command="commands:CustomCommands.AddNewAnalysis" x:Name="miAddAnalyses"
                               ToolTip="Добавляет к каждому образцу выбранное количество записей для данных анализа">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Ввести данные новых анализов "/>
                                 <talex:NumericUpDown Minimum="1" Maximum="30" ValueChanged="NumericUpDown_ValueChanged"
-                                                     ToolTip="Установите количество добавляемых анализов к каждому образцу"/>
+                                                     ToolTip="Установите количество добавляемых анализов к каждому образцу"
+                                                     x:Name="taNumUpDown"/>
                                 <TextBlock Text=" штук"/>
                         </StackPanel>
                         </MenuItem.Header>
                     </MenuItem>
-                    <MenuItem Header="Редактировать данные анализов" Command="commands:CustomCommands.Edit"/>
+                    <MenuItem Header="Редактировать данные анализов" Command="commands:CustomCommands.Edit" x:Name="miEditAnalyses"/>
                     <MenuItem Header="Удалить образец" Command="Delete" ToolTip="Удалить образец из базы"/>
                     <MenuItem Header="Редактировать…" Command="commands:CustomCommands.Update" 
                               ToolTip="Редактировать данные образца"/>

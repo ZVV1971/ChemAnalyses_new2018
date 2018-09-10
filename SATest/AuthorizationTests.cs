@@ -7,6 +7,8 @@ using TestStack.White.UIItems.Finders;
 using TestStack.White.UIItems.ListBoxItems;
 using TestStack.White.UIItems.MenuItems;
 using TestStack.White.UIItems.WindowItems;
+using TestStack.White.Factory;
+using TestStack.White.Configuration;
 using TestStack.White.WindowsAPI;
 
 namespace SATest
@@ -25,7 +27,8 @@ namespace SATest
         [TestInitialize]
         public void UITestsInit()
         {
-            var appPath = @"e:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe";
+            CoreAppXmlConfiguration.Instance.BusyTimeout = 1000;
+            var appPath = @"e:\Downloads\svpp\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe ";
             app = Application.Launch(appPath);
         }
 
@@ -35,21 +38,30 @@ namespace SATest
             app?.Close();
         }
 
+        protected bool Authorize(string uName, string pwd)
+        {
+            if (app == null ) return false;
+            else
+            {
+                Window window = app.GetWindow("Авторизация");
+                TextBox tbUserName = window.Get<TextBox>("tbUserName");
+                tbUserName.BulkText = uName;
+                TextBox tbPwd = window.Get<TextBox>("pbPassword");
+                tbPwd.Enter(pwd);
+                Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
+                btn.Click();
+                app.WaitWhileBusy();
+                var wnds = app.GetWindows();
+                return wnds.Find(x => x.Name.StartsWith("Расчет")) != null;
+            }
+        }
+
         [TestMethod]
         [TestCategory("Authorization")]
         [Description("CA-01-001")]
         public void AuthorizationPositive()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
-            var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")),"Вход не осуществлен!");
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
         }
 
         [TestMethod]
@@ -101,15 +113,7 @@ namespace SATest
         [Description("CA-01-002")]
         public void AuthorizationNegativeWrongUser()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            //Too short to pass the rule
-            tbUserName.Enter(new string('a',10));
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(new string('g',10));
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsFalse(Authorize(new string('a', 10), new string('g', 10)), "Wrong user came in!");
             var wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Ошибка")), "Wrong user came in!");
         }
@@ -121,15 +125,7 @@ namespace SATest
         {
             for (int i = 1; i <= 3; i++)
             {
-                Window window = app.GetWindow("Авторизация");
-                TextBox tbUserName = window.Get<TextBox>("tbUserName");
-                TextBox tbPwd = window.Get<TextBox>("pbPassword");
-                tbUserName.Enter(new string('a', 10));
-                tbPwd.Enter(new string('g', 10));
-                window.WaitWhileBusy();
-                Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-                btn.Click();
-                app.WaitWhileBusy();
+                Authorize(new string('a', 10), new string('g', 10));
                 var wnds = app.GetWindows();
                 if (i != 3)
                 {
@@ -150,16 +146,8 @@ namespace SATest
         [Description("CA-02-003")]
         public void HelpMenu()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Помощь")).SubMenu(SearchCriteria.ByText("О программе…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("О программе…")), "About is not working!");
@@ -169,16 +157,8 @@ namespace SATest
         [Description("CA-02-004")]
         public void HelpMenuF1()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.F1);
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("О программе…")), "About is not working!");
@@ -188,16 +168,8 @@ namespace SATest
         [Description("CA-02-010")]
         public void SamplesListMenu()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -207,16 +179,8 @@ namespace SATest
         [Description("CA-02-010")]
         public void SamplesListMenuByHotKey()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Keyboard.HoldKey(KeyboardInput.SpecialKeys.CONTROL);
             wnds[0].Keyboard.Enter("L");
             wnds[0].Keyboard.LeaveKey(KeyboardInput.SpecialKeys.CONTROL);
@@ -228,16 +192,8 @@ namespace SATest
         [Description("CA-02-006")]
         public void KCalibrationMenu()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Настройки")).SubMenu(SearchCriteria.ByText("Калибровки")).SubMenu(SearchCriteria.ByText("Калий")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Выбор калибровки для:")), "Calibration selection dialog is unavailable!");
@@ -247,16 +203,8 @@ namespace SATest
         [Description("CA-02-007")]
         public void NaCalibrationMenu()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Настройки")).SubMenu(SearchCriteria.ByText("Калибровки")).SubMenu(SearchCriteria.ByText("Натрий")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Выбор калибровки для:")), "Calibration selection dialog is unavailable!");
@@ -266,16 +214,8 @@ namespace SATest
         [Description("CA-02-005")]
         public void InitialOptionsMenu()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Настройки")).SubMenu(SearchCriteria.ByText("Исходные данные…")).SubMenu(SearchCriteria.ByText("для анализа солей")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Исходные настройки")), "Initial options dialog is not available!");
@@ -285,16 +225,8 @@ namespace SATest
         [Description("CA-02-008")]
         public void ChangeUserMenu()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Файл")).SubMenu(SearchCriteria.ByText("Сменить пользователя")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Авторизация")), "Change user failed!");
@@ -304,16 +236,8 @@ namespace SATest
         [Description("CA-02-009")]
         public void ChangeUserMenuByHotKey()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Keyboard.HoldKey(KeyboardInput.SpecialKeys.ALT);
             wnds[0].Keyboard.Enter("R");
             wnds[0].Keyboard.LeaveKey(KeyboardInput.SpecialKeys.ALT);
@@ -325,17 +249,10 @@ namespace SATest
         [Description("CA-02-001")]
         public void ExitMenu()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Файл")).SubMenu(SearchCriteria.ByText("Выход")).Click();
+            app.WaitWhileBusy();
             Assert.IsTrue(app.HasExited, "Exit failed!");
         }
 
@@ -343,20 +260,12 @@ namespace SATest
         [Description("CA-02-002")]
         public void ExitMenuByALT_F4()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Keyboard.HoldKey(KeyboardInput.SpecialKeys.ALT);
             wnds[0].Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.F4);
             wnds[0].Keyboard.LeaveKey(KeyboardInput.SpecialKeys.ALT);
-            Thread.Sleep(1000);// Wait till hot key combination is swallowed by WPF monster
+            Thread.Sleep(1500);// Wait till hot key combination is swallowed by WPF monster
             Assert.IsTrue(app.HasExited, "Exit failed!");
         }
 
@@ -364,16 +273,8 @@ namespace SATest
         [Description("CA-03-006")]
         public void SamplesListLoadSamplesFails_UnAuthorizedUser()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -387,16 +288,8 @@ namespace SATest
         [Description("CA-03-001")]
         public void SamplesListLoadSamplesAddSample()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -410,16 +303,8 @@ namespace SATest
         [Description("CA-03-002")]
         public void SamplesListLoadSamplesAddSampleByCTRL_N()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -435,16 +320,8 @@ namespace SATest
         [Description("CA-03-003")]
         public void SamplesListLoadSamplesFilter()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -458,16 +335,8 @@ namespace SATest
         [Description("CA-03-002")]
         public void SamplesListLoadSamplesFilterByALT_F()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -483,16 +352,8 @@ namespace SATest
         [Description("CA-03-005")]
         public void SamplesListLoadSamplesExit()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser1);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -506,16 +367,8 @@ namespace SATest
         [Description("CA-03-007")]
         public void SamplesListLoadSamplesPositive()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser2);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
@@ -531,23 +384,15 @@ namespace SATest
         [Description("CA-03-008")]
         public void SamplesListAddDeleteSample()
         {
-            Window window = app.GetWindow("Авторизация");
-            TextBox tbUserName = window.Get<TextBox>("tbUserName");
-            tbUserName.SetValue(testuser2);
-            TextBox tbPwd = window.Get<TextBox>("pbPassword");
-            tbPwd.Enter(testpwd1);
-            Button btn = window.Get<Button>(SearchCriteria.ByText("OK"));
-            btn.Click();
-            app.WaitWhileBusy();
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
             var wnds = app.GetWindows();
-            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Расчет")), "Вход не осуществлен!");
             wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
             Thread.Sleep(1000);
             wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
             wnds = app.GetWindows();
-            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")), "Data have been seen by an unauthorized user!");
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
             wnds[0].Get<Button>(SearchCriteria.ByText("Добавить…")).Click();
             wnds = app.GetWindows();
             Window wnd;
@@ -568,6 +413,57 @@ namespace SATest
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Удаление")), "Deletion of samples unavailable!");
             wnds[0].Get<Button>(SearchCriteria.ByText("Да")).Click();
             Assert.IsNull(li = lb.Items.Find(x => x.Text.Contains(labNumber)), "Sample wasn't deleted");
+        }
+
+        [TestMethod]
+        [Description("CA-03-009")]
+        public void SamplesListAddDeleteAnalysisToSample()
+        {
+            Assert.IsTrue(Authorize(testuser2, testpwd1), "Вход не осуществлен!");
+            var wnds = app.GetWindows();
+            wnds[0].Get<Menu>(SearchCriteria.ByText("Образец")).SubMenu(SearchCriteria.ByText("Список…")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Thread.Sleep(1000);
+            wnds[0].Get<Button>(SearchCriteria.ByText("Загрузить список")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNull(wnds.Find(x => x.Name.StartsWith("Ошибка")));
+            ListBox lb = wnds[0].Get<ListBox>(SearchCriteria.ByAutomationId("lbSamples"));
+            ListItem li;
+            Assert.IsNotNull(li = lb.Items.Find(x => true), "No Samples");
+            string litext = li.Text;
+            li.RightClick();
+            PopUpMenu pop = wnds[0].Popup;
+            pop.ItemBy(SearchCriteria.ByAutomationId("miAddAnalyses")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")),"Cannot add analyses");
+            wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
+            Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
+            li.RightClick();
+            pop = wnds[0].Popup;
+            Menu mn;
+            Assert.IsNotNull(mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses")));
+            Assert.IsTrue(mn.Enabled);
+            mn.Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактирование данных")), "Cannot edit analyses");
+            ListView list;
+            Assert.IsNotNull(list = wnds[0].Get<ListView>(SearchCriteria.ByAutomationId("dgrdSA")), "No datagrid");
+            list.Rows[0].Select();
+            wnds[0].Get<Button>(SearchCriteria.ByAutomationId("btnDelete")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Удаление")), "No deletion warning!");
+            wnds[0].Get<Button>(SearchCriteria.ByText("Да")).Click();
+            wnds = app.GetWindows();
+            Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Редактирование данных")), "Cannot edit analyses");
+            wnds[0].Get<Button>(SearchCriteria.ByText("Отмена")).Click();
+            Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
+            li.RightClick();
+            pop = wnds[0].Popup;
+            Action ac = () => mn = pop.ItemBy(SearchCriteria.ByAutomationId("miEditAnalyses"));
+            Assert.ThrowsException<UIItemSearchException> (ac);//unable to find disabled menu item
         }
     }
 
