@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Windows.Automation;
+
 using TestStack.White;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
@@ -31,7 +32,7 @@ namespace SATest
         public void UITestsInit()
         {
             CoreAppXmlConfiguration.Instance.BusyTimeout = 3000;
-            var appPath = @"e:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe";
+            var appPath = @"e:\Downloads\svpp\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe";
             app = Application.Launch(appPath);
         }
 
@@ -634,13 +635,23 @@ namespace SATest
             list.Rows[0].DoubleClick();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Описание")), "Description of samples unavailable!");
+            string sampleDescription = RandomString.GetRandomString();
+            wnds[0].Get<TextBox>(SearchCriteria.ByAutomationId("tbDescription")).BulkText = sampleDescription;
             wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Новые данные")), "Cannot add analyses");
+            //CADataGridDetails details = wnds[0].Get<CADataGridDetails>(SearchCriteria.ByClassName("DataGridDetailsPresenter"));
+            //System.Windows.Rect rc = details.Bounds;
+            //wnds[0].Mouse.Location = new System.Windows.Point((rc.Left + rc.Right) / 2, (rc.Top + rc.Bottom) / 2);
+            //Thread.Sleep(3000);
+            //var tmp = wnds[0].ToolTip.Text;
+            
+            //Assert.IsTrue(tmp.Contains(sampleDescription));
             wnds[0].Get<Button>(SearchCriteria.ByText("OK")).Click();
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("Список")), "List of samples unavailable!");
             Assert.IsNotNull(li = lb.Items.Find(x => x.Text == litext), "No Samples");
+                        
             li.RightClick();
             pop = wnds[0].Popup;
             Menu mn;
