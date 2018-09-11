@@ -32,7 +32,7 @@ namespace SATest
         public void UITestsInit()
         {
             CoreAppXmlConfiguration.Instance.BusyTimeout = 3000;
-            var appPath = @"e:\Downloads\svpp\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe";
+            var appPath = @"e:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe";
             app = Application.Launch(appPath);
         }
 

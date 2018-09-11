@@ -415,7 +415,7 @@
                                           DisplayMemberPath="Value" SelectedValuePath="Key"
                                           SelectionChanged="ComboBox_SelectionChanged"
                                           ToolTip="Выберите требуемую схему расчета, принимая во внимание предполагаемую.&#x0a;Данные буду обсчитаны с использованием выбранной вами схемы!"/>
-                                <Label Content="_Расчитано:" Target="{Binding ElementName=cbIsCalculated}"/>
+                                <Label Content="_Рассчитано:" Target="{Binding ElementName=cbIsCalculated}"/>
                                 <CheckBox IsChecked="{Binding Path=IsCalculated, NotifyOnSourceUpdated=True}" 
                                           x:Name="cbIsCalculated" IsEnabled="False"/>
                             </StackPanel>
