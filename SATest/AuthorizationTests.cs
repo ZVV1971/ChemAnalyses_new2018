@@ -764,7 +764,7 @@ namespace SATest
             return new String(stringChars);
         }
     }
-    [ControlTypeMapping(CustomUIItemType.Custom)]
+    [ControlTypeMapping(CustomUIItemType.Custom, WindowsFramework.Wpf)]
     public class CADataGridDetails : CustomUIItem
     {
         public CADataGridDetails(AutomationElement automationElement, IActionListener actionListener)
