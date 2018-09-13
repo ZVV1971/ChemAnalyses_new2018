@@ -26,7 +26,7 @@ namespace ChemicalAnalyses.Dialogs
     {
         private int _validationErrorCount = 0;
         private int _validationRowErrorCount = 0;
-        public ObservableCollection<SaltAnalysisData> sa { get; set; }
+        public ObservableCollection<SaltAnalysisData> saltAnalysisDatas { get; set; }
         public string TypeOfWork { get; set; }
         public List<Sample> Labnumbers { get; set; }
         private bool _all_selected = false;
@@ -51,7 +51,7 @@ namespace ChemicalAnalyses.Dialogs
                 (Enum.GetValues(typeof(SaltCalculationSchemes)).OfType<SaltCalculationSchemes>()
                 .Select(p => new KeyValuePair<SaltCalculationSchemes, string>( p, p.ToName())));
                
-            sa = new ObservableCollection<SaltAnalysisData>();
+            saltAnalysisDatas = new ObservableCollection<SaltAnalysisData>();
             InitializeComponent();
 
             //Add handler to process cell editing events
@@ -61,7 +61,7 @@ namespace ChemicalAnalyses.Dialogs
             {//Creating new analyses 'data with on-default settings
                 Labnumbers.ForEach(p => {
                     for (int i = 1; i <= qToAdd; i++) {
-                        sa.Add(
+                        saltAnalysisDatas.Add(
                         new SaltAnalysisData
                         {
                             IDSample = p.IDSample,
@@ -92,7 +92,7 @@ namespace ChemicalAnalyses.Dialogs
 
         private void FillData()
         {
-            sa.Clear();
+            saltAnalysisDatas.Clear();
             using (var context = new ChemicalAnalysesEntities())
             {
 #if DEBUG
@@ -107,7 +107,7 @@ namespace ChemicalAnalyses.Dialogs
                         foreach (SaltAnalysisData sad in smpl)
                         {
                             sad.LabNumber = Labnumbers[0].LabNumber;
-                            sa.Add(sad);
+                            saltAnalysisDatas.Add(sad);
                         }
                     }
                     catch (Exception ex) { }
@@ -121,7 +121,7 @@ namespace ChemicalAnalyses.Dialogs
                     {
                         sad.LabNumber = context.Samples.Where(p=>p.IDSample == sad.IDSample)
                             .FirstOrDefault().LabNumber;
-                        sa.Add(sad);
+                        saltAnalysisDatas.Add(sad);
                     }
                 }
             }
@@ -545,6 +545,27 @@ namespace ChemicalAnalyses.Dialogs
                 }
             }
             MessageBox.Show(stringBuilder.ToString(), "Результаты сравнения");
+        }
+
+        private void DuplicateCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = dgrdSA.SelectedItems.Count >= 1;
+        }
+
+        private void DuplicateCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            using (var context = new ChemicalAnalysesEntities())
+            {
+                foreach (SaltAnalysisData item in dgrdSA.SelectedItems)
+                {
+                    var newItem = context.SaltAnalysisDatas.AsNoTracking()
+                        .FirstOrDefault(p => p.IDSaltAnalysis == item.IDSaltAnalysis);
+                    context.SaltAnalysisDatas.Add(newItem);
+                    context.Entry(newItem).State = EntityState.Added;
+                }
+                context.SaveChanges();
+            }
+            FillData();
         }
     }
 }
