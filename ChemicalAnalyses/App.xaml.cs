@@ -68,7 +68,7 @@ namespace ChemicalAnalyses
             if (remainingTimeToShowSplash > 0) //if the loading took less time than was planned to show splash
                 Thread.Sleep(remainingTimeToShowSplash); //sleep a little bit more
 
-            splash.Close(TimeSpan.FromSeconds(2)); //two seconds fade away
+            splash.Close(TimeSpan.FromSeconds(1)); //one second fade away
         }
 
         protected override void OnExit(ExitEventArgs e)

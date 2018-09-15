@@ -296,5 +296,10 @@ namespace ChemicalAnalyses.Dialogs
              title.ToString());
             if (saltADlg.ShowDialog() == true) FillData();
         }
+
+        private void lbSamples_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (lbSamples.SelectedIndex != -1) UpdateCommand_Executed(sender, null);
+        }
     }
 }

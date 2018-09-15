@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
+using System.IO;
 using System.Windows.Automation;
-
 using TestStack.White;
 using TestStack.White.UIItems;
 using TestStack.White.UIItems.Finders;
@@ -11,9 +11,9 @@ using TestStack.White.UIItems.MenuItems;
 using TestStack.White.UIItems.WindowItems;
 using TestStack.White.UIItems.Custom;
 using TestStack.White.UIItems.Actions;
-using TestStack.White.Factory;
 using TestStack.White.Configuration;
 using TestStack.White.WindowsAPI;
+using Microsoft.Win32;
 
 namespace SATest
 {
@@ -25,15 +25,33 @@ namespace SATest
         //user with read write rights
         string testuser2 = "catest1";
         string testpwd1 = "ca123_CA123";
+        static string appPath = String.Empty;
 
         static Application app;
 
         [TestInitialize]
         public void UITestsInit()
         {
-            CoreAppXmlConfiguration.Instance.BusyTimeout = 3000;
-            var appPath = @"e:\IIT\Projects\СВПП\KSR\ChemicalAnalyses\ChemicalAnalyses\bin\Debug\ChemicalAnalyses.exe";
+            if (!File.Exists(appPath))
+            {
+                if (!File.Exists(Properties.Settings.Default.AppPath))
+                {
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                    openFileDialog.CheckFileExists = true;
+                    openFileDialog.Filter = "Executable files|*.exe";
+                    openFileDialog.Title = "Задайте путь к программе";
+                    if (openFileDialog.ShowDialog() == true)
+                    {
+                        appPath = openFileDialog.FileName;
+                        Properties.Settings.Default.AppPath = openFileDialog.FileName;
+                        Properties.Settings.Default.Save();
+                    }
+                    else Assert.Fail("Application not found");
+                }
+                else appPath = Properties.Settings.Default.AppPath;
+            }
             app = Application.Launch(appPath);
+            CoreAppXmlConfiguration.Instance.BusyTimeout = 3000;
         }
 
         [TestCleanup]
@@ -67,7 +85,7 @@ namespace SATest
         {
             Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");
         }
-
+        #region Authorization
         [TestMethod]
         [TestCategory("Authorization")]
         public void AuthorizationNegativeUserNameTooShort()
@@ -143,7 +161,8 @@ namespace SATest
                 }
             }
         }
-
+        #endregion Authorization
+        #region HelpMenu
         [TestMethod]
         [Description("CA-02-003")]
         public void HelpMenu()
@@ -165,9 +184,9 @@ namespace SATest
             wnds = app.GetWindows();
             Assert.IsNotNull(wnds.Find(x => x.Name.StartsWith("О программе…")), "About is not working!");
         }
-
+        #endregion HelpMenu
         [TestMethod]
-        [Description("CA-02-010")]
+        [Description("CA-02-011")]
         public void SamplesListMenu()
         {
             Assert.IsTrue(Authorize(testuser1, testpwd1), "Вход не осуществлен!");

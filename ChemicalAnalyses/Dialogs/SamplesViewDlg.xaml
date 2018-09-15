@@ -43,16 +43,16 @@
             <Button Content="Редактировать…" Command="commands:CustomCommands.Update" x:Name="btnEditSample"
                     ToolTip="Редактировать данные образца" ToolTipService.ShowOnDisabled="True"/>
             <Button Command="Delete" Content="Удалить" ToolTip="Удалить образец из базы" ToolTipService.ShowOnDisabled="True"/>
-            <Button Content="Фильтр…" Command="commands:CustomCommands.Filter" 
+            <Button Content="Фильтр…" Command="commands:CustomCommands.Filter" x:Name="btnFilter"
                     ToolTip="Фильтровать записи" ToolTipService.ShowOnDisabled="True"/>
             <Button Content="Выход" IsCancel="True" ToolTip="Закрыть окно" Click="CancelButton_Click"/>
                    </StackPanel>
-        <TextBlock Grid.Column="1" Grid.Row="0" x:Name="txFilters" 
+        <TextBlock Grid.Column="1" Grid.Row="0" x:Name="txtFilters" 
                    Text="{Binding Path=FilterText, TargetNullValue=Фильтр сброшен}" 
                    HorizontalAlignment="Center" TextWrapping="Wrap" ToolTip="Образцы в списке отобраны в соответствии с указанными параметрами&#x0a;Для сброса перейдите в контекстное меню">
             <TextBlock.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Сбросить фильтр" Click="ClearFilterMenuItem_Click" 
+                    <MenuItem Header="Сбросить фильтр" Click="ClearFilterMenuItem_Click" x:Name="miClearFilter"
                               IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu, Mode=FindAncestor},
                         Path=PlacementTarget.Text, Converter={StaticResource str2bool}, NotifyOnSourceUpdated=True}" 
                               ToolTip="Устанавливает фильтр по-умолчанию: интервал дат 1 — год с текущего момента&#x0a;без фильтрации по номеру образца"/>
@@ -60,7 +60,7 @@
             </TextBlock.ContextMenu>
         </TextBlock>
         <ListBox Grid.Column="1" Grid.Row="1" x:Name="lbSamples" ItemsSource="{Binding}" VerticalContentAlignment="Stretch"
-                 SelectionMode="Extended">
+                 SelectionMode="Extended" MouseDoubleClick="lbSamples_MouseDoubleClick">
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="commands:CustomCommands.AddNewAnalysis" x:Name="miAddAnalyses"

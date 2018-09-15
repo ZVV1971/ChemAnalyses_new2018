@@ -16,7 +16,7 @@
             </RoutedUICommand.InputGestures>
         </RoutedUICommand>
         <alumni:BooleanToUserTypeConverter x:Key="bln2UserTypeConv"/>
-        <RoutedUICommand x:Key="Calibration" Text="Сменить пользователя">
+        <RoutedUICommand x:Key="Calibration" Text="Работа с калибровками">
         </RoutedUICommand>
     </Window.Resources>
     <Window.CommandBindings>
@@ -37,7 +37,7 @@
         <Menu x:Name="mnMainMenu" Grid.Row="0" ToolTip="Главное меню программы">
             <MenuItem Header="Файл" ToolTip="Работа с файлами…">
                 <MenuItem Command="{StaticResource ReloginCmd}" ToolTip="Войти в систему под другими логином и паролем"
-                          Icon="{Binding Source={StaticResource icnExitApplication}}"/>
+                          Icon="{Binding Source={StaticResource icnExitApplication}}" x:Name="miChangeUser"/>
                 <Separator/>
                 <MenuItem Command="commands:CustomCommands.Exit" ToolTip="Выход из программы"
                           Icon="{Binding Source={StaticResource icExit2}}"/>
