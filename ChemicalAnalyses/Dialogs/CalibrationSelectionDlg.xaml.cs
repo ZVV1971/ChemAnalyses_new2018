@@ -192,7 +192,7 @@ namespace ChemicalAnalyses.Dialogs
             catch
             { e.CanExecute = false; }
         
-            btnDelete.ToolTip = (e.CanExecute) ? "Удалить выбранную калибровку" 
+            btnDeleteCalibration.ToolTip = (e.CanExecute) ? "Удалить выбранную калибровку" 
                 : "Удаление калибровки невозможно." + Environment.NewLine + "Присутствуют связанные данные.";
         }
 

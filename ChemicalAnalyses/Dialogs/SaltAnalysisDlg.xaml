@@ -40,8 +40,8 @@
                 <Setter Property="Height" Value="25"/>
             </Style>
         </Grid.Resources>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0"
-                      VerticalScrollBarVisibility="Auto">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" x:Name="scroller"
+                      VerticalScrollBarVisibility="Auto" CanContentScroll="True">
             <DataGrid x:Name="dgrdSA" CanUserAddRows="False" TargetUpdated="dgrdSA_SourceUpdated"
                   ItemsSource="{Binding Path=saltAnalysisDatas, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
                       AutoGenerateColumns="False" LoadingRow="dgrdSA_LoadingRow">
@@ -441,13 +441,13 @@
                                         </ToolTip.Content>
                                     </ToolTip>
                                 </StackPanel.ToolTip>
-                                <Label Content="Ионная форма:"/>
+                                <Label Content="Ионная форма:" x:Name="lblIonicForm"/>
                                 <Ellipse Width="16" Height="16" Fill="{Binding Path=IonSumColor, NotifyOnSourceUpdated=True}"/>
                             </StackPanel>
                             <StackPanel Visibility="{Binding Path=IsCalculated, Converter={StaticResource bln2VisibilityConv}}"
                                             x:Name="spSaltForm" Orientation="Horizontal" ToolTip="{Binding ElementName=spIonForm, Path=ToolTip}"
                                         Grid.Column="1" Grid.Row="0">
-                                <Label Content="Солевая форма:"/>
+                                <Label Content="Солевая форма:" x:Name="lblSaltForm"/>
                                 <Ellipse Width="16" Height="16" Fill="{Binding Path=SaltSumColor, NotifyOnSourceUpdated=True}"/>
                             </StackPanel>
                         </Grid>
@@ -472,7 +472,7 @@
                                   ToolTip="Производит расчет по схеме, выбранной из выпадающего списка"
                                   x:Name="miCalculateResults"/>
                         <MenuItem Header="Удалить выбранные" Command="Delete" x:Name="miDeleteAnalyses"/>
-                        <MenuItem Command="{StaticResource cmdCompare}">
+                        <MenuItem Command="{StaticResource cmdCompare}" x:Name="imCompareResults">
                             <MenuItem.ToolTip>
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Text="Сравнить результаты расчета двух образцов." FontWeight="Black"/>

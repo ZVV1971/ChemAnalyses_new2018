@@ -28,8 +28,8 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TabControl Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0">
-            <TabItem Header="Анализ">
+        <TabControl Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" x:Name="tcSaltOptionsTabs">
+            <TabItem Header="Анализ" x:Name="tabAnalysis">
                 <AdornerDecorator>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -80,7 +80,7 @@
                     </Grid>
                 </AdornerDecorator>
             </TabItem>
-            <TabItem Header="Проверка">
+            <TabItem Header="Проверка" x:Name="tabControl">
                 <AdornerDecorator>
                     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                         <Grid x:Name="spSchemeTolerances" Height="450"/>

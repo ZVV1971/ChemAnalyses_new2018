@@ -41,15 +41,15 @@
                       ToolTip="Для совершения операций выберите калибровку из списка"/>
         </StackPanel>
         <Button Content="Сохранить" Grid.Column="0" Grid.Row="1" IsDefault="True" IsCancel="False"
-                Click="CloseButton_Click"/>
+                Click="CloseButton_Click" x:Name="btnSaveCalibration"/>
         <Button Content="Отмена" Grid.Column="1" Grid.Row="1" IsCancel="True"/>
         <Button Content="{Binding}" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" Width="auto" Margin="4,0,4,0"
                 Command="commands:CustomCommands.SetDefault" x:Name="btnSetDefault" ToolTip="{Binding}"/>
         <Button Content="Изменить" Grid.Column="0" Grid.Row="2" Command="commands:CustomCommands.Edit" 
-                ToolTip="Изменить выбранную калибровку"/>
-        <Button Content="Просмотр" Grid.Column="1" Grid.Row="2" Command="commands:CustomCommands.View" 
+                ToolTip="Изменить выбранную калибровку" x:Name="btnChangeCalibration"/>
+        <Button Content="Просмотр" Grid.Column="1" Grid.Row="2" Command="commands:CustomCommands.View" x:Name="btnViewCalibration"
                 ToolTip="Просмотреть графическое представление и расчитанные параметры для выбранной калибровки"/>
-        <Button Content="Новая" Grid.Column="2" Grid.Row="2" Command="New" ToolTip="Создать новую калибровку"/>
-        <Button x:Name="btnDelete" Content="Удалить" Grid.Column="3" Grid.Row="2" Command="Delete" ToolTip="{Binding}"/>
+        <Button Content="Новая" Grid.Column="2" Grid.Row="2" Command="New" ToolTip="Создать новую калибровку" x:Name="btnNewCalibration"/>
+        <Button x:Name="btnDeleteCalibration" Content="Удалить" Grid.Column="3" Grid.Row="2" Command="Delete" ToolTip="{Binding}"/>
     </Grid>
 </Window>

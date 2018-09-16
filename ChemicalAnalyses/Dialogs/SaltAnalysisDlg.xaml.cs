@@ -31,6 +31,7 @@ namespace ChemicalAnalyses.Dialogs
         public List<Sample> Labnumbers { get; set; }
         private bool _all_selected = false;
         private List<SchemesPrintingGrid> pGrids;
+        private bool AutoScroll = true;
 
         public static ObservableCollection<KeyValuePair<SaltCalculationSchemes, string>> SchemesNames { get; set; }
       
@@ -274,7 +275,7 @@ namespace ChemicalAnalyses.Dialogs
                 p.IonSumColor = p.CalcSchemeTolerance(p).IonSumColor;
                 p.SaltSumColor = p.CalcSchemeTolerance(p).SaltSumColor;
             });
-            MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны");
+            MessageBox.Show(dgrdSA.SelectedItems.Count.ToString() + " образцов были расчитаны", "Результаты расчета");
             dgrdSA.SelectedItems.Clear();
             btnPrint.Visibility = Visibility.Visible;
         }

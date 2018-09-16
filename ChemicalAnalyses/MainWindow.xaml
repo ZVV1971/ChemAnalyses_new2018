@@ -47,17 +47,20 @@
                           ToolTip="Диалоговое окно выбора образца из списка имеющихся"
                           Icon="{Binding Source={StaticResource icnListOfSamples}}"/>
             </MenuItem>
-            <MenuItem Header="Настройки" ToolTip="Различные настройки программы…">
-                <MenuItem Header="Калибровки" ToolTip="Настройки калибровок…" Icon="{Binding Source={StaticResource icnCalib}}">
+            <MenuItem Header="Настройки" ToolTip="Различные настройки программы…" x:Name="miMainOptions">
+                <MenuItem Header="Калибровки" ToolTip="Настройки калибровок…" Icon="{Binding Source={StaticResource icnCalib}}" 
+                          x:Name="miMainCalibrations">
                     <MenuItem Header="Калий" ToolTip="Настройки калибровочных данных для калия" Command="{StaticResource Calibration}"
-                              Icon="{Binding Source={StaticResource icnKalium}}" CommandParameter="Kalium"/>
+                              Icon="{Binding Source={StaticResource icnKalium}}" CommandParameter="Kalium" 
+                              x:Name="miMainCalibrationsKalium"/>
                     <MenuItem Header="Натрий" Command="{StaticResource Calibration}" ToolTip="Настройки калибровочных данных для натрия"
-                              Icon="{Binding Source={StaticResource icnNatrium}}" CommandParameter="Natrium"/>
+                              Icon="{Binding Source={StaticResource icnNatrium}}" CommandParameter="Natrium"
+                              x:Name="miMainCalibrationsNatrium"/>
                 </MenuItem>
                 <MenuItem Header="Исходные данные…" ToolTip="Разлиные исходные данные, используемые при расчете анализов"
-                          Icon="{Binding Source={StaticResource icnInitData}}">
+                          Icon="{Binding Source={StaticResource icnInitData}}" x:Name="miInitialParameters">
                     <MenuItem Header="для анализа солей" Click="SAOptionsMenuItem_Click"
-                              ToolTip="Титры, значения холостых анализов и проч."
+                              ToolTip="Титры, значения холостых анализов и проч." x:Name="miSaltAnalysisOptions"
                               Icon="{Binding Source={StaticResource icnInitDataSalts}}"/>
                 </MenuItem> 
             </MenuItem>
