@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ChemicalAnalyses.Alumni;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ChemicalAnalyses.Alumni;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -27,9 +27,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = errorCount == 0;
-        }
+        { e.CanExecute = errorCount == 0; }
 
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {DialogResult = true;}
@@ -41,17 +39,11 @@ namespace ChemicalAnalyses.Dialogs
             switch (validationEventArgs.Action)
             {
                 case ValidationErrorEventAction.Added:
-                    {
-                        errorCount++; break;
-                    }
+                    { errorCount++; break; }
                 case ValidationErrorEventAction.Removed:
-                    {
-                        errorCount--; break;
-                    }
+                    { errorCount--; break; }
                 default:
-                    {
-                        throw new Exception("Unknown action");
-                    }
+                    { throw new Exception("Unknown action"); }
             }
         }
     }

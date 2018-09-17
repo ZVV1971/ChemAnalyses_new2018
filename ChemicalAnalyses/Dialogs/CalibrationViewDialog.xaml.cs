@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows;
+﻿using SA_EF;
+using System;
 using System.Collections.ObjectModel;
-using SA_EF;
 using System.Linq;
+using System.Windows;
 
 namespace ChemicalAnalyses.Dialogs
 {

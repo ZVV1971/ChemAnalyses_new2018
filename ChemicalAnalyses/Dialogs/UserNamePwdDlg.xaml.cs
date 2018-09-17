@@ -48,9 +48,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void pbPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            wrongPwd = pbPassword.Password.Length < 3;
-        }
+        {wrongPwd = pbPassword.Password.Length < 3;}
 
         static bool validateUserNameValue(object value)
         {

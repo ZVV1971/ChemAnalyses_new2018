@@ -2,6 +2,7 @@
 
 namespace ChemicalAnalyses.Alumni
 {
+    //https://www.thomaslevesque.com/2011/03/21/wpf-how-to-bind-to-data-when-the-datacontext-is-not-inherited/
     public class BindingProxy : Freezable
     {
         public static readonly DependencyProperty DataProperty =

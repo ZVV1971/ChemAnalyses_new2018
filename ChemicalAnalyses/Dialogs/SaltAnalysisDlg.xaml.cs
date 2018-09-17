@@ -1,4 +1,7 @@
 ﻿using ChemicalAnalyses.Alumni;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
+using PrintHelper;
 using SA_EF;
 using SA_EF.Interfaces;
 using SettingsHelper;
@@ -16,9 +19,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using PrintHelper;
-using Microsoft.Office.Interop.Excel;
-using Microsoft.Win32;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -159,9 +159,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void SaveCommand_CanExecute (object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = (_validationErrorCount == 0) && (_validationRowErrorCount == 0) && (dgrdSA.Items.Count >= 1);
-        }
+        { e.CanExecute = (_validationErrorCount == 0) && (_validationRowErrorCount == 0) && (dgrdSA.Items.Count >= 1);}
 
         private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -257,9 +255,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void CalculateCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = dgrdSA.SelectedItems.Count != 0 && _validationErrorCount == 0;
-        }
+        {e.CanExecute = dgrdSA.SelectedItems.Count != 0 && _validationErrorCount == 0;}
 
         private void CalculateCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -549,9 +545,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void DuplicateCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = dgrdSA.SelectedItems.Count >= 1;
-        }
+        { e.CanExecute = dgrdSA.SelectedItems.Count >= 1;}
 
         private void DuplicateCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {

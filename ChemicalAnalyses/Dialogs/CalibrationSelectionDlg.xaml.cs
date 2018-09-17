@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using EntityFrameworkExtras.EF6;
+using SA_EF;
+using SettingsHelper;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
-using SettingsHelper;
-using SA_EF;
-using System.Diagnostics;
-using System.Data.Entity;
-using System.Data;
-using EntityFrameworkExtras.EF6;
 using System.Windows.Controls;
-using System.ComponentModel;
+using System.Windows.Input;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -66,9 +66,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void EditCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = cbLCSelection?.SelectedItem != null;
-        }
+        { e.CanExecute = cbLCSelection?.SelectedItem != null;}
 
         private void EditCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -130,9 +128,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
+        {e.CanExecute = true;}
 
         private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
@@ -173,9 +169,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-        }
+        {DialogResult = true;}
 
         private void DeleteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Text;
+﻿using ChemicalAnalyses.Alumni;
+using SA_EF;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using SA_EF;
-using ChemicalAnalyses.Alumni;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -40,9 +40,7 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            DialogResult = true;
-        }
+        {DialogResult = true;}
 
         private void OnErrorEvent(object sender, RoutedEventArgs e)
         {
@@ -51,17 +49,11 @@ namespace ChemicalAnalyses.Dialogs
             switch (validationEventArgs.Action)
             {
                 case ValidationErrorEventAction.Added:
-                    {
-                        errorCount++; break;
-                    }
+                    {errorCount++; break;}
                 case ValidationErrorEventAction.Removed:
-                    {
-                        errorCount--; break;
-                    }
+                    {errorCount--; break;}
                 default:
-                    {
-                        throw new Exception("Unknown action");
-                    }
+                    {throw new Exception("Unknown action");}
             }
         }
 

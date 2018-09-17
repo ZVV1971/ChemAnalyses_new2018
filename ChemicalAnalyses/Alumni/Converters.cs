@@ -1,10 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-using SA_EF;
-using System.Windows;
-using System.Linq;
+﻿using SA_EF;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Windows;
+using System.Windows.Data;
 
 namespace ChemicalAnalyses.Alumni
 {
@@ -13,9 +13,7 @@ namespace ChemicalAnalyses.Alumni
     {
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException("Backward conversion is not possible");
-        }
+        {throw new NotImplementedException("Backward conversion is not possible");}
 
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
@@ -35,7 +33,6 @@ namespace ChemicalAnalyses.Alumni
             DateTime smplDate;
             NumberFormatInfo nfi = new NumberFormatInfo();
             nfi.NumberDecimalSeparator = ".";
-            
             try
             {
                 labnm = values[0].ToString().Trim();
@@ -54,9 +51,7 @@ namespace ChemicalAnalyses.Alumni
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException("Обратная конвертация невозможна!");
-        }
+        {throw new NotSupportedException("Обратная конвертация невозможна!");}
     }
 
     [ValueConversion(typeof(string), typeof(double?))]
@@ -75,9 +70,7 @@ namespace ChemicalAnalyses.Alumni
                 return o = d;
             }
             catch
-            {
-                return null;
-            }
+            {return null;}
         }
 
         public object Convert(object value, Type targetType,
@@ -93,9 +86,7 @@ namespace ChemicalAnalyses.Alumni
     {
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException("Backward conversion is not possible");
-        }
+        {throw new NotImplementedException("Backward conversion is not possible");}
 
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
@@ -116,9 +107,7 @@ namespace ChemicalAnalyses.Alumni
                 if (values[i] != null)
                 {
                     try
-                    {
-                        res += (decimal)values[i];
-                    }
+                    {res += (decimal)values[i];}
                     catch { }
                 }
             }
@@ -126,9 +115,7 @@ namespace ChemicalAnalyses.Alumni
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException("Backward conversion is not possible");
-        }
+        {throw new NotImplementedException("Backward conversion is not possible");}
     }
 
     [ValueConversion(typeof(bool), typeof(Visibility))]
@@ -166,9 +153,7 @@ namespace ChemicalAnalyses.Alumni
     {
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
-        {
-            return false;
-        }
+        {return false;}
 
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
@@ -202,9 +187,7 @@ namespace ChemicalAnalyses.Alumni
     {
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException("Backward conversion is not possible");
-        }
+        {throw new NotImplementedException("Backward conversion is not possible");}
 
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)
@@ -227,9 +210,7 @@ namespace ChemicalAnalyses.Alumni
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException("Backward conversion is not possible");
-        }
+        {throw new NotImplementedException("Backward conversion is not possible");}
     }
 
     [ValueConversion(typeof(SaltCalculationSchemes), typeof(string))]
@@ -237,9 +218,7 @@ namespace ChemicalAnalyses.Alumni
     {
         public object ConvertBack(object value, Type targetType,
             object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException("Backward conversion not implemented");
-        }
+        {throw new NotImplementedException("Backward conversion not implemented");}
 
         public object Convert(object value, Type targetType,
             object parameter, CultureInfo culture)

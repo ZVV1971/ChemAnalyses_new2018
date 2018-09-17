@@ -1,12 +1,8 @@
 ﻿using System.Windows;
-//using Samples;
 using SA_EF;
 
 namespace ChemicalAnalyses.Dialogs
 {
-    /// <summary>
-    /// Логика взаимодействия для Sample.xaml
-    /// </summary>
     public partial class SampleDlg : Window
     {
         public Sample smpl { get; set; }

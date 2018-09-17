@@ -1,9 +1,9 @@
-﻿using System;
+﻿using SA_EF;
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Collections.Generic;
-using SA_EF;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -22,8 +22,6 @@ namespace ChemicalAnalyses.Dialogs
             nameof(SumTolerance), typeof(decimal), typeof(SaltAnalysisOptionsDlg),
             new PropertyMetadata(0.02M), new ValidateValueCallback(validateSumToleranceValue));
 
-
-
         public Dictionary<SaltCalculationSchemes,SchemeResultsTolerance> SchemesDictionary
         {
             get { return (Dictionary<SaltCalculationSchemes,SchemeResultsTolerance>)GetValue(SchemesDictionaryProperty); }
@@ -33,8 +31,6 @@ namespace ChemicalAnalyses.Dialogs
         public static readonly DependencyProperty SchemesDictionaryProperty =
             DependencyProperty.Register(nameof(SchemesDictionary), 
                 typeof(Dictionary<SaltCalculationSchemes,SchemeResultsTolerance>), typeof(SaltAnalysisOptionsDlg));
-
-
 
         public SaltAnalysisOptionsDlg(SaltAnalysisData sa)
         {
