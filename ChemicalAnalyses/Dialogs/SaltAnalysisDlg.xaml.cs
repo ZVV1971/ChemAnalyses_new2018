@@ -391,7 +391,8 @@ namespace ChemicalAnalyses.Dialogs
                 {
                     foreach (SchemesPrintingGrid p in pGrids) p.ExportToExcel(ref wb);
                     wb.SaveAs(saveDialog.FileName);
-                    MessageBox.Show(string.Format($"Эскпорт в файл {0} осуществлен", saveDialog.FileName),"Экспорт");
+                    MessageBox.Show(string.Format("Эскпорт в файл {0} осуществлен", 
+                        saveDialog.FileName),"Экспорт");
                 }
             }
             catch { }

@@ -3,9 +3,6 @@ using System.Windows.Documents;
 
 namespace ChemicalAnalyses.Dialogs
 {
-    /// <summary>
-    /// Логика взаимодействия для SAPrintPreview.xaml
-    /// </summary>
     public partial class SAPrintPreview : Window
     {
         public SAPrintPreview()

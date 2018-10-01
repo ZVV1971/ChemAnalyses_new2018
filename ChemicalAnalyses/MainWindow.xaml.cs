@@ -399,5 +399,9 @@ namespace ChemicalAnalyses
         }
 
         private void Relogin_Click(object sender, ExecutedRoutedEventArgs e) => Authorize(true);
+
+        private void ShowLogCommand_Executed(object sender, ExecutedRoutedEventArgs e) => CALogger.ShowLogFile();
+
+        private void ShowLogCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = IsAdmin;
     }
 }

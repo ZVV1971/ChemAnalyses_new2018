@@ -15,6 +15,11 @@
                 <KeyGesture>ALT+R</KeyGesture>
             </RoutedUICommand.InputGestures>
         </RoutedUICommand>
+        <RoutedUICommand x:Key="ShowLogFile" Text="Показать лог">
+            <RoutedUICommand.InputGestures>
+                <KeyGesture>SHIFT+CTRL+L</KeyGesture>
+            </RoutedUICommand.InputGestures>
+        </RoutedUICommand>
         <alumni:BooleanToUserTypeConverter x:Key="bln2UserTypeConv"/>
         <RoutedUICommand x:Key="Calibration" Text="Работа с калибровками">
         </RoutedUICommand>
@@ -26,6 +31,8 @@
         <CommandBinding Command="commands:CustomCommands.Exit" Executed="ExitCommand_Executed"/>
         <CommandBinding Command="{StaticResource ReloginCmd}" Executed="Relogin_Click"/>
         <CommandBinding Command="{StaticResource Calibration}" Executed="CalibrationMenuItem_Click"/>
+        <CommandBinding Command="{StaticResource ShowLogFile}" Executed="ShowLogCommand_Executed" 
+                        CanExecute="ShowLogCommand_CanExecute"/>
     </Window.CommandBindings>
     <Grid ToolTip="">
         <Grid.RowDefinitions>
@@ -38,6 +45,9 @@
             <MenuItem Header="Файл" ToolTip="Работа с файлами…">
                 <MenuItem Command="{StaticResource ReloginCmd}" ToolTip="Войти в систему под другими логином и паролем"
                           Icon="{Binding Source={StaticResource icnExitApplication}}" x:Name="miChangeUser"/>
+                <Separator/>
+                <MenuItem Command="{StaticResource ShowLogFile}" ToolTip="Показать лог"
+                          x:Name="miShowLogFile" Icon="{Binding Source={StaticResource icnLog}}"/>
                 <Separator/>
                 <MenuItem Command="commands:CustomCommands.Exit" ToolTip="Выход из программы"
                           Icon="{Binding Source={StaticResource icExit2}}"/>
