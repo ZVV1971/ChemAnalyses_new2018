@@ -3,24 +3,17 @@ using ChemicalAnalyses.Dialogs;
 using SA_EF;
 using SettingsHelper;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data;
-using System.Data.Common;
-using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Threading;
 using System.Windows.Threading;
 
 namespace ChemicalAnalyses
