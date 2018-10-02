@@ -20,6 +20,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace ChemicalAnalyses
 {
@@ -40,7 +42,7 @@ namespace ChemicalAnalyses
         public string WindowTitle { get; } = "Расчет химсостава образцов";
 
         public MainWindow()
-        {    
+        {
             InitializeComponent();
             wndThis = this;
             DataContext = this;
@@ -52,6 +54,8 @@ namespace ChemicalAnalyses
             while (attemptsCounter++ < MaxAttempts)
             {
                 UserNamePwdDlg userDlg = new UserNamePwdDlg();
+                PBar pBar = new PBar();
+
                 if (userDlg.ShowDialog() == true)
                 {
                     ChemicalAnalysesEntities.UserName = userDlg.UserName;
@@ -69,13 +73,32 @@ namespace ChemicalAnalyses
                     }
                     return false;
                 }
+                //https://stackoverflow.com/questions/14732142/show-progressbar-until-window-show
+                Dispatcher progressDisptacher = null;
                 try
                 {
+                    Thread uiThread = new Thread(() =>
+                    {
+                        PBar spb = new PBar();
+                        spb.Topmost = true;
+                        spb.Show();
+                        progressDisptacher = spb.Dispatcher;
+                        // allowing the main UI thread to proceed 
+                        Dispatcher.Run();
+                    });
+                    uiThread.SetApartmentState(ApartmentState.STA);
+                    uiThread.IsBackground = true;
+                    uiThread.Start();
+
                     using (var context = new ChemicalAnalysesEntities(relogin))
-                    { var t = context.Samples.FirstOrDefault(); }
+                    {
+                        var t = context.Samples.FirstOrDefault();
+                    }
+                    progressDisptacher?.BeginInvokeShutdown(DispatcherPriority.Send);
                 }
                 catch (Exception ex)
                 {
+                    progressDisptacher?.BeginInvokeShutdown(DispatcherPriority.Send);
                     if (ex.InnerException?.GetType() == typeof(SqlException) 
                         && ((string)(ex.InnerException?.Data["HelpLink.EvtID"])).Equals("53"))
                     {

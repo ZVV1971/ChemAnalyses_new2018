@@ -8,7 +8,7 @@
         xmlns:talex="http://schemas.talex-soft.com/2010/xaml/presentation"
         mc:Ignorable="d"
         Title="Список образцов в базе" Height="350" Width="600" MinHeight="205" MinWidth="500"
-        PreviewMouseMove="Window_PreviewMouseMove">
+        PreviewMouseMove="Window_PreviewMouseMove" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Button.Margin" Value="5"/>
@@ -82,10 +82,12 @@
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
-        <TextBlock Grid.Column="0" Grid.Row="2" Text="{Binding ElementName=lbSamples, Path=Items.Count, 
-            StringFormat={}{0} записей, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"
-                   Margin="7" ToolTip="Отображает количество загруженных на данный момент образцов"/>
-        <StatusBar Grid.Column="1" Grid.Row="2">
+        <Border Grid.Column="0" Grid.Row="2" Background="LightGray">
+            <TextBlock Text="{Binding ElementName=lbSamples, Path=Items.Count, 
+                StringFormat={}{0} образцов, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"
+                Margin="7" ToolTip="Отображает количество загруженных на данный момент образцов"/>
+        </Border>
+        <StatusBar Grid.Column="1" Grid.Row="2" Background="LightGray">
             <TextBlock Text="{Binding Path=HoverToolTip2,
                     RelativeSource={RelativeSource AncestorType=Window}}"/>
         </StatusBar>

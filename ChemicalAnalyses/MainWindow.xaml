@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="{Binding WindowTitle}" Height="250" Width="425"
         PreviewMouseMove="Window_PreviewMouseMove"
-        SourceInitialized="Window_SourceInitialized">
+        SourceInitialized="Window_SourceInitialized" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <RoutedUICommand x:Key="ReloginCmd" Text="Сменить пользователя">
             <RoutedUICommand.InputGestures>

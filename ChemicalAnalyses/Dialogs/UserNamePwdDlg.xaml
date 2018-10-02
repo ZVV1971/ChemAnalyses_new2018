@@ -6,7 +6,7 @@
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
         Title="Авторизация" Height="180" Width="250" MaxHeight="180" MinHeight="180" MinWidth="250"
-         Validation.Error="Window_ValidationError">
+         Validation.Error="Window_ValidationError" WindowStartupLocation="CenterScreen">
     <Window.CommandBindings>
         <CommandBinding Command="Save" Executed="SaveCommand_Executed" CanExecute="SaveCommand_CanExecute"/>
     </Window.CommandBindings>
@@ -28,7 +28,7 @@
                 <Setter Property="Height" Value="25"/>
             </Style>
         </Grid.Resources>
-        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Center">
             <Label Content="Введите имя пользователя:" Target="{Binding ElementName=tbUserName}"/>
             <TextBox Text="{Binding Path=UserName, NotifyOnValidationError=True, Mode=TwoWay, 
                 ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="tbUserName"
@@ -37,7 +37,7 @@
             <PasswordBox x:Name="pbPassword" PasswordChanged="pbPassword_PasswordChanged" MaxLength="50"
                          Margin="3,0,3,0"/>
             <Label Visibility="{Binding Path=wrongPwd, Converter={StaticResource bln2VisibilityConverter}}">
-                <TextBlock Text="Пароль от 3 символов!" Foreground="Red"/>
+                <TextBlock Text="Пароль не короче 3 символов!" Foreground="Red"/>
             </Label>
         </StackPanel>
         <Button Content="OK" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Command="Save"
