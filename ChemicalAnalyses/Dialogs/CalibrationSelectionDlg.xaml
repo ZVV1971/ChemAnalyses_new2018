@@ -46,7 +46,7 @@
         <Button Content="{Binding}" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" Width="auto" Margin="4,0,4,0"
                 Command="commands:CustomCommands.SetDefault" x:Name="btnSetDefault" ToolTip="{Binding}"/>
         <Button Content="Изменить" Grid.Column="0" Grid.Row="2" Command="commands:CustomCommands.Edit" 
-                ToolTip="Изменить выбранную калибровку" x:Name="btnChangeCalibration"/>
+                ToolTip="{Binding}" x:Name="btnChangeCalibration"/>
         <Button Content="Просмотр" Grid.Column="1" Grid.Row="2" Command="commands:CustomCommands.View" x:Name="btnViewCalibration"
                 ToolTip="Просмотреть графическое представление и расчитанные параметры для выбранной калибровки"/>
         <Button Content="Новая" Grid.Column="2" Grid.Row="2" Command="New" ToolTip="Создать новую калибровку" x:Name="btnNewCalibration"/>

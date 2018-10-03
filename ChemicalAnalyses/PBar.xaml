@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChemicalAnalyses"
         mc:Ignorable="d"
-        Title="PBar" Height="50" Width="350" WindowStartupLocation="CenterScreen" 
+        Title="PBar" Height="50" Width="200" WindowStartupLocation="CenterScreen" 
         WindowStyle="None"
         ResizeMode="NoResize"
         ShowInTaskbar="False">
     <Grid>
-        <ProgressBar Minimum="0" Maximum="100" Name="pbStatus" IsIndeterminate="True" />
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Подключение к БД" FontSize="24"/>
+        <ProgressBar Name="pbStatus" IsIndeterminate="True" />
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Авторизация…" FontSize="24"/>
     </Grid>
 </Window>

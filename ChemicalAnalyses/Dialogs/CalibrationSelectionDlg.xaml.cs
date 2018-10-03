@@ -66,7 +66,23 @@ namespace ChemicalAnalyses.Dialogs
         }
 
         private void EditCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        { e.CanExecute = cbLCSelection?.SelectedItem != null;}
+        {
+            try
+            {
+                if (cbLCSelection?.SelectedItem != null)
+                {
+                    e.CanExecute = context.LineaCalibrations
+                        .Find((cbLCSelection.SelectedItem as LinearCalibration).CalibrationID)?
+                        .SaltAnalysis.Count == 0;
+                }
+                else e.CanExecute = false;
+            }
+            catch
+            { e.CanExecute = false; }
+
+            btnChangeCalibration.ToolTip = (e.CanExecute) ? "Изменить выбранную калибровку"
+                : "Изменение калибровки невозможно." + Environment.NewLine + "Присутствуют связанные данные.";
+        }
 
         private void EditCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
