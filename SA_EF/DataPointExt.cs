@@ -43,14 +43,13 @@ namespace SA_EF
         public bool Equals(DataPoint dp)
         {
             if (dp == null) return false;
-            return Concentration.Equals(dp.Concentration) && Value.Equals(dp.Value);
+            return Concentration.Equals(dp.Concentration) && Value.Equals(dp.Value) && Diapason.Equals(dp.Diapason);
         }
 
         public override int GetHashCode()
         {
-            return (int)(Value * 26440451) + (int)(Concentration * 334216273);
+            return (int)(Value * 26440451) + (int)(Concentration * 334216273) + (int)(Diapason*123);
         }
-
         public static bool operator ==(DataPoint dp1, DataPoint dp2)
         {
             if (ReferenceEquals(dp1, dp2)) return true;
