@@ -82,6 +82,20 @@ namespace SATest
         }
 
         [TestMethod, Owner("ZVV 60325-2")]
+        public void CalibrationDataHashSet()
+        {
+            // Arrange
+            LinearCalibration mock = Mock.Of<LinearCalibration>();
+            //Check
+            mock.CalibrationData.Add(new DataPoint() { Concentration = 0.001M, Value = 1M, Diapason = 1 });
+            mock.CalibrationData.Add(new DataPoint() { Concentration = 0.002M, Value = 2M, Diapason = 1 });
+            mock.CalibrationData.Add(new DataPoint() { Concentration = 0.001M, Value = 1M, Diapason = 2 });
+            mock.CalibrationData.Add(new DataPoint() { Concentration = 0.002M, Value = 2M, Diapason = 2 });
+
+            Assert.IsTrue(mock.CalibrationData.Count == 4);
+        }
+
+        [TestMethod, Owner("ZVV 60325-2")]
         public void ContainsEqualDataPointsDiapasonCheckPositive()
         {
             // Arrange
