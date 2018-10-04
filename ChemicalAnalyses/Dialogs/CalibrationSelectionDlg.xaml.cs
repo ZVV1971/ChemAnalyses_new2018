@@ -50,7 +50,7 @@ namespace ChemicalAnalyses.Dialogs
             lcList.Clear();
             try
             {
-                foreach (LinearCalibration clbr in context.LineaCalibrations
+                foreach (LinearCalibration clbr in context.LineaCalibrations.Include(s=>s.CalibrationData)
                     .Where(p => p.CalibrationType.Trim() == type))
                     lcList.Add(clbr);
             }

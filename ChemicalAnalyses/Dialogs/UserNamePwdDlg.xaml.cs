@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -27,7 +18,7 @@ namespace ChemicalAnalyses.Dialogs
         public static readonly DependencyProperty UserNameProperty =
             DependencyProperty.Register(nameof(UserName),
                 typeof(string), typeof(UserNamePwdDlg),
-                new PropertyMetadata("Введите имя пользователя"),
+                new PropertyMetadata(""),
                 new ValidateValueCallback(validateUserNameValue));
 
         public bool wrongPwd
@@ -52,7 +43,7 @@ namespace ChemicalAnalyses.Dialogs
 
         static bool validateUserNameValue(object value)
         {
-            if (value == null || ((string)value).Equals(string.Empty)) return false;
+            if (value == null || ((string)value).Equals(string.Empty)) return true;
             return (((string)value).Length >= 3 && ((string)value).Length <= 100);
         }
 
@@ -60,7 +51,7 @@ namespace ChemicalAnalyses.Dialogs
         { DialogResult = true; }
 
         private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        { e.CanExecute = errorCount == 0 && !wrongPwd; }
+        { e.CanExecute = errorCount == 0 && !wrongPwd && tbUserName.Text != null && tbUserName.Text != string.Empty; }
 
         private void Window_ValidationError(object sender, ValidationErrorEventArgs e)
         {

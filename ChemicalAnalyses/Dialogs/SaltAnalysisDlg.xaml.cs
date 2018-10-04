@@ -31,7 +31,6 @@ namespace ChemicalAnalyses.Dialogs
         public List<Sample> Labnumbers { get; set; }
         private bool _all_selected = false;
         private List<SchemesPrintingGrid> pGrids;
-        private bool AutoScroll = true;
 
         public static ObservableCollection<KeyValuePair<SaltCalculationSchemes, string>> SchemesNames { get; set; }
       

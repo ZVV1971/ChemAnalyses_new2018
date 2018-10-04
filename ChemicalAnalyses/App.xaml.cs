@@ -1,13 +1,11 @@
-﻿using System.Windows;
-using System.Diagnostics;
-using System.Threading;
-using System;
+﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Data.SqlClient;
-using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows;
 
 namespace ChemicalAnalyses
 {
