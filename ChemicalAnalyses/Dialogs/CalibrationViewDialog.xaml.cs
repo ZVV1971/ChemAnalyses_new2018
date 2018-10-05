@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ChemicalAnalyses.Dialogs
 {
@@ -39,7 +40,7 @@ namespace ChemicalAnalyses.Dialogs
                     new Tuple<decimal, decimal>(lc.LinearCalibrationData[1].Max(p=>p.Concentration),
                     lc.LinearCalibrationData[1].Max(p=>p.Concentration)*lc.Slope[1]+
                     lc.Intercept[1])
-                };
+                };                
             }
             catch { }
         }

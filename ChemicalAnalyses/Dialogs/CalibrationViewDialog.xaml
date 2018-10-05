@@ -55,7 +55,7 @@
                                             DataPointStyle="{StaticResource pointStyle}">
                 </chartingToolkit:LineSeries>
                 <chartingToolkit:Chart.ToolTip>
-                    <TextBlock Text="Пример подсказки для графика"/>
+                    <ToolTip x:Name="tltpFirst"/>
                 </chartingToolkit:Chart.ToolTip>
             </chartingToolkit:Chart>
             <chartingToolkit:Chart Grid.Row="1" x:Name="chrChart2" chHlpr:ChartHelpers.IsLegendHidden="True"
@@ -74,6 +74,11 @@
                                             IndependentValuePath="Item1"
                                             DataPointStyle="{StaticResource pointStyle}">
                 </chartingToolkit:LineSeries>
+                <chartingToolkit:Chart.ToolTip>
+                    <ToolTip x:Name="tltpSecond">
+                        <TextBlock/>
+                    </ToolTip>
+                </chartingToolkit:Chart.ToolTip>
             </chartingToolkit:Chart>
             <StackPanel Grid.Column="1" Grid.Row="0">
                 <TextBlock>
