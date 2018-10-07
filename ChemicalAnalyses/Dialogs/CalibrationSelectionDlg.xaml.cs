@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,6 +20,17 @@ namespace ChemicalAnalyses.Dialogs
         public int CalibrationNumber { get; set; }
         string type { get; set; }
         private ChemicalAnalysesEntities context;
+
+        public int selectedIndex
+        {
+            get { return (int)GetValue(selectedIndexProperty); }
+            set { SetValue(selectedIndexProperty, value); }
+        }
+
+        public static readonly DependencyProperty selectedIndexProperty =
+            DependencyProperty.Register(nameof(selectedIndex),
+                typeof(int), typeof(CalibrationSelectionDlg),
+                new PropertyMetadata(0));
 
         public CalibrationSelectionDlg(string type="Kalium", int number = 0)
         {

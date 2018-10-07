@@ -37,7 +37,8 @@
         <StackPanel Grid.Column="0" Grid.ColumnSpan="4">
             <Label Content="_Выбор подходящей калибровки из списка:" Target="{Binding ElementName=cbLCSelection}"/>
             <ComboBox x:Name="cbLCSelection" Margin="10" Height="25"
-                      ItemsSource="{Binding Path=lcList}"
+                      ItemsSource="{Binding Path=lcList}" SelectedIndex="{Binding Path=selectedIndex, 
+                NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True, Mode=TwoWay}"
                       ToolTip="Для совершения операций выберите калибровку из списка"/>
         </StackPanel>
         <Button Content="Сохранить" Grid.Column="0" Grid.Row="1" IsDefault="True" IsCancel="False"
