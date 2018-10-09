@@ -43,7 +43,7 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" x:Name="scroller"
                       VerticalScrollBarVisibility="Auto" CanContentScroll="True">
             <DataGrid x:Name="dgrdSA" CanUserAddRows="False" TargetUpdated="dgrdSA_SourceUpdated"
-                  ItemsSource="{Binding Path=saltAnalysisDatas, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"
+                  ItemsSource="{Binding Path=saltAnalysisDatas, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
                       AutoGenerateColumns="False" LoadingRow="dgrdSA_LoadingRow">
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
