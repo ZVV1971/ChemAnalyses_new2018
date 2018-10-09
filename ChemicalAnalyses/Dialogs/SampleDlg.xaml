@@ -23,13 +23,14 @@
             <Label Content="Лабораторный номер:" Grid.RowSpan="2"/>
             <TextBox x:Name="tbLabNumber" Text="{Binding Path=LabNumber, ValidatesOnExceptions=True,
                 UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Height="{Binding ElementName=dpSamplingDate, 
-                Path=ActualHeight}" ToolTip="Лабораторный номер. От 2 до 15 символов включительно.&#x0a;Использование символа ';' не допускается."/>
+                Path=ActualHeight}" ToolTip="Лабораторный номер. От 2 до 15 символов включительно.&#x0a;Использование символа ';' не допускается."
+                     Margin="5"/>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="1">
             <Label Content="Дата отбора:" Grid.RowSpan="2"/>
             <DatePicker x:Name="dpSamplingDate" Text="{Binding Path=SamplingDate, ValidatesOnExceptions=True, 
                 UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd/MM/yyyy},Mode=TwoWay}" Grid.RowSpan="2"
-                 SelectedDateFormat="Short" Language="ru-RU">
+                 SelectedDateFormat="Short" Language="ru-RU" Margin="5">
                 <DatePicker.Resources>
                     <Style TargetType="{x:Type DatePickerTextBox}">
                         <Setter Property="Control.Template">
@@ -50,7 +51,7 @@
             <TextBox x:Name="tbDescription" Text="{Binding Path=Description, ValidatesOnExceptions=True, 
                 UpdateSourceTrigger=PropertyChanged}" TextWrapping="WrapWithOverflow"
                      Height="{Binding ElementName=dpSamplingDate, Path=ActualHeight}"
-                     ToolTip="Краткое описание образца"/>
+                     ToolTip="Краткое описание образца" Margin="5"/>
         </StackPanel>
         <Button Grid.Row="2" Grid.Column="2" Width="90" Height="20" Content="Cancel" HorizontalAlignment="Center"
                 IsCancel="True"/>

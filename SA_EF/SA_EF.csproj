@@ -123,6 +123,7 @@
     <Compile Include="SampleExt.cs" />
     <Compile Include="SchemeResultsTolerance.cs" />
     <Compile Include="SchemesHelper.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="X509EncDec.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +165,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UseGlobalSettings="True" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UseGlobalSettings="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
