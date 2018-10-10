@@ -47,7 +47,7 @@ namespace ChemicalAnalyses
             while (attemptsCounter++ < MaxAttempts)
             {
                 UserNamePwdDlg userDlg = new UserNamePwdDlg();
-                PBar pBar = new PBar();
+                PBar spb = new PBar();
 
                 if (userDlg.ShowDialog() == true)
                 {
@@ -70,8 +70,10 @@ namespace ChemicalAnalyses
                 Dispatcher progressDisptacher = null;
                 Thread uiThread = new Thread(() =>
                 {
-                    PBar spb = new PBar();
-                    spb.Topmost = true;
+                    spb = new PBar
+                    {
+                        Topmost = true
+                    };
                     spb.Show();
                     progressDisptacher = spb.Dispatcher;
                     // allows the main UI thread to proceed
@@ -84,8 +86,11 @@ namespace ChemicalAnalyses
                 {
                     using (var context = new ChemicalAnalysesEntities(relogin))
                     {
+                        spb.Dispatcher.Invoke(new Action(() => { spb.MessageText = "Авторизация…"; }));
                         var t = context.Samples.FirstOrDefault();
+                        spb.Dispatcher.Invoke(new Action(() => { spb.MessageText = "Инициализация…"; }));
                     }
+                    
                 }
                 catch (Exception ex)
                 {   
@@ -109,7 +114,7 @@ namespace ChemicalAnalyses
                         progressDisptacher?.BeginInvokeShutdown(DispatcherPriority.Send);
                     }
                 }
-                
+
                 if (!ChemicalAnalysesEntities.AreUserNameAndPwdSet)
                 {
                     if (attemptsCounter < MaxAttempts)

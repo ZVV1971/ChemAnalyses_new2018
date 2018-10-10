@@ -29,6 +29,7 @@ namespace SA_EF
                 dbConnInterceptor = new DbConnectionApplicationRoleInterceptor(_userName, _password);
                 DbInterception.Add(dbConnInterceptor);
                 DbConnectionApplicationRoleInterceptor.AppRoleTreatment += OnAppRoleTreatment;
+                DbConnectionApplicationRoleInterceptor.EFStateChange += OnEFStateChange;
             }
         }
 
@@ -38,6 +39,29 @@ namespace SA_EF
             {
                 _areUserNameAndPwdSet = e.HasAppRolePassed;
                 _isAdmin = e.IsMemberOfAdmin;
+            }
+        }
+
+        protected void OnEFStateChange(object sender, EFConnectionStatesChangeArgs e)
+        {
+            if (e != null)
+            {
+                string s = string.Empty ;
+                switch (e.State)
+                {
+                    case EFConnectionStates.Connecting:
+                        s = "Подключение…";
+                        break;
+                    case EFConnectionStates.Authorizing:
+                        s = "Авторизация…";
+                        break;
+                    case EFConnectionStates.Initializing:
+                        s = "Инициализация…";
+                        break;
+                    default:
+                        break;
+                }
+                OnStateChange(new StatesEventArgs(s));
             }
         }
 
@@ -77,5 +101,22 @@ namespace SA_EF
         public virtual DbSet<SaltAnalysisData> SaltAnalysisDatas { get; set; }
         public virtual DbSet<CalibrationType> CalibrationType { get; set; }
         public virtual DbSet<Sample> Samples { get; set; }
+
+        public static event StatesChangesEventHandler StateChanged;
+        protected virtual void OnStateChange (StatesEventArgs e)
+        {
+            StateChanged?.Invoke(this, e);
+        }
+
     }
+
+    public class StatesEventArgs: EventArgs
+    {
+        public string NameOfTheState { get; set; }
+        public StatesEventArgs(string s)
+        {
+            NameOfTheState = s;
+        }
+    }
+    public delegate void StatesChangesEventHandler (object sender, StatesEventArgs e);
 }

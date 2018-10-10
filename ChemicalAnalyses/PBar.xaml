@@ -11,6 +11,8 @@
         ShowInTaskbar="False">
     <Grid>
         <ProgressBar Name="pbStatus" IsIndeterminate="True" />
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Авторизация…" FontSize="24"/>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                   Text="{Binding Path=MessageText, NotifyOnSourceUpdated=True}" 
+                   FontSize="24" x:Name="tbMessage"/>
     </Grid>
 </Window>

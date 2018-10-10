@@ -25,7 +25,7 @@ namespace SA_EF
             {
                 if (value <= 0) throw new ArgumentOutOfRangeException("Value",
                     "Показание прибора должно быть положительным числом!");
-                else { val = value; OnPropertyChanged("value"); }
+                else { val = value; OnPropertyChanged("Value"); }
             }
         }
 

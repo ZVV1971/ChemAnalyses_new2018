@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace SA_EF
 {
@@ -56,6 +57,7 @@ namespace SA_EF
 
         private void SetApplicationRole(DbConnection dbConn, string appRoleName, string password)
         {
+            OnEFStateChange(new EFConnectionStatesChangeArgs(EFConnectionStates.Authorizing));
             if (!_isSetApproleExecuted) {
                 using (var cmd = dbConn.CreateCommand())
                 {
@@ -87,9 +89,9 @@ namespace SA_EF
                         try { res = (int)cmd.ExecuteScalar(); }
                         catch { }
                     }
-
                     OnAppRoleTreatment(new AppRoleTreatmentEventArgs(_isSetApproleExecuted, res == 1 &&
                         _isSetApproleExecuted));
+                   OnEFStateChange(new EFConnectionStatesChangeArgs(EFConnectionStates.Initializing));
                 }
             }
         }
@@ -181,6 +183,13 @@ namespace SA_EF
         {
             AppRoleTreatment?.Invoke(this, e);
         }
+
+        public static event EFConnectionStateChangeEventHandler EFStateChange;
+
+        protected virtual void OnEFStateChange(EFConnectionStatesChangeArgs e)
+        {
+            EFStateChange?.Invoke(this, e);
+        }
     }
 
     public class AppRoleTreatmentEventArgs : EventArgs
@@ -206,4 +215,23 @@ namespace SA_EF
     }
 
     public delegate void AppRoleTreatmentEventHandler(object sender, AppRoleTreatmentEventArgs e);
+
+    public class EFConnectionStatesChangeArgs: EventArgs
+    {
+        public EFConnectionStatesChangeArgs(EFConnectionStates e)
+        {
+            State = e;
+        }
+
+        public EFConnectionStates State { get; set; }
+    }
+
+    public delegate void EFConnectionStateChangeEventHandler(object sender, EFConnectionStatesChangeArgs e);
+
+    public enum EFConnectionStates
+    {
+        Connecting =1,
+        Authorizing = 2,
+        Initializing = 3
+    }
 }
