@@ -5,9 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:chHlpr="clr-namespace:ChemicalAnalyses.Alumni"
-        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         mc:Ignorable="d"
-        Title="Просмотр параметров калибровки" Height="750" Width="625">
+        Title="Просмотр параметров калибровки" Height="750" Width="625" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="{x:Type chartingToolkit:NumericAxisLabel}" x:Key="nmStyle">
             <Setter Property="StringFormat" Value="{}{0:0.####}"/>
@@ -96,8 +95,7 @@
             <StackPanel Grid.Column="1" Grid.Row="0">
                 <TextBlock>
                     <Run>Y=</Run>
-                    <Run Text="{Binding ElementName=grdMain, Path=DataContext.lcCalibration.Slope[0], StringFormat={}{0:0.0},
-                        diag:PresentationTraceSources.TraceLevel=High}"/>
+                    <Run Text="{Binding ElementName=grdMain, Path=DataContext.lcCalibration.Slope[0], StringFormat={}{0:0.0}}"/>
                     <Run>*x+</Run>
                     <Run Text="{Binding ElementName=grdMain, Path=DataContext.lcCalibration.Intercept[0], StringFormat={}{0:0.00}}"/>
                 </TextBlock>

@@ -250,6 +250,7 @@ namespace ChemicalAnalyses.Dialogs
             if (dlg.ShowDialog() == true)
             {
                 ((SaltAnalysisData)dgrdSA.SelectedItem).KaliumCalibration = dlg.CalibrationNumber;
+                (dgrdSA.SelectedItem as ISaltAnalysisCalcResults).IsCalculated = false;
             }
         }
 
@@ -475,8 +476,8 @@ namespace ChemicalAnalyses.Dialogs
 
         private void dgrdSA_SourceUpdated(object sender, DataTransferEventArgs e)
         {
-            if((dgrdSA?.CurrentItem as ISaltAnalysisCalcResults)!=null)
-                (dgrdSA?.CurrentItem as ISaltAnalysisCalcResults).IsCalculated = false;
+            //if ((dgrdSA?.CurrentItem as ISaltAnalysisCalcResults) != null)
+            //    (dgrdSA?.CurrentItem as ISaltAnalysisCalcResults).IsCalculated = false;
         }
 
         private void CompareCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -495,7 +496,12 @@ namespace ChemicalAnalyses.Dialogs
             SaltAnalysisData res1 = dgrdSA.SelectedItems[0] as SaltAnalysisData;
             SaltAnalysisData res2 = dgrdSA.SelectedItems[1] as SaltAnalysisData;
             StringBuilder stringBuilder = new StringBuilder();
-            
+            stringBuilder.Append("1)"+ res1.LabNumber + ";" + Environment.NewLine 
+                + res1.AnalysisDescription + Environment.NewLine);
+            stringBuilder.Append("2)" + res2.LabNumber + ";" + Environment.NewLine
+                + res2.AnalysisDescription + Environment.NewLine);
+            stringBuilder.AppendLine("Расчетная схема: " + res1.DefaultCalculationScheme.ToName());
+
             foreach (string prpName in SchemesHelper.GetPropertiesToCheck(res1.DefaultCalculationScheme))
             {
                 string desc = string.Empty;
@@ -541,7 +547,8 @@ namespace ChemicalAnalyses.Dialogs
                     delimiter = ";" + Environment.NewLine;
                 }
             }
-            MessageBox.Show(stringBuilder.ToString(), "Результаты сравнения");
+            MessageBox.Show(stringBuilder.ToString() + "\nИнформация скопирована в буфер обмена.", "Результаты сравнения");
+            Clipboard.SetText(stringBuilder.ToString());
         }
 
         private void DuplicateCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -561,6 +568,18 @@ namespace ChemicalAnalyses.Dialogs
                 context.SaveChanges();
             }
             FillData();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if ((dgrdSA.CurrentItem as ISaltAnalysisCalcResults) != null)
+                (dgrdSA.CurrentItem as ISaltAnalysisCalcResults).IsCalculated = false;
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((dgrdSA.CurrentItem as ISaltAnalysisCalcResults) != null)
+                (dgrdSA.CurrentItem as ISaltAnalysisCalcResults).IsCalculated = false;
         }
     }
 }

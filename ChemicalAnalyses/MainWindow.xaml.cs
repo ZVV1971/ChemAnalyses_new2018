@@ -32,14 +32,25 @@ namespace ChemicalAnalyses
 
         public static readonly DependencyProperty IsAdminProperty =
             DependencyProperty.Register("IsAdmin", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+        //private static string _userName;
+        public string UserName
+        {
+            get { return (string)GetValue(UserNameProperty); }
+            set { SetValue(UserNameProperty, value); }
+        }
 
-        public string WindowTitle { get; } = "Расчет химсостава образцов";
+        public static readonly DependencyProperty UserNameProperty =
+            DependencyProperty.Register("UserName", typeof(string), typeof(MainWindow));
+
+        public string WindowTitle { get; } = "Расчет состава солевых образцов";
 
         public MainWindow()
         {
             InitializeComponent();
             wndThis = this;
             DataContext = this;
+            DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, 
+                delegate { tblCurrentDateTime.Text = DateTime.Now.ToString(); }, Dispatcher);
         }
 
         private bool Authorize(bool relogin = false)
@@ -129,6 +140,8 @@ namespace ChemicalAnalyses
                     return false;
                 }
                 IsAdmin = ChemicalAnalysesEntities.IsAdmin;
+                UserName = IsAdmin?("Администратор: " + ChemicalAnalysesEntities.UserName):
+                    ("Пользователь: " + ChemicalAnalysesEntities.UserName);
                 return true;
             }
             return false;
@@ -177,15 +190,19 @@ namespace ChemicalAnalyses
         }
         private void HelpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            MessageBox.Show("Дипломная работа по теме" +
-                "\n«Программное средство для расчета химического состава образцов»" +
+            MessageBox.Show("Дипломная работа" +
+                "\n«Программное средство для расчета " +
+                "\nхимического состава солевых образцов»" +
                 "\nЗахаренков В.В. группа №60325-2\nВерсия: " +
                 Assembly.GetExecutingAssembly().GetName().Version.ToString(), "О программе…",
                         MessageBoxButton.OK, MessageBoxImage.Information);
         }
         private void ListCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            SamplesViewDlg dlg = new SamplesViewDlg();
+            SamplesViewDlg dlg = new SamplesViewDlg()
+            {
+                WindowTitle = "Список образцов в базе. " + UserName
+            };
             if (dlg.ShowDialog() == true);
         }
         #endregion Commands
@@ -247,7 +264,6 @@ namespace ChemicalAnalyses
                 CALogger.WriteToLogFile("Ошибка при считывании настроек из файла конфигурации!");
                 return;
             }
-
 
             Dictionary<SaltCalculationSchemes, SchemeResultsTolerance> schemeDict = 
                 new Dictionary<SaltCalculationSchemes, SchemeResultsTolerance>(SchemeCompareOptionsHelper.GetSchemeCompareOptions());
@@ -440,6 +456,19 @@ namespace ChemicalAnalyses
 
         private void ShowLogCommand_Executed(object sender, ExecutedRoutedEventArgs e) => CALogger.ShowLogFile();
 
-        private void ShowLogCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = IsAdmin;
+        private void ShowLogCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (IsAdmin)
+            {
+                e.CanExecute = true;
+                miShowLogFile.ToolTip = "Показать файл журнала";
+            }
+            else
+            {
+                e.CanExecute = false;
+                miShowLogFile.ToolTip = "Просмотр файла журнала доступен" +
+                    Environment.NewLine + " только администраторам";
+            }
+        }
     }
 }

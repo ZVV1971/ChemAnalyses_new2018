@@ -6,7 +6,7 @@
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
         mc:Ignorable="d"
-        Title="{Binding}" Height="500" Width="1150" MinHeight="500" MinWidth="1050" 
+        Title="{Binding}" Height="500" Width="1200" MinHeight="500" MinWidth="1050" 
             x:Name="wSAWindow"  Validation.Error="OnErrorEvent">
     <Window.CommandBindings>
         <CommandBinding Command="Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed"/>
@@ -43,7 +43,8 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0" x:Name="scroller"
                       VerticalScrollBarVisibility="Auto" CanContentScroll="True">
             <DataGrid x:Name="dgrdSA" CanUserAddRows="False" TargetUpdated="dgrdSA_SourceUpdated"
-                  ItemsSource="{Binding Path=saltAnalysisDatas, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                  ItemsSource="{Binding Path=saltAnalysisDatas, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True,
+                NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True}"
                       AutoGenerateColumns="False" LoadingRow="dgrdSA_LoadingRow">
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
@@ -95,7 +96,7 @@
                                 <DatePicker Text="{Binding AnalysisDate, UpdateSourceTrigger=PropertyChanged,
                                     Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True,
                                     NotifyOnTargetUpdated=True}" SelectedDateFormat="Short" Language="ru-RU"
-                                    ToolTip="Ввести дату анализа"/>
+                                    ToolTip="Ввести дату анализа" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -104,9 +105,10 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <AdornerDecorator>
-                                    <TextBox Text="{Binding Path=WetWeight, 
-                        NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                                    <TextBox Text="{Binding Path=WetWeight, UpdateSourceTrigger=PropertyChanged,
+                        Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnExceptions=True,
+                        NotifyOnTargetUpdated=True, StringFormat={}{0:0.0000},   
+                                        NotifyOnSourceUpdated=True}" TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -117,7 +119,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=MagnesiumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}" 
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -128,7 +131,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=MagnesiumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -139,7 +143,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=CalciumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -150,7 +155,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=CalciumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -161,7 +167,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=KaliumValue, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -172,7 +179,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=KaliumVolume, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -183,7 +191,8 @@
                                 <AdornerDecorator>
                                 <TextBox Text="{Binding Path=KaliumDiapason, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                         TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -204,7 +213,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=HumidityCrucibleEmptyWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -215,7 +225,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=HumidityCrucibleWetSampleWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -226,7 +237,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=HumidityCrucibleDry110SampleWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -237,7 +249,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=HumidityCrucibleDry180SampleWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -248,7 +261,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=ChlorumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.00}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -259,7 +273,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=ChlorumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -270,7 +285,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=BromumTitre, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -281,7 +297,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=BromumAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -292,7 +309,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=ResiduumCrucibleEmptyWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -303,7 +321,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=ResiduumCrucibleFullWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -321,7 +340,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=SulfatesCrucibleEmptyWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -339,7 +359,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=SulfatesCrucibleFullWeight, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0000}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -355,7 +376,8 @@
                                 <AdornerDecorator>
                                     <TextBox Text="{Binding Path=SulfatesAliquote, 
                         NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay,
-                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                        StringFormat={}{0:0.0}, ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                             TextChanged="TextBox_TextChanged"/>
                                 </AdornerDecorator>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -377,15 +399,18 @@
                                 <Label Content="Коэффициент Hg:"/>
                                 <TextBox Text="{Binding Path=HgCoefficient, StringFormat={}{0:0.0000}, 
                                     ValidatesOnExceptions=True, NotifyOnValidationError=True, 
-                                    UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"/>
+                                    UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}"
+                                         TextChanged="TextBox_TextChanged"/>
                                 <Label Content="мг-экв/мл; Холостой Br:"/>
                                 <TextBox Text="{Binding Path=BromumBlank, StringFormat={}{0:0.0}, 
                                     ValidatesOnExceptions=True, NotifyOnTargetUpdated=True,
-                                    NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"
+                                         TextChanged="TextBox_TextChanged"/>
                                 <Label Content="мл; Стандартный титр Br:"/>
                                 <TextBox Text="{Binding Path=BromumStandardTitre, StringFormat={}{0:0.0000},
                                     NotifyOnValidationError=True, ValidatesOnExceptions=True, 
-                                    UpdateSourceTrigger=PropertyChanged , NotifyOnTargetUpdated=True}"/>
+                                    UpdateSourceTrigger=PropertyChanged , NotifyOnTargetUpdated=True}"
+                                         TextChanged="TextBox_TextChanged"/>
                                 <Label Content=" мг-экв/мл"/>
                                 <Label Content=" Рекомендуемая схема расчета: "/>
                                 <TextBlock Text="{Binding Path=RecommendedCalculationScheme, 
@@ -396,15 +421,18 @@
                                 <Label Content="Холостой сульфаты:"/>
                                 <TextBox Text="{Binding Path=SulfatesBlank, StringFormat={}{0:0.0000}, 
                                     ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, 
-                                    ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"/>
+                                    ValidatesOnExceptions=True, NotifyOnTargetUpdated=True}"
+                                         TextChanged="TextBox_TextChanged"/>
                                 <Label Content="мг; Трилон Б (Ca):"/>
                                 <TextBox Text="{Binding Path=CalciumTrilonTitre, StringFormat={}{0:0.0000}, 
                                     ValidatesOnExceptions=True, NotifyOnTargetUpdated=True,
-                                    UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"/>
+                                    UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                                         TextChanged="TextBox_TextChanged"/>
                                 <Label Content=" мг-экв/мл; Трилон Б (Mg):"/>
                                 <TextBox Text="{Binding Path=MagnesiumTrilonTitre, StringFormat={}{0:0.0000}, 
                                     ValidatesOnExceptions=True, NotifyOnTargetUpdated=True,
-                                    UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"/>
+                                    UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                                         TextChanged="TextBox_TextChanged"/>
                                 <Label Content=" мг-экв/мл; Предполагаемая схема расчета:"/>
                                 <ComboBox SelectedItem="{Binding Path=DefaultCalculationScheme, 
                                     ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged,
@@ -459,12 +487,12 @@
                         <ContextMenu.Resources>
                             <RoutedUICommand x:Key="cmdCompare" Text="Сравнить">
                                 <RoutedUICommand.InputGestures>
-                                    <KeyGesture>SHIFT+ALT+C</KeyGesture>
+                                    <KeyGesture>ALT+C</KeyGesture>
                                 </RoutedUICommand.InputGestures>
                             </RoutedUICommand>
                             <RoutedUICommand x:Key="cdmDuplicate" Text="Дублировать">
                                 <RoutedUICommand.InputGestures>
-                                    <KeyGesture>SHIFT+ALT+D</KeyGesture>
+                                    <KeyGesture>ALT+D</KeyGesture>
                                 </RoutedUICommand.InputGestures>
                             </RoutedUICommand>
                         </ContextMenu.Resources>
@@ -486,6 +514,8 @@
                         <MenuItem Command="{StaticResource cdmDuplicate}"/>
                         <ContextMenu.CommandBindings>
                             <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed"/>
+                            <CommandBinding Command="{StaticResource cmdCompare}" CanExecute="CompareCommand_CanExecute" 
+                                            Executed="CompareCommand_Executed"/>
                             <CommandBinding Command="{StaticResource cmdCompare}" CanExecute="CompareCommand_CanExecute" 
                                             Executed="CompareCommand_Executed"/>
                             <CommandBinding Command="{StaticResource cdmDuplicate}" CanExecute="DuplicateCommand_CanExecute"

@@ -32,6 +32,15 @@ namespace ChemicalAnalyses.Dialogs
             DependencyProperty.Register(nameof(FilterText), typeof(string), typeof(SamplesViewDlg),
                 new PropertyMetadata(null));
 
+        public string WindowTitle
+        {
+            get { return (string)GetValue(WindowTitleProperty); }
+            set { SetValue(WindowTitleProperty, value); }
+        }
+
+        public static readonly DependencyProperty WindowTitleProperty =
+            DependencyProperty.Register("WindowTitle", typeof(string), typeof(SamplesViewDlg));
+
         private static SampleFilterFields fFields;
         public SampleFilterFields GetFilter() { return fFields; }
 
@@ -51,6 +60,7 @@ namespace ChemicalAnalyses.Dialogs
             InitializeComponent();
             lbSamples.ItemsSource = SamplesCollection;
             grdMain.DataContext = this;
+            DataContext = this;
             try {fFields = Properties.Settings.Default.PreviousFilter;}
             catch { }
             if (fFields == null) fFields = new SampleFilterFields();

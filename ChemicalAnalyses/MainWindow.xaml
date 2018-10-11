@@ -6,7 +6,7 @@
         xmlns:commands="clr-namespace:ChemicalAnalyses.Commands"
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
-        Title="{Binding WindowTitle}" Height="250" Width="425"
+        Title="{Binding WindowTitle}" Height="250" MinWidth="480" Width="480"
         PreviewMouseMove="Window_PreviewMouseMove"
         SourceInitialized="Window_SourceInitialized" WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -40,14 +40,22 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="1" Grid.Row="0" Background="{Binding ElementName=mnMainMenu, Path=Background}"
+                   x:Name="tblCurrentDateTime" TextAlignment="Right" 
+                   ToolTip="Отображает текущие дату и время"/>
         <!--*********************  Menu **************************-->
         <Menu x:Name="mnMainMenu" Grid.Row="0" ToolTip="Главное меню программы">
             <MenuItem Header="Файл" ToolTip="Работа с файлами…">
                 <MenuItem Command="{StaticResource ReloginCmd}" ToolTip="Войти в систему под другими логином и паролем"
                           Icon="{Binding Source={StaticResource icnExitApplication}}" x:Name="miChangeUser"/>
                 <Separator/>
-                <MenuItem Command="{StaticResource ShowLogFile}" ToolTip="Показать лог"
-                          x:Name="miShowLogFile" Icon="{Binding Source={StaticResource icnLog}}"/>
+                <MenuItem Command="{StaticResource ShowLogFile}" ToolTip="{Binding}"
+                          x:Name="miShowLogFile" Icon="{Binding Source={StaticResource icnLog}}"
+                          ToolTipService.ShowOnDisabled="True"/>
                 <Separator/>
                 <MenuItem Command="commands:CustomCommands.Exit" ToolTip="Выход из программы"
                           Icon="{Binding Source={StaticResource icExit2}}"/>
@@ -81,13 +89,13 @@
             </MenuItem>
         </Menu>
         <!--*********************  StatusBar **************************-->
-        <StatusBar Grid.Row="3" VerticalAlignment="Stretch" x:Name="sbMain" ToolTip="Строка состояния">
+        <StatusBar Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Stretch" x:Name="sbMain" ToolTip="Строка состояния">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="5*"></ColumnDefinition>
-                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
@@ -98,8 +106,8 @@
             </StatusBarItem>
             <StatusBarItem Grid.Column="1">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="stbSecondSection" Text="{Binding Path=IsAdmin, 
-                        RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource bln2UserTypeConv}}"
+                    <TextBlock x:Name="stbSecondSection" Text="{Binding Path=UserName, 
+                        RelativeSource={RelativeSource AncestorType=Window}}"
                                ToolTip="Отображает статус текущего пользователя в системе"/>
                 </StackPanel>
             </StatusBarItem>

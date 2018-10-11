@@ -34,7 +34,7 @@
             <AdornerDecorator>
                 <TextBox Text="{Binding Path=UserName, NotifyOnValidationError=True, Mode=TwoWay, 
                     ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}" x:Name="tbUserName"
-                    Margin="3,0,3,0">
+                    Margin="3,0,3,0" TabIndex="0">
                     <alumni:WatermarkService.Watermark>
                         <TextBlock>Введите имя пользователя</TextBlock>
                     </alumni:WatermarkService.Watermark>
@@ -42,14 +42,14 @@
             </AdornerDecorator>
             <Label Content="Пароль:" Target="{Binding ElementName=pbPassword}"/>
             <PasswordBox x:Name="pbPassword" PasswordChanged="pbPassword_PasswordChanged" MaxLength="50"
-                         Margin="3,0,3,0"/>
+                         Margin="3,0,3,0" TabIndex="1"/>
             <Label Visibility="{Binding Path=wrongPwd, Converter={StaticResource bln2VisibilityConverter}}">
                 <TextBlock Text="Пароль не короче 3 символов!" Foreground="Red"/>
             </Label>
         </StackPanel>
         <Button Content="OK" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="0" Command="Save"
-                VerticalAlignment="Center" IsCancel="False" IsDefault="True" x:Name="btnOK"/>
+                VerticalAlignment="Center" IsCancel="False" IsDefault="True" x:Name="btnOK" TabIndex="2"/>
         <Button Content="Cancel" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" 
-                VerticalAlignment="Center" IsCancel="True" IsDefault="False" x:Name="btnCancels"/>
+                VerticalAlignment="Center" IsCancel="True" IsDefault="False" x:Name="btnCancels" TabIndex="3"/>
     </Grid>
 </Window>

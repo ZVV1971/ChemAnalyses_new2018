@@ -11,7 +11,11 @@ namespace SA_EF
     public partial class ChemicalAnalysesEntities : DbContext
     {
         private static string _userName = "";
-        public static string UserName { set { if (value != null) _userName = value; } }
+        public static string UserName
+        {
+            set { if (value != null) _userName = value; }
+            get { return _userName; }
+        }
         private static string _password = "";
         public static string Password { set { if (value != null) _password = value; } }
         private static bool _areUserNameAndPwdSet = false;

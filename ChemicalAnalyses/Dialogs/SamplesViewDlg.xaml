@@ -7,7 +7,7 @@
         xmlns:alumni="clr-namespace:ChemicalAnalyses.Alumni"
         xmlns:talex="http://schemas.talex-soft.com/2010/xaml/presentation"
         mc:Ignorable="d"
-        Title="Список образцов в базе" Height="350" Width="600" MinHeight="205" MinWidth="500"
+        Title="{Binding Path=WindowTitle}" Height="350" Width="600" MinHeight="205" MinWidth="500"
         PreviewMouseMove="Window_PreviewMouseMove" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -47,7 +47,7 @@
                     ToolTip="Фильтровать записи" ToolTipService.ShowOnDisabled="True"/>
             <Button Content="Выход" IsCancel="True" ToolTip="Закрыть окно" Click="CancelButton_Click"/>
                    </StackPanel>
-        <TextBlock Grid.Column="1" Grid.Row="0" x:Name="txtFilters" 
+        <TextBlock Grid.Column="1" Grid.Row="0" x:Name="txtFilters" Tag="{x:Static commands:CustomCommands.Filter}"
                    Text="{Binding Path=FilterText, TargetNullValue=Фильтр сброшен}" 
                    HorizontalAlignment="Center" TextWrapping="Wrap" ToolTip="Образцы в списке отобраны в соответствии с указанными параметрами&#x0a;Для сброса перейдите в контекстное меню">
             <TextBlock.ContextMenu>
