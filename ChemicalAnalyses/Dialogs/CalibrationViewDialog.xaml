@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:chHlpr="clr-namespace:ChemicalAnalyses.Alumni"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="Просмотр параметров калибровки" Height="750" Width="625">
     <Window.Resources>
@@ -55,7 +56,14 @@
                                             DataPointStyle="{StaticResource pointStyle}">
                 </chartingToolkit:LineSeries>
                 <chartingToolkit:Chart.ToolTip>
-                    <ToolTip x:Name="tltpFirst"/>
+                    <ToolTip x:Name="tltpFirst">
+                        <TextBlock>
+                            <Run>Y = </Run>
+                            <Run x:Name="tlt11"/>
+                            <Run>*x + </Run>
+                            <Run x:Name="tlt12"/>
+                        </TextBlock>
+                    </ToolTip>
                 </chartingToolkit:Chart.ToolTip>
             </chartingToolkit:Chart>
             <chartingToolkit:Chart Grid.Row="1" x:Name="chrChart2" chHlpr:ChartHelpers.IsLegendHidden="True"
@@ -76,14 +84,20 @@
                 </chartingToolkit:LineSeries>
                 <chartingToolkit:Chart.ToolTip>
                     <ToolTip x:Name="tltpSecond">
-                        <TextBlock/>
+                        <TextBlock>
+                            <Run>Y = </Run>
+                            <Run x:Name="tlt21"/>
+                            <Run>*x + </Run>
+                            <Run x:Name="tlt22"/>
+                        </TextBlock>
                     </ToolTip>
                 </chartingToolkit:Chart.ToolTip>
             </chartingToolkit:Chart>
             <StackPanel Grid.Column="1" Grid.Row="0">
                 <TextBlock>
                     <Run>Y=</Run>
-                    <Run Text="{Binding ElementName=grdMain, Path=DataContext.lcCalibration.Slope[0], StringFormat={}{0:0.0}}"/>
+                    <Run Text="{Binding ElementName=grdMain, Path=DataContext.lcCalibration.Slope[0], StringFormat={}{0:0.0},
+                        diag:PresentationTraceSources.TraceLevel=High}"/>
                     <Run>*x+</Run>
                     <Run Text="{Binding ElementName=grdMain, Path=DataContext.lcCalibration.Intercept[0], StringFormat={}{0:0.00}}"/>
                 </TextBlock>

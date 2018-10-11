@@ -22,6 +22,7 @@ namespace ChemicalAnalyses
     {
         private Window wndThis = null;
         private const int MaxAttempts = 3;
+        private PBar spb = null;
 
         public bool IsAdmin
         {
@@ -47,7 +48,7 @@ namespace ChemicalAnalyses
             while (attemptsCounter++ < MaxAttempts)
             {
                 UserNamePwdDlg userDlg = new UserNamePwdDlg();
-                PBar spb = new PBar();
+                spb = new PBar();
 
                 if (userDlg.ShowDialog() == true)
                 {
@@ -86,9 +87,8 @@ namespace ChemicalAnalyses
                 {
                     using (var context = new ChemicalAnalysesEntities(relogin))
                     {
-                        spb.Dispatcher.Invoke(new Action(() => { spb.MessageText = "Авторизация…"; }));
+                        ChemicalAnalysesEntities.StateChanged += OnStateChange;
                         var t = context.Samples.FirstOrDefault();
-                        spb.Dispatcher.Invoke(new Action(() => { spb.MessageText = "Инициализация…"; }));
                     }
                     
                 }
@@ -107,6 +107,7 @@ namespace ChemicalAnalyses
                 }
                 finally
                 {
+                    ChemicalAnalysesEntities.StateChanged -= OnStateChange;
                     if (progressDisptacher != null) progressDisptacher.BeginInvokeShutdown(DispatcherPriority.Send);
                     else
                     {
@@ -131,6 +132,15 @@ namespace ChemicalAnalyses
                 return true;
             }
             return false;
+        }
+
+        //Changes the title on the Progress bar when DbContext fires an event of connection State Change
+        protected void OnStateChange (object sender, StatesEventArgs e)
+        {
+            if (e != null)
+            {
+                spb.Dispatcher.Invoke(new Action(() => { spb.MessageText = e.NameOfTheState; }));
+            }
         }
 
         #region HoverToolTip Property

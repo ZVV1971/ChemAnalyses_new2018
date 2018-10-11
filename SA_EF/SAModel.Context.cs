@@ -19,7 +19,7 @@ namespace SA_EF
         private static bool _isAdmin = false;
         public static bool IsAdmin { get { return _isAdmin; } }
         public static string connectionString { private get; set; } = "name=CAEntities";
-        private static DbConnectionApplicationRoleInterceptor dbConnInterceptor;
+        public static DbConnectionApplicationRoleInterceptor dbConnInterceptor;
 
         public ChemicalAnalysesEntities(bool relogin = false) :base(ConnectionStringRebuilder(connectionString))
         {

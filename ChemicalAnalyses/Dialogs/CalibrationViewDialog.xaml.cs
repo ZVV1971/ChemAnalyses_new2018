@@ -43,6 +43,10 @@ namespace ChemicalAnalyses.Dialogs
                 };                
             }
             catch { }
+            tlt11.Text = lc.Slope[0].ToString("0.0");
+            tlt12.Text = lc.Intercept[0].ToString("0.00");
+            tlt21.Text = lc.Slope[1].ToString("0.0");
+            tlt22.Text = lc.Intercept[1].ToString("0.00");
         }
     }
 }
