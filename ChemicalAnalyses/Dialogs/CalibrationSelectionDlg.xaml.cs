@@ -39,6 +39,7 @@ namespace ChemicalAnalyses.Dialogs
             InitializeComponent();
             this.type = type;
             CalibrationNumber = number;
+            selectedIndex = number;
             context = new ChemicalAnalysesEntities();
 #if DEBUG
             context.Database.Log = s => { Debug.WriteLine(s); };

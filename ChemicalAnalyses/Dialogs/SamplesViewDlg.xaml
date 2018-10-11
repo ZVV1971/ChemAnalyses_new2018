@@ -41,8 +41,8 @@
             <Button Content="Загрузить список" Click="ReadButton_Click" ToolTip="Загрузить список образцов из базы в соответствии с&#x0a;установленным фильтром"/>
             <Button Content="Добавить…" Command="New" ToolTip="Добавить новый образец"/>
             <Button Content="Редактировать…" Command="commands:CustomCommands.Update" x:Name="btnEditSample"
-                    ToolTip="Редактировать данные образца" ToolTipService.ShowOnDisabled="True"/>
-            <Button Command="Delete" Content="Удалить" ToolTip="Удалить образец из базы" ToolTipService.ShowOnDisabled="True"/>
+                    ToolTip="{Binding}" ToolTipService.ShowOnDisabled="True"/>
+            <Button Command="Delete" Content="Удалить" ToolTip="{Binding}" ToolTipService.ShowOnDisabled="True" x:Name="btnDelete"/>
             <Button Content="Фильтр…" Command="commands:CustomCommands.Filter" x:Name="btnFilter"
                     ToolTip="Фильтровать записи" ToolTipService.ShowOnDisabled="True"/>
             <Button Content="Выход" IsCancel="True" ToolTip="Закрыть окно" Click="CancelButton_Click"/>
@@ -76,7 +76,8 @@
                         </MenuItem.Header>
                     </MenuItem>
                     <MenuItem Header="Редактировать данные анализов" Command="commands:CustomCommands.Edit" x:Name="miEditAnalyses"/>
-                    <MenuItem Header="Удалить образец" Command="Delete" ToolTip="Удалить образец из базы" x:Name="miDeleteSample"/>
+                    <MenuItem Header="Удалить образец" Command="Delete" ToolTip="Удалить образец из базы" x:Name="miDeleteSample"
+                              ToolTipService.ShowOnDisabled="True"/>
                     <MenuItem Header="Редактировать…" Command="commands:CustomCommands.Update" 
                               ToolTip="Редактировать данные образца" x:Name="miEditSample"/>
                 </ContextMenu>

@@ -126,7 +126,16 @@ namespace ChemicalAnalyses.Dialogs
 
         private void UpdateCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = lbSamples?.SelectedItems.Count != 0;
+            if(lbSamples?.SelectedItems.Count != 0)
+            {
+                e.CanExecute = true;
+                btnEditSample.ToolTip = "Редактировать данные образца";
+            }
+            else
+            {
+                e.CanExecute = false;
+                btnEditSample.ToolTip = "Для редактирования выберите образец из списка";
+            }
         }
 
         private void FilterCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -148,8 +157,17 @@ namespace ChemicalAnalyses.Dialogs
 
         private void DeleteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (lbSamples?.SelectedItems.Count != 0) &&
-                lbSamples?.SelectedItems.Cast<Sample>().ToList().Count(p => p.SamplesCount != 0) == 0;
+            if ((lbSamples?.SelectedItems.Count != 0) &&
+               ( lbSamples?.SelectedItems.Cast<Sample>().ToList().Count(p => p.SamplesCount != 0) == 0))
+            {
+                e.CanExecute = true;
+                btnDelete.ToolTip = "Удалить образец из базы";
+            }
+            else
+            {
+                e.CanExecute = false;
+                btnDelete.ToolTip = "Удалить образец нельзя." + Environment.NewLine + "Имеются связанные анализы";
+            }
         }
 
         private void DeleteCommand_Executed(object sender, ExecutedRoutedEventArgs e)
