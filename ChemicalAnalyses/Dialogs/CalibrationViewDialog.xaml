@@ -6,7 +6,7 @@
         xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:chHlpr="clr-namespace:ChemicalAnalyses.Alumni"
         mc:Ignorable="d"
-        Title="Просмотр параметров калибровки" Height="750" Width="625" ResizeMode="NoResize">
+        Title="{Binding Path=WindowTitle}" Height="750" Width="625" ResizeMode="NoResize">
     <Window.Resources>
         <Style TargetType="{x:Type chartingToolkit:NumericAxisLabel}" x:Key="nmStyle">
             <Setter Property="StringFormat" Value="{}{0:0.####}"/>

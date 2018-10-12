@@ -20,11 +20,24 @@ namespace ChemicalAnalyses.Dialogs
                 typeof(LinearCalibration), typeof(CalibrationViewDialog),
                 new PropertyMetadata());
 
+
+        public String WindowTitle
+        {
+            get { return (String)GetValue(WindowTitleProperty); }
+            set { SetValue(WindowTitleProperty, value); }
+        }
+
+        public static readonly DependencyProperty WindowTitleProperty =
+            DependencyProperty.Register("WindowTitle", typeof(String), typeof(CalibrationViewDialog));
+
+
+
         public CalibrationViewDialog(ref LinearCalibration lc)
         {
             InitializeComponent();
             lcCalibration = lc;
             grdMain.DataContext = this;
+            DataContext = this;
             try
             {
                     lnSeries1.ItemsSource = new ObservableCollection<Tuple<decimal, decimal>>()
