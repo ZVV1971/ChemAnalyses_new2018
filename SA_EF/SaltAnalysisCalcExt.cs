@@ -520,13 +520,13 @@ namespace SA_EF
             if (Math.Abs(1 - res.IonSum) < sumTolerance) _res.IonSumColor = greenBrush;
             else
             {
-                if ((1 - res.IonSum) > 0) _res.IonSumColor = redBrush;
+                if ((1 - res.IonSum) < 0) _res.IonSumColor = redBrush;
                 else _res.IonSumColor = blueBrush;
             }
             if (Math.Abs(1 - res.SaltSum) < sumTolerance) _res.SaltSumColor = greenBrush;
             else
             {
-                if ((1 - res.SaltSum) > 0) _res.SaltSumColor = redBrush;
+                if ((1 - res.SaltSum) < 0) _res.SaltSumColor = redBrush;
                 else _res.SaltSumColor = blueBrush;
             }
             return _res;
