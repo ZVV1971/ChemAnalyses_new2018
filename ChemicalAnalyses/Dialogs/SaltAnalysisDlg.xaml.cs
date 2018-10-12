@@ -560,10 +560,14 @@ namespace ChemicalAnalyses.Dialogs
             {
                 foreach (SaltAnalysisData item in dgrdSA.SelectedItems)
                 {
-                    var newItem = context.SaltAnalysisDatas.AsNoTracking()
+                    try
+                    {
+                        var newItem = context.SaltAnalysisDatas.AsNoTracking()
                         .FirstOrDefault(p => p.IDSaltAnalysis == item.IDSaltAnalysis);
-                    context.SaltAnalysisDatas.Add(newItem);
-                    context.Entry(newItem).State = EntityState.Added;
+                        context.SaltAnalysisDatas.Add(newItem);
+                        context.Entry(newItem).State = EntityState.Added;
+                    }
+                    catch { }
                 }
                 context.SaveChanges();
             }
