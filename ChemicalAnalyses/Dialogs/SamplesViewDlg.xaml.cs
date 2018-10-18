@@ -238,7 +238,8 @@ namespace ChemicalAnalyses.Dialogs
                 catch (Exception ex)
                 {
                     if (ex.InnerException?.InnerException?.Data["HelpLink.EvtID"] != null
-                        && (string)ex.InnerException?.InnerException?.Data["HelpLink.EvtID"] == "2601")
+                        && ((string)ex.InnerException?.InnerException?.Data["HelpLink.EvtID"] == "2601")||
+                        (string)ex.InnerException?.InnerException?.Data["HelpLink.EvtID"] == "2627")
                         MessageBox.Show("Лабораторный номер должен быть уникален в пределах календарного года!", "Ошибка!", MessageBoxButton.OK);
                     else MessageBox.Show(ex.Message, "Ошибка при добавлении записи", MessageBoxButton.OK);
                 }
@@ -318,10 +319,12 @@ namespace ChemicalAnalyses.Dialogs
             List<Sample> lst = lbSamples.SelectedItems.Cast<Sample>().ToList<Sample>();
             StringBuilder title = new StringBuilder("образцов №№ ");
             lst.ForEach(p => { title.Append(p.LabNumber); title.Append(" "); });
-            SaltAnalysisDlg saltADlg = new SaltAnalysisDlg(lst, "Create", (int)NumberOfAnalysesToAdd);
-            saltADlg.Title = "Новые данные анализов для " + ((lbSamples.SelectedItems.Count == 1) ?
+            SaltAnalysisDlg saltADlg = new SaltAnalysisDlg(lst, "Create", (int)NumberOfAnalysesToAdd)
+            {
+                Title = "Новые данные анализов для " + ((lbSamples.SelectedItems.Count == 1) ?
              "образца №" + ((Sample)lbSamples.SelectedItem).IDSample.ToString() :
-             title.ToString());
+             title.ToString())
+            };
             if (saltADlg.ShowDialog() == true) FillData();
         }
 

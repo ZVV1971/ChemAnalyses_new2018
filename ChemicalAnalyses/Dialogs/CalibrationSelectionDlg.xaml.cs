@@ -151,7 +151,8 @@ namespace ChemicalAnalyses.Dialogs
                 .Find(((LinearCalibration)cbLCSelection.SelectedItem).CalibrationID);
             if (lc != null) lc.GetLinearCoefficients();
             else return;
-            CalibrationViewDialog cvDlg = new CalibrationViewDialog(ref lc);
+            CalibrationViewDialog cvDlg = new CalibrationViewDialog(ref lc)
+            { WindowTitle = "Просмотр параметров калибровки: " + lc.Description};
             cvDlg.Show(); //just to show it, no results are necessary
         }
 
